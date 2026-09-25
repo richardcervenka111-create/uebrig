@@ -1,0 +1,16 @@
+{
+  "name": "übrig Bern",
+  "short_name": "übrig",
+  "description": "Was in der Küche übrig bleibt, sicher weitergeben: Prüfen, Meldung, Etikett, Protokoll.",
+  "lang": "de-CH",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3EEE6",
+  "theme_color": "#F3EEE6",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["index.html", "app/**", "research/**", ".github/workflows/pages.yml"]
+    paths: ["index.html", "datenschutz.html", "manifest.webmanifest", "icons/**", "app/**", "research/**", "tests/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,7 +12,23 @@ concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright (library) and Chromium
+        run: npm i --no-save playwright@1.56.1 && npx playwright install --with-deps chromium
+      - name: Serve and run end-to-end checks
+        run: |
+          python3 -m http.server 8080 --bind 127.0.0.1 &
+          sleep 1
+          BASE_URL=http://127.0.0.1:8080 node tests/e2e.mjs
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -26,7 +42,7 @@ jobs:
           ! grep -qiE 'fetch\(|XMLHttpRequest|sendBeacon' index.html
       - uses: actions/configure-pages@v5
       - name: Stage site
-        run: mkdir -p _site && cp index.html _site/ && cp -r app _site/ && cp -r research _site/
+        run: mkdir -p _site && cp index.html datenschutz.html manifest.webmanifest _site/ && cp -r icons app research _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>übrig Bern – Datenschutz</title>
+<meta name="description" content="Datenschutzerklärung von übrig Bern: was die Startseite im Browser speichert, was die App in der Datenbank speichert, wer was sieht, welche Rechte du hast.">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<style>
+:root{--paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--rule:#D8D0C4;--mute:#7A746C}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Atkinson Hyperlegible",system-ui,sans-serif}
+main{max-width:680px;margin:0 auto;padding:28px 20px 64px}
+h1{font-family:Georgia,serif;font-style:italic;font-weight:500;font-size:2rem;margin:.2em 0 .4em}h2{font-size:1.15rem;margin:30px 0 8px}
+.k{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp)}
+p,li{color:var(--ink-2)}a{color:var(--stamp)}
+.box{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:.95rem}td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--rule);vertical-align:top}th{color:var(--mute);font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
+footer{margin-top:40px;color:var(--mute);font-size:.88rem;border-top:1px solid var(--rule);padding-top:12px}
+</style>
+</head>
+<body>
+<main>
+<span class="k">übrig Bern · Stand 25. September 2026</span>
+<h1>Datenschutz</h1>
+<p>übrig ist ein Freiwilligenprojekt aus Bern. Diese Seite sagt, was mit Daten passiert – so, wie der Code es heute tatsächlich tut, nicht wie er einmal gedacht war. Wenn sich etwas ändert, ändert sich auch diese Seite.</p>
+
+<div class="box"><b>Verantwortlich</b><br>Richard Cervenka, Bern (Projektträger; ein Verein ist in Gründung). Kontakt: über <a href="https://github.com/richardcervenka111-create/uebrig/issues" rel="noopener">GitHub Issues</a>. Eine E-Mail-Adresse für Datenschutzanfragen wird hier ergänzt, sobald der Verein steht.</div>
+
+<h2>1 · Startseite (Prüfen, Meldung, Etikett, Protokoll)</h2>
+<p>Die Startseite sendet <b>keine Daten an uns</b>. Es gibt keinen Server von übrig, kein Konto, keine Analyse, keine Werbung. Was du eingibst – Gericht, Portionen, Betrieb, Telefon, E-Mail, Allergene, Protokolleinträge, Notizen zu Organisationen, Sprache, ausgeblendete Hinweise – liegt ausschliesslich im Speicher deines Browsers (<code>localStorage</code>) auf deinem Gerät. Du löschst es, indem du die Website-Daten im Browser löschst oder einzelne Einträge im Protokoll löschst.</p>
+<table><thead><tr><th>Was</th><th>Wo</th><th>Wie lange</th></tr></thead><tbody>
+<tr><td>Freigabe-Check, Meldung, Protokoll, Notizen, Sprache, Hinweise</td><td>nur in deinem Browser</td><td>bis du es löschst</td></tr>
+<tr><td>Zeitpunkt der letzten Intro-Anzeige</td><td>Browser-Sitzung (<code>sessionStorage</code>)</td><td>bis der Tab geschlossen wird</td></tr>
+</tbody></table>
+<p>Beim Aufruf lädt dein Browser die Seite von <b>GitHub Pages</b> und die Schriften von <b>Google Fonts</b>. Dabei erhalten GitHub bzw. Google technisch deine IP-Adresse und Browserdaten. Wir bekommen davon nichts. Siehe <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub Privacy Statement</a> und <a href="https://policies.google.com/privacy" rel="noopener">Google Datenschutzerklärung</a>. Wir planen, die Schriften selbst auszuliefern; dann entfällt der Abruf bei Google.</p>
+
+<h2>2 · App (Anmeldung, Angebote, Reservationen)</h2>
+<p>Die App unter <a href="app/">/app/</a> speichert Daten in einer Datenbank bei <b>Supabase</b> (Projekt in der Region Paris, EU; Supabase Inc. als Auftragsverarbeiter). Ohne Anmeldung sieht niemand etwas; die Datenbank prüft bei jeder Abfrage, wer was sehen darf (Row Level Security).</p>
+<table><thead><tr><th>Daten</th><th>Zweck</th><th>Wer sieht sie</th></tr></thead><tbody>
+<tr><td>E-Mail-Adresse</td><td>Anmeldung per Link (kein Passwort)</td><td>nur du und die Datenbank-Administration</td></tr>
+<tr><td>Betrieb/Organisation, Name, Telefon, Adresse, Sprache, Rolle</td><td>Profil; damit Küche und Abnehmer sich finden und abholen können</td><td>du; die Freigabe-Administration; freigegebene Abnehmer sehen Betrieb, Name, Telefon und Übergabeort von Küchen mit offenem Angebot; nach einer Reservation sehen sich Küche und Abnehmer gegenseitig</td></tr>
+<tr><td>Angebote (Speise, Portionen, Allergene, Zeiten, Übergabeort, Hinweis) und Reservationen</td><td>der Zweck der App</td><td>offene Angebote: alle freigegebenen Nutzer; eigene und reservierte: die Beteiligten und die Administration</td></tr>
+<tr><td>Zeitstempel (erstellt, reserviert)</td><td>Ablauf, Nachvollziehbarkeit</td><td>wie oben</td></tr>
+</tbody></table>
+<p><b>Aufbewahrung:</b> Profile bleiben, bis du die Löschung verlangst oder wir das Konto entfernen. Angebote bleiben derzeit gespeichert (eine automatische Löschfrist ist geplant und wird hier nachgetragen). <b>Anmelde-Mails</b> werden über den E-Mail-Dienst von Supabase versendet. <b>Sitzung:</b> die Anmeldung wird im Browser (<code>localStorage</code>) gehalten; Abmelden löscht sie. <b>Benachrichtigungen:</b> optional, nur im Browser, nur solange die Seite offen ist; keine Push-Server.</p>
+<p>Die App lädt ausserdem die Bibliothek <code>supabase-js</code> von <b>jsDelivr</b> (CDN) und Schriften von Google Fonts – dabei gilt dasselbe wie oben (IP-Adresse an den Anbieter).</p>
+
+<h2>3 · Deine Rechte</h2>
+<p>Auskunft, Berichtigung, Löschung, Widerspruch – schreib uns (Kontakt oben). Für die Startseite brauchst du uns nicht: die Daten sind nur bei dir. Für die App löschen wir Profil und zugehörige Angebote auf Anfrage. Aufsichtsbehörde in der Schweiz ist der <a href="https://www.edoeb.admin.ch/" rel="noopener">EDÖB</a>.</p>
+
+<h2>4 · Was wir nicht tun</h2>
+<ul>
+<li>keine Cookies zu Werbe- oder Analysezwecken, kein Tracking, keine Weitergabe an Dritte zu deren Zwecken</li>
+<li>keine Gesundheitsdaten von Personen – Allergene beschreiben das Essen, nicht Menschen</li>
+<li>kein Verkauf von Daten; der Code ist offen (<a href="https://github.com/richardcervenka111-create/uebrig" rel="noopener">GitHub</a>, CC0)</li>
+</ul>
+
+<h2>5 · Lebensmittelrecht</h2>
+<p>übrig ersetzt keine Selbstkontrolle. Bis zur Übergabe ist der abgebende Betrieb für die Lebensmittelsicherheit verantwortlich, danach die empfangende Organisation. Das Etikett und das Protokoll sind Hilfsmittel dafür.</p>
+
+<footer>übrig Bern · <a href="./">Startseite</a> · <a href="app/">App</a> · <a href="research/">Research</a></footer>
+</main>
+</body>
+</html>
