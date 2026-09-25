@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#B85C00">
+<title>Übrig Bern · App</title>
+<meta name="description" content="Übrig Bern: Küchen melden übrig gebliebenes Essen, Organisationen holen es ab. Live-Liste, Reservation, Freigabe-Check. Für Bern.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.86.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<style>
+:root{--bg:#F7F4EF;--surface:#FFFFFF;--surface-2:#EFEAE2;--line:#D6CDBF;--ink:#1B1712;--ink-2:#4A4136;--muted:#7A6E60;--acc:#B85C00;--acc-soft:#F8E5CF;--red:#C8102E;--red-soft:#FBE3E7;--go:#2E7D4F;--go-soft:#DDF1E4;--gold:#E3B505;--gold-soft:#FBF1C7;--shadow:0 10px 30px rgba(27,23,18,.10);--body:"Atkinson Hyperlegible","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#15120E;--surface:#1F1A14;--surface-2:#2A241C;--line:#433A2E;--ink:#F3EEE6;--ink-2:#D2C9BC;--muted:#9C9182;--acc:#E8893A;--acc-soft:#3E2A14;--red:#E5333F;--red-soft:#3D1A20;--go:#5CC98A;--go-soft:#173626;--gold:#F2C530;--gold-soft:#3A3212;--shadow:0 10px 30px rgba(0,0,0,.45)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#15120E;--surface:#1F1A14;--surface-2:#2A241C;--line:#433A2E;--ink:#F3EEE6;--ink-2:#D2C9BC;--muted:#9C9182;--acc:#E8893A;--acc-soft:#3E2A14;--red:#E5333F;--red-soft:#3D1A20;--go:#5CC98A;--go-soft:#173626;--gold:#F2C530;--gold-soft:#3A3212;--shadow:0 10px 30px rgba(0,0,0,.45)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 var(--body)}
+.wrap{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:12px 80px;display:grid;gap:16px}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}h1{font-size:26px}h2{font-size:20px}h3{font-size:17px}
+p{margin:0;max-width:66ch}button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.brand small{display:block;font-size:14px;color:var(--muted)}
+.langs{display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:999px}
+.langs button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px;color:var(--ink-2)}
+.langs button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
+nav.tabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;min-height:44px}
+nav.tabs button[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:12px;min-width:0}
+.row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+label.f{display:grid;gap:4px;font-size:14px;color:var(--ink-2);min-width:0}label.f span{font-weight:700}
+input[type=text],input[type=tel],input[type=email],input[type=number],input[type=datetime-local],textarea,select{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:46px}
+textarea{min-height:60px;resize:vertical}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;font-size:16px;min-height:46px;background:var(--surface-2);color:var(--ink)}
+.btn.primary{background:var(--acc);color:#fff;box-shadow:var(--shadow)}.btn.ghost{background:transparent;border:2px solid var(--line)}.btn.danger{background:var(--red-soft);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.small{font-size:14px;color:var(--muted)}
+.chk{display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border-radius:10px;padding:9px 12px;font-size:15px;min-height:44px}
+.chk input{width:20px;height:20px;flex:none;accent-color:var(--go);margin-top:2px}.chk.bad{background:var(--red-soft)}
+.agrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}@media (max-width:560px){.agrid{grid-template-columns:repeat(4,1fr)}}
+.ab{display:grid;justify-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;padding:5px 2px;background:var(--surface-2);cursor:pointer;min-height:50px;font-size:11px;line-height:1.1;text-align:center;color:var(--ink-2);user-select:none;position:relative}
+.ab b{font-size:14px;color:var(--ink)}.ab[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}.ab[aria-pressed="true"] b{color:#fff}.ab input{position:absolute;opacity:0;width:0;height:0}
+.flags{display:flex;gap:8px;flex-wrap:wrap}.flag{display:flex;gap:8px;align-items:center;background:var(--surface-2);border-radius:999px;padding:7px 12px;font-size:14px}.flag input{width:18px;height:18px;accent-color:var(--go)}
+.offers{display:grid;gap:10px}
+.offer{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px;border-left:6px solid var(--go)}
+.offer.reserved{border-left-color:var(--gold)}.offer.picked{border-left-color:var(--muted);opacity:.8}.offer.cancelled,.offer.expired{border-left-color:var(--line);opacity:.6}
+.offer .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.offer .h b{font-size:19px}.offer .pill{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
+.offer .meta{font-size:15px;color:var(--ink-2);display:grid;gap:2px}
+.offer .al{display:flex;gap:4px;flex-wrap:wrap}.offer .al span{background:var(--red-soft);color:var(--ink);border-radius:6px;padding:1px 7px;font-size:13px;font-weight:700}
+.notice{border-radius:12px;padding:12px 14px;font-size:15px}.notice.warn{background:var(--gold-soft)}.notice.ok{background:var(--go-soft)}.notice.err{background:var(--red-soft)}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+.toast.show{opacity:1}
+footer.site{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:grid;gap:4px}footer.site a{color:var(--ink-2)}
+table.adm{border-collapse:collapse;width:100%;font-size:14px}table.adm td,table.adm th{text-align:left;padding:6px;border-bottom:1px solid var(--line);vertical-align:top}
+.scroll{overflow-x:auto}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>Übrig Bern</h1><small data-i18n="tagline">Was übrig bleibt, findet jemanden.</small></div>
+    <div class="langs" role="group" aria-label="Sprache"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="fr" aria-pressed="false">FR</button></div>
+  </header>
+
+  <nav class="tabs" id="tabs" hidden>
+    <button type="button" data-view="board" data-i18n="t_board">Angebote</button>
+    <button type="button" data-view="new" data-i18n="t_new" data-role="kitchen">Melden</button>
+    <button type="button" data-view="mine" data-i18n="t_mine">Meine</button>
+    <button type="button" data-view="admin" data-i18n="t_admin" data-role="admin">Freigaben</button>
+    <button type="button" data-view="profile" data-i18n="t_profile">Profil</button>
+  </nav>
+
+  <div id="noconfig" class="notice err" hidden data-i18n="noconfig">Die App ist noch nicht mit einer Datenbank verbunden (config.js fehlt).</div>
+
+  <!-- LOGIN -->
+  <section class="card" id="v_login" hidden>
+    <h2 data-i18n="login_h">Anmelden</h2>
+    <p data-i18n="login_p">Gib deine E-Mail-Adresse ein. Du bekommst einen Link, kein Passwort. Neue Betriebe und Organisationen werden vom Übrig-Team freigeschaltet, bevor sie Angebote sehen.</p>
+    <div class="row"><label class="f"><span>E-Mail</span><input type="email" id="email" autocomplete="email" placeholder="kueche@beispiel.ch"></label></div>
+    <div class="actions"><button type="button" class="btn primary" id="sendLink" data-i18n="b_link">Link schicken</button></div>
+    <div id="loginState" class="small"></div>
+  </section>
+
+  <!-- ONBOARDING -->
+  <section class="card" id="v_onboard" hidden>
+    <h2 data-i18n="ob_h">Wer bist du?</h2>
+    <div class="flags">
+      <label class="flag"><input type="radio" name="role" value="kitchen" checked><span data-i18n="r_kitchen">Küche / Betrieb, der Essen abgibt</span></label>
+      <label class="flag"><input type="radio" name="role" value="taker"><span data-i18n="r_taker">Organisation / Person, die Essen abholt</span></label>
+    </div>
+    <div class="row">
+      <label class="f"><span data-i18n="f_org">Betrieb oder Organisation</span><input type="text" id="ob_org" placeholder="Restaurant Sonne / Gassenküche Bern"></label>
+      <label class="f"><span data-i18n="f_contact">Name</span><input type="text" id="ob_contact"></label>
+      <label class="f"><span data-i18n="f_phone">Telefon</span><input type="tel" id="ob_phone" placeholder="079 …"></label>
+    </div>
+    <label class="f"><span data-i18n="f_address">Adresse (Übergabeort bzw. Sitz)</span><input type="text" id="ob_address" placeholder="Länggassstrasse 42, 3012 Bern, Hintereingang"></label>
+    <div class="actions"><button type="button" class="btn primary" id="saveProfile" data-i18n="b_save">Speichern</button><button type="button" class="btn ghost" id="logout1" data-i18n="b_logout">Abmelden</button></div>
+  </section>
+
+  <!-- PENDING -->
+  <section class="card" id="v_pending" hidden>
+    <h2 data-i18n="pend_h">Danke. Wir schalten dich frei.</h2>
+    <p data-i18n="pend_p">Ein Mensch aus dem Übrig-Team prüft neue Betriebe und Organisationen, meist innert eines Tages. Sobald du freigeschaltet bist, siehst du hier die Angebote. Du kannst die Seite offen lassen; sie aktualisiert sich selbst.</p>
+    <div class="actions"><button type="button" class="btn ghost" id="logout2" data-i18n="b_logout">Abmelden</button></div>
+  </section>
+
+  <!-- BOARD -->
+  <section id="v_board" hidden style="display:grid;gap:12px">
+    <div class="notice ok" id="boardHint"></div>
+    <div class="offers" id="board"></div>
+  </section>
+
+  <!-- NEW OFFER (kitchen) -->
+  <section class="card" id="v_new" hidden>
+    <h2 data-i18n="new_h">Übrig melden</h2>
+    <div><div class="eyebrow" data-i18n="check_h">Freigabe-Check</div><div id="rules" style="display:grid;gap:6px;margin-top:6px"></div><div class="notice warn" id="verdict"></div></div>
+    <div class="row">
+      <label class="f" style="grid-column:span 2"><span data-i18n="f_dish">Speise</span><input type="text" id="n_dish" placeholder="Gemüserisotto, Salat separat"></label>
+      <label class="f"><span data-i18n="f_portions">Portionen</span><input type="number" id="n_portions" min="1" max="999" inputmode="numeric" placeholder="20"></label>
+    </div>
+    <div class="flags">
+      <label class="flag"><input type="checkbox" id="n_veg"><span data-i18n="c_veg">vegetarisch</span></label>
+      <label class="flag"><input type="checkbox" id="n_vegan"><span data-i18n="c_vegan">vegan</span></label>
+      <label class="flag"><input type="checkbox" id="n_pork"><span data-i18n="c_pork">ohne Schweinefleisch</span></label>
+      <label class="flag"><input type="checkbox" id="n_hot"><span data-i18n="c_hot">heiss (≥ 65 °C)</span></label>
+    </div>
+    <div><div class="eyebrow" data-i18n="f_allerg">Enthaltene Allergene (LIV, Anhang 6)</div><div class="agrid" id="allerg" style="margin-top:6px"></div></div>
+    <div class="row">
+      <label class="f"><span data-i18n="f_made">Zubereitet</span><input type="datetime-local" id="n_made"></label>
+      <label class="f"><span data-i18n="f_useby">Konsumieren bis</span><input type="datetime-local" id="n_useby"></label>
+      <label class="f"><span data-i18n="f_from">Abholung von</span><input type="datetime-local" id="n_from"></label>
+      <label class="f"><span data-i18n="f_to">bis</span><input type="datetime-local" id="n_to"></label>
+    </div>
+    <label class="f"><span data-i18n="f_where">Übergabeort</span><input type="text" id="n_address"></label>
+    <label class="f"><span data-i18n="f_note">Hinweis</span><input type="text" id="n_note" placeholder="Eigene Behälter mitbringen."></label>
+    <div class="actions"><button type="button" class="btn primary" id="publish" data-i18n="b_publish">Veröffentlichen</button></div>
+    <p class="small" data-i18n="new_note">Nach dem Veröffentlichen sehen alle freigeschalteten Abnehmer dein Angebot live. Wer reserviert, sieht deinen Namen, Telefon und den Übergabeort.</p>
+  </section>
+
+  <!-- MINE -->
+  <section id="v_mine" hidden style="display:grid;gap:12px"><div class="offers" id="mine"></div></section>
+
+  <!-- ADMIN -->
+  <section class="card" id="v_admin" hidden>
+    <h2 data-i18n="adm_h">Freigaben</h2>
+    <div class="scroll"><table class="adm" id="admTable"></table></div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="card" id="v_profile" hidden>
+    <h2 data-i18n="t_profile">Profil</h2>
+    <div class="row">
+      <label class="f"><span data-i18n="f_org">Betrieb oder Organisation</span><input type="text" id="p_org"></label>
+      <label class="f"><span data-i18n="f_contact">Name</span><input type="text" id="p_contact"></label>
+      <label class="f"><span data-i18n="f_phone">Telefon</span><input type="tel" id="p_phone"></label>
+    </div>
+    <label class="f"><span data-i18n="f_address">Adresse</span><input type="text" id="p_address"></label>
+    <label class="chk"><input type="checkbox" id="p_notify"><span data-i18n="c_notify">Browser-Benachrichtigung bei neuen Angeboten (nur solange die Seite offen ist)</span></label>
+    <div class="actions"><button type="button" class="btn primary" id="updProfile" data-i18n="b_save">Speichern</button><button type="button" class="btn ghost" id="logout3" data-i18n="b_logout">Abmelden</button></div>
+    <p class="small" id="p_meta"></p>
+  </section>
+
+  <footer class="site">
+    <p data-i18n="foot">Übrig Bern ist frei (CC0). Bis zur Übergabe ist der Betrieb für die Lebensmittelsicherheit verantwortlich, danach der Empfänger. Daten liegen in einer Datenbank in der EU (Supabase); sichtbar nur für freigeschaltete Betriebe und Organisationen.</p>
+    <p><a href="../" data-i18n="foot_tool">Checkliste, Etiketten und Protokoll ohne Anmeldung</a> · <a href="https://github.com/richardcervenka111-create/uebrig" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+var ALLERG={de:['Gluten','Krebstiere','Eier','Fisch','Erdnüsse','Soja','Milch','Nüsse','Sellerie','Senf','Sesam','Sulfite','Lupinen','Weichtiere'],fr:['Gluten','Crustacés','Œufs','Poisson','Arachides','Soja','Lait','Fruits à coque','Céleri','Moutarde','Sésame','Sulfites','Lupin','Mollusques']};
+var I18N={
+de:{tagline:'Was übrig bleibt, findet jemanden.',noconfig:'Die App ist noch nicht mit einer Datenbank verbunden (config.js fehlt).',
+ t_board:'Angebote',t_new:'Melden',t_mine:'Meine',t_admin:'Freigaben',t_profile:'Profil',
+ login_h:'Anmelden',login_p:'Gib deine E-Mail-Adresse ein. Du bekommst einen Link, kein Passwort. Neue Betriebe und Organisationen werden vom Übrig-Team freigeschaltet, bevor sie Angebote sehen.',b_link:'Link schicken',link_sent:'Link geschickt. Schau in dein Postfach (auch Spam) und öffne ihn auf diesem Gerät.',link_err:'Konnte keinen Link schicken: ',
+ ob_h:'Wer bist du?',r_kitchen:'Küche / Betrieb, der Essen abgibt',r_taker:'Organisation / Person, die Essen abholt',f_org:'Betrieb oder Organisation',f_contact:'Name',f_phone:'Telefon',f_address:'Adresse (Übergabeort bzw. Sitz)',b_save:'Speichern',b_logout:'Abmelden',
+ pend_h:'Danke. Wir schalten dich frei.',pend_p:'Ein Mensch aus dem Übrig-Team prüft neue Betriebe und Organisationen, meist innert eines Tages. Sobald du freigeschaltet bist, siehst du hier die Angebote. Du kannst die Seite offen lassen; sie aktualisiert sich selbst.',
+ board_hint_taker:'Live: neue Angebote erscheinen von selbst. Reservieren heisst: du holst es im Abholfenster ab.',board_hint_kitchen:'Das sehen die Abnehmer gerade. Deine eigenen Angebote verwaltest du unter «Meine».',board_empty:'Gerade ist nichts übrig. Die Liste aktualisiert sich von selbst.',
+ new_h:'Übrig melden',check_h:'Freigabe-Check',v_ok:'Freigegeben.',v_no:'Erst alle Punkte bestätigen.',
+ rules:['Die Speise war nie im Gästebereich: kein Buffet, kein Rückläufer vom Tisch, keine angebrochene Portion.','Heiss gehalten bei mindestens 65 °C, oder innert 2 Stunden nach dem Kochen auf 5 °C oder kälter gekühlt. Nie länger als 2 Stunden bei Raumtemperatur.','Zubereitungsdatum und -zeit sind bekannt und kommen aufs Etikett.','Alle 14 Allergene der Speise sind bekannt und werden angegeben.','Sauberer, geschlossener, beschrifteter Behälter. Keine Speisen mit rohem Ei, rohem Fisch oder rohem Fleisch.','Transport in der Kühlkette (Kühlbox) oder heiss in der Warmhaltebox.','Der Empfänger weiss, bis wann zu konsumieren ist und dass die Speise vor dem Servieren durcherhitzt wird (mindestens 72 °C im Kern).'],
+ f_dish:'Speise',f_portions:'Portionen',c_veg:'vegetarisch',c_vegan:'vegan',c_pork:'ohne Schweinefleisch',c_hot:'heiss (≥ 65 °C)',f_allerg:'Enthaltene Allergene (LIV, Anhang 6)',f_made:'Zubereitet',f_useby:'Konsumieren bis',f_from:'Abholung von',f_to:'bis',f_where:'Übergabeort',f_note:'Hinweis',b_publish:'Veröffentlichen',
+ new_note:'Nach dem Veröffentlichen sehen alle freigeschalteten Abnehmer dein Angebot live. Wer reserviert, sieht deinen Namen, Telefon und den Übergabeort.',
+ need_fields:'Speise, Portionen, Zeiten und Übergabeort ausfüllen.',need_check:'Erst den Freigabe-Check vollständig bestätigen.',published:'Veröffentlicht.',
+ st_open:'offen',st_reserved:'reserviert',st_picked:'abgeholt',st_cancelled:'zurückgezogen',st_expired:'abgelaufen',
+ portions:'Portionen',allerg_none:'keine der 14 Allergene',pickup:'Abholen',useby:'Konsumieren bis',made:'Zubereitet',hot:'heiss',cold:'gekühlt',
+ b_reserve:'Reservieren',b_release:'Reservation zurückgeben',b_picked:'Abgeholt',b_cancel:'Zurückziehen',reserved_by:'Reserviert von',kitchen:'Küche',where:'Ort',contact:'Kontakt',
+ reserved_ok:'Reserviert. Melde dich bei der Küche und hol es im Abholfenster ab.',err_not_open:'Zu spät, schon reserviert.',err_generic:'Hat nicht geklappt: ',
+ mine_empty:'Noch keine Angebote.',adm_h:'Freigaben',a_role:'Rolle',a_org:'Betrieb / Organisation',a_contact:'Kontakt',a_since:'seit',a_approved:'frei',b_approve:'Freischalten',b_block:'Sperren',
+ c_notify:'Browser-Benachrichtigung bei neuen Angeboten (nur solange die Seite offen ist)',notify_title:'Übrig: neues Angebot',saved:'Gespeichert.',
+ foot:'Übrig Bern ist frei (CC0). Bis zur Übergabe ist der Betrieb für die Lebensmittelsicherheit verantwortlich, danach der Empfänger. Daten liegen in einer Datenbank in der EU (Supabase); sichtbar nur für freigeschaltete Betriebe und Organisationen.',foot_tool:'Checkliste, Etiketten und Protokoll ohne Anmeldung'},
+fr:{tagline:'Ce qui reste trouve quelqu’un.',noconfig:'L’app n’est pas encore reliée à une base de données (config.js manque).',
+ t_board:'Offres',t_new:'Annoncer',t_mine:'Les miennes',t_admin:'Validations',t_profile:'Profil',
+ login_h:'Se connecter',login_p:'Saisis ton e-mail. Tu reçois un lien, pas de mot de passe. Les nouveaux établissements et organisations sont validés par l’équipe Übrig avant de voir les offres.',b_link:'Envoyer le lien',link_sent:'Lien envoyé. Regarde ta boîte (aussi le spam) et ouvre-le sur cet appareil.',link_err:'Envoi impossible : ',
+ ob_h:'Qui es-tu ?',r_kitchen:'Cuisine / établissement qui donne',r_taker:'Organisation / personne qui vient chercher',f_org:'Établissement ou organisation',f_contact:'Nom',f_phone:'Téléphone',f_address:'Adresse (lieu de remise ou siège)',b_save:'Enregistrer',b_logout:'Se déconnecter',
+ pend_h:'Merci. On te valide.',pend_p:'Une personne de l’équipe Übrig vérifie les nouveaux comptes, en général dans la journée. Dès validation, les offres apparaissent ici. Tu peux laisser la page ouverte ; elle se met à jour seule.',
+ board_hint_taker:'En direct : les nouvelles offres apparaissent seules. Réserver = tu viens chercher pendant la fenêtre de retrait.',board_hint_kitchen:'Voici ce que voient les receveurs. Tes propres offres sont sous « Les miennes ».',board_empty:'Rien de disponible pour l’instant. La liste se met à jour seule.',
+ new_h:'Annoncer des restes',check_h:'Check de libération',v_ok:'Libéré.',v_no:'Confirmer d’abord tous les points.',
+ rules:['La denrée n’a jamais été côté clients : pas de buffet, pas de retour de table, pas de portion entamée.','Maintenue chaude à 65 °C au moins, ou refroidie à 5 °C ou moins dans les 2 heures. Jamais plus de 2 heures à température ambiante.','Date et heure de préparation connues et sur l’étiquette.','Les 14 allergènes connus et indiqués.','Récipient propre, fermé, étiqueté. Pas d’œuf, poisson ou viande crus.','Transport dans la chaîne du froid ou chaud en boîte isotherme.','Le receveur connaît la date limite et réchauffe à cœur avant le service (72 °C).'],
+ f_dish:'Plat',f_portions:'Portions',c_veg:'végétarien',c_vegan:'végane',c_pork:'sans porc',c_hot:'chaud (≥ 65 °C)',f_allerg:'Allergènes présents (OIDAl, annexe 6)',f_made:'Préparé',f_useby:'Consommer jusqu’au',f_from:'Retrait de',f_to:'à',f_where:'Lieu de remise',f_note:'Remarque',b_publish:'Publier',
+ new_note:'Après publication, tous les receveurs validés voient ton offre en direct. Qui réserve voit ton nom, ton téléphone et le lieu de remise.',
+ need_fields:'Remplir plat, portions, horaires et lieu.',need_check:'Confirmer d’abord tout le check.',published:'Publié.',
+ st_open:'ouvert',st_reserved:'réservé',st_picked:'récupéré',st_cancelled:'retiré',st_expired:'expiré',
+ portions:'portions',allerg_none:'aucun des 14 allergènes',pickup:'Retrait',useby:'Consommer jusqu’au',made:'Préparé',hot:'chaud',cold:'réfrigéré',
+ b_reserve:'Réserver',b_release:'Rendre la réservation',b_picked:'Récupéré',b_cancel:'Retirer',reserved_by:'Réservé par',kitchen:'Cuisine',where:'Lieu',contact:'Contact',
+ reserved_ok:'Réservé. Contacte la cuisine et viens pendant la fenêtre de retrait.',err_not_open:'Trop tard, déjà réservé.',err_generic:'Échec : ',
+ mine_empty:'Pas encore d’offres.',adm_h:'Validations',a_role:'Rôle',a_org:'Établissement / organisation',a_contact:'Contact',a_since:'depuis',a_approved:'validé',b_approve:'Valider',b_block:'Bloquer',
+ c_notify:'Notification du navigateur pour les nouvelles offres (page ouverte)',notify_title:'Übrig : nouvelle offre',saved:'Enregistré.',
+ foot:'Übrig Bern est libre (CC0). Jusqu’à la remise, l’établissement est responsable de la sécurité alimentaire, ensuite le receveur. Données dans une base en UE (Supabase), visibles seulement par les comptes validés.',foot_tool:'Check-list, étiquettes et protocole sans connexion'}};
+
+var $=function(id){return document.getElementById(id);}, el=function(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;};
+var lang='de'; try{ var sl=localStorage.getItem('ub_lang'); if(sl&&I18N[sl]) lang=sl; }catch(e){} if(!sl && (navigator.language||'').slice(0,2)==='fr') lang='fr';
+function t(k){ return I18N[lang][k]; }
+var toastTimer; function toast(m){ var tt=$('toast'); tt.textContent=m; tt.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ tt.classList.remove('show'); },2600); }
+function fmt(iso){ if(!iso) return ''; var d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'. '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+function fmtT(iso){ var d=new Date(iso); return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+function localInput(d){ var p=function(n){return ('0'+n).slice(-2);}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); }
+
+var cfg=window.UEBRIG_CONFIG||null, sb=null, session=null, profile=null, view='board', channel=null, notify=false, knownIds={};
+try{ notify=localStorage.getItem('ub_notify')==='1'; }catch(e){}
+if(!cfg||!cfg.url||!cfg.key||!window.supabase){ $('noconfig').hidden=false; } else { sb=window.supabase.createClient(cfg.url, cfg.key, {auth:{persistSession:true, detectSessionInUrl:true}}); }
+
+/* ---- i18n & nav ---- */
+function renderUI(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(n){ var v=t(n.getAttribute('data-i18n')); if(typeof v==='string') n.textContent=v; });
+  document.querySelectorAll('.langs button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-lang')===lang)); });
+  buildRules(); buildAllerg(); route();
+}
+document.querySelectorAll('.langs button').forEach(function(b){ b.addEventListener('click', function(){ lang=b.getAttribute('data-lang'); try{ localStorage.setItem('ub_lang',lang);}catch(e){} renderUI(); }); });
+document.querySelectorAll('#tabs button').forEach(function(b){ b.addEventListener('click', function(){ view=b.getAttribute('data-view'); location.hash=view; route(); }); });
+window.addEventListener('hashchange', function(){ var h=location.hash.replace('#',''); if(h && ['board','new','mine','admin','profile'].indexOf(h)>=0){ view=h; route(); } });
+
+function show(id){ ['v_login','v_onboard','v_pending','v_board','v_new','v_mine','v_admin','v_profile'].forEach(function(v){ $(v).hidden = v!==id; }); }
+function route(){
+  if(!sb) { show(null); return; }
+  if(!session){ $('tabs').hidden=true; show('v_login'); return; }
+  if(!profile){ $('tabs').hidden=true; show('v_onboard'); return; }
+  if(!profile.approved){ $('tabs').hidden=true; show('v_pending'); return; }
+  $('tabs').hidden=false;
+  document.querySelectorAll('#tabs button').forEach(function(b){ var r=b.getAttribute('data-role'); b.hidden = r && profile.role!==r && !(r==='kitchen' && profile.role==='admin'); b.setAttribute('aria-current', b.getAttribute('data-view')===view ? 'page' : 'false'); });
+  if(view==='new' && profile.role==='taker') view='board';
+  if(view==='admin' && profile.role!=='admin') view='board';
+  show('v_'+view);
+  if(view==='board') loadBoard(); if(view==='mine') loadMine(); if(view==='admin') loadAdmin(); if(view==='profile') fillProfile(); if(view==='new') prefillNew();
+}
+
+/* ---- auth ---- */
+async function boot(){
+  if(!sb){ renderUI(); return; }
+  var s=await sb.auth.getSession(); session=s.data.session||null;
+  sb.auth.onAuthStateChange(function(_e, sess){ session=sess||null; if(session) loadProfile(); else { profile=null; stopRealtime(); route(); } });
+  if(session) await loadProfile(); else renderUI();
+}
+async function loadProfile(){
+  var r=await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+  profile=r.data||null; renderUI(); startRealtime();
+}
+$('sendLink').addEventListener('click', async function(){
+  var email=$('email').value.trim(); if(!email) return; $('sendLink').disabled=true;
+  var redirect=location.origin+location.pathname;
+  var r=await sb.auth.signInWithOtp({email:email, options:{emailRedirectTo:redirect}});
+  $('sendLink').disabled=false;
+  $('loginState').textContent = r.error ? t('link_err')+r.error.message : t('link_sent');
+});
+['logout1','logout2','logout3'].forEach(function(id){ $(id).addEventListener('click', async function(){ await sb.auth.signOut(); session=null; profile=null; route(); }); });
+
+/* ---- onboarding / profile ---- */
+$('saveProfile').addEventListener('click', async function(){
+  var role=document.querySelector('input[name=role]:checked').value;
+  var row={id:session.user.id, role:role, org:$('ob_org').value.trim(), contact:$('ob_contact').value.trim(), phone:$('ob_phone').value.trim(), address:$('ob_address').value.trim()||null, lang:lang};
+  if(row.org.length<2||row.contact.length<2||row.phone.length<6){ toast(t('need_fields')); return; }
+  var r=await sb.from('profiles').insert(row).select().single();
+  if(r.error){ toast(t('err_generic')+r.error.message); return; }
+  profile=r.data; route(); startRealtime();
+});
+function fillProfile(){ $('p_org').value=profile.org; $('p_contact').value=profile.contact; $('p_phone').value=profile.phone; $('p_address').value=profile.address||''; $('p_notify').checked=notify; $('p_meta').textContent=(profile.role==='kitchen'?t('r_kitchen'):profile.role==='taker'?t('r_taker'):'Admin')+' · '+session.user.email; }
+$('updProfile').addEventListener('click', async function(){
+  var r=await sb.from('profiles').update({org:$('p_org').value.trim(), contact:$('p_contact').value.trim(), phone:$('p_phone').value.trim(), address:$('p_address').value.trim()||null, lang:lang}).eq('id', session.user.id).select().single();
+  if(r.error){ toast(t('err_generic')+r.error.message); return; } profile=r.data;
+  notify=$('p_notify').checked; try{ localStorage.setItem('ub_notify', notify?'1':'0'); }catch(e){}
+  if(notify && window.Notification && Notification.permission==='default'){ try{ Notification.requestPermission(); }catch(e){} }
+  toast(t('saved'));
+});
+
+/* ---- new offer ---- */
+var rules=[false,false,false,false,false,false,false], allerg=[];
+function buildRules(){ var box=$('rules'); box.textContent=''; t('rules').forEach(function(r,i){ var l=el('label','chk'+(rules[i]?'':' bad')); var c=document.createElement('input'); c.type='checkbox'; c.checked=rules[i]; c.addEventListener('change', function(){ rules[i]=c.checked; l.classList.toggle('bad',!c.checked); verdict(); }); l.appendChild(c); l.appendChild(el('span',null,r)); box.appendChild(l); }); verdict(); }
+function allOk(){ return rules.every(Boolean); }
+function verdict(){ var v=$('verdict'); v.className='notice '+(allOk()?'ok':'warn'); v.textContent=(allOk()?'✅ ':'⛔ ')+t(allOk()?'v_ok':'v_no'); }
+function buildAllerg(){ var g=$('allerg'); g.textContent=''; ALLERG[lang].forEach(function(a,i){ var n=i+1; var b=el('label','ab'); b.setAttribute('aria-pressed', String(allerg.indexOf(n)>=0)); var c=document.createElement('input'); c.type='checkbox'; c.checked=allerg.indexOf(n)>=0; c.addEventListener('change', function(){ var k=allerg.indexOf(n); if(c.checked&&k<0) allerg.push(n); if(!c.checked&&k>=0) allerg.splice(k,1); allerg.sort(function(p,q){return p-q;}); b.setAttribute('aria-pressed', String(c.checked)); }); b.appendChild(c); b.appendChild(el('b',null,String(n))); b.appendChild(el('span',null,a)); g.appendChild(b); }); }
+function prefillNew(){
+  if(!$('n_address').value && profile.address) $('n_address').value=profile.address;
+  if(!$('n_made').value){ var now=new Date(); var from=new Date(now.getTime()+30*60000); var to=new Date(now.getTime()+150*60000); var useby=new Date(now.getTime()+20*3600000);
+    $('n_made').value=localInput(new Date(now.getTime()-3600000)); $('n_from').value=localInput(from); $('n_to').value=localInput(to); $('n_useby').value=localInput(useby); }
+}
+$('publish').addEventListener('click', async function(){
+  if(!allOk()){ toast(t('need_check')); return; }
+  var row={kitchen_id:session.user.id, dish:$('n_dish').value.trim(), portions:parseInt($('n_portions').value,10), veg:$('n_veg').checked||$('n_vegan').checked, vegan:$('n_vegan').checked, no_pork:$('n_pork').checked, hot:$('n_hot').checked, allergens:allerg.slice(),
+    made_at:$('n_made').value?new Date($('n_made').value).toISOString():null, use_by:$('n_useby').value?new Date($('n_useby').value).toISOString():null, pickup_from:$('n_from').value?new Date($('n_from').value).toISOString():null, pickup_to:$('n_to').value?new Date($('n_to').value).toISOString():null,
+    address:$('n_address').value.trim(), note:$('n_note').value.trim()||null, check_ok:true};
+  if(row.dish.length<2||!row.portions||!row.made_at||!row.use_by||!row.pickup_from||!row.pickup_to||row.address.length<3){ toast(t('need_fields')); return; }
+  $('publish').disabled=true; var r=await sb.from('offers').insert(row).select().single(); $('publish').disabled=false;
+  if(r.error){ toast(t('err_generic')+r.error.message); return; }
+  toast(t('published')); $('n_dish').value=''; $('n_portions').value=''; $('n_note').value=''; allerg=[]; buildAllerg(); rules=rules.map(function(){return false;}); buildRules(); view='mine'; location.hash='mine'; route();
+});
+
+/* ---- offers rendering ---- */
+var profCache={};
+async function profilesFor(ids){ var need=ids.filter(function(i){ return i && !profCache[i]; }); if(need.length){ var r=await sb.from('profiles').select('id,org,contact,phone,address,role').in('id', need); (r.data||[]).forEach(function(p){ profCache[p.id]=p; }); } }
+function offerCard(o, mode){
+  var c=el('article','offer '+o.status); var h=el('div','h'); var left=el('div'); left.appendChild(el('b',null,o.portions+' '+t('portions')+' · '+o.dish)); h.appendChild(left); h.appendChild(el('span','pill', t('st_'+o.status))); c.appendChild(h);
+  var tags=[]; if(o.vegan) tags.push(t('c_vegan')); else if(o.veg) tags.push(t('c_veg')); if(o.no_pork) tags.push(t('c_pork')); tags.push(t(o.hot?'hot':'cold'));
+  var meta=el('div','meta'); meta.appendChild(el('div',null,tags.join(' · ')));
+  meta.appendChild(el('div',null,t('pickup')+': '+fmt(o.pickup_from)+'–'+fmtT(o.pickup_to)+' · '+t('useby')+' '+fmt(o.use_by)+' · '+t('made')+' '+fmt(o.made_at)));
+  var k=profCache[o.kitchen_id]; var showContact = mode==='mine' || o.reserved_by===session.user.id || profile.role==='admin';
+  meta.appendChild(el('div',null,(k?k.org:t('kitchen'))+(showContact&&k?' · '+t('contact')+': '+k.contact+', '+k.phone:'')));
+  if(showContact) meta.appendChild(el('div',null,t('where')+': '+o.address+(o.note?' · '+o.note:'')));
+  if(o.reserved_by && (mode==='mine'||profile.role==='admin')){ var rb=profCache[o.reserved_by]; meta.appendChild(el('div',null,t('reserved_by')+': '+(rb? rb.org+' · '+rb.contact+', '+rb.phone : '…'))); }
+  c.appendChild(meta);
+  var al=el('div','al'); if(o.allergens&&o.allergens.length) o.allergens.forEach(function(n){ al.appendChild(el('span',null,n+' '+ALLERG[lang][n-1])); }); else al.appendChild(el('span',null,t('allerg_none'))); c.appendChild(al);
+  var act=el('div','actions');
+  if(profile.role==='taker' && o.status==='open'){ var b=el('button','btn primary',t('b_reserve')); b.type='button'; b.addEventListener('click', function(){ rpc('reserve_offer', o.id, t('reserved_ok')); }); act.appendChild(b); }
+  if(o.status==='reserved' && (o.reserved_by===session.user.id || o.kitchen_id===session.user.id || profile.role==='admin')){ var b2=el('button','btn',t('b_picked')); b2.type='button'; b2.addEventListener('click', function(){ rpc('mark_picked', o.id, null); }); act.appendChild(b2); var b3=el('button','btn ghost',t('b_release')); b3.type='button'; b3.addEventListener('click', function(){ rpc('release_offer', o.id, null); }); act.appendChild(b3); }
+  if(mode==='mine' && o.kitchen_id===session.user.id && (o.status==='open')){ var b4=el('button','btn danger',t('b_cancel')); b4.type='button'; b4.addEventListener('click', async function(){ var r=await sb.from('offers').update({status:'cancelled'}).eq('id',o.id); if(r.error) toast(t('err_generic')+r.error.message); else loadMine(); }); act.appendChild(b4); }
+  if(act.children.length) c.appendChild(act);
+  return c;
+}
+async function rpc(fn, id, okMsg){ var r=await sb.rpc(fn,{p_offer:id}); if(r.error){ toast(/not_open/.test(r.error.message)?t('err_not_open'):t('err_generic')+r.error.message); } else if(okMsg) toast(okMsg); loadBoard(); if(view==='mine') loadMine(); }
+
+async function loadBoard(){
+  $('boardHint').textContent=t(profile.role==='taker'?'board_hint_taker':'board_hint_kitchen');
+  var r=await sb.from('offers').select('*').eq('status','open').gt('pickup_to', new Date().toISOString()).order('pickup_from');
+  var list=r.data||[]; await profilesFor(list.map(function(o){return o.kitchen_id;}));
+  var box=$('board'); box.textContent=''; if(!list.length) box.appendChild(el('p','small',t('board_empty')));
+  list.forEach(function(o){ box.appendChild(offerCard(o,'board')); if(profile.role==='taker' && !knownIds[o.id] && Object.keys(knownIds).length && notify && window.Notification && Notification.permission==='granted'){ try{ new Notification(t('notify_title'), {body:o.portions+' '+t('portions')+' · '+o.dish}); }catch(e){} } knownIds[o.id]=true; });
+}
+async function loadMine(){
+  var q = profile.role==='kitchen' ? sb.from('offers').select('*').eq('kitchen_id', session.user.id) : sb.from('offers').select('*').eq('reserved_by', session.user.id);
+  var r=await q.order('created_at',{ascending:false}).limit(50); var list=r.data||[];
+  await profilesFor(list.map(function(o){return o.kitchen_id;}).concat(list.map(function(o){return o.reserved_by;})));
+  var box=$('mine'); box.textContent=''; if(!list.length) box.appendChild(el('p','small',t('mine_empty')));
+  list.forEach(function(o){ if(o.status==='open' && new Date(o.pickup_to)<new Date()) o.status='expired'; box.appendChild(offerCard(o,'mine')); });
+}
+async function loadAdmin(){
+  var r=await sb.from('profiles').select('*').order('created_at',{ascending:false}); var list=r.data||[];
+  var tb=$('admTable'); tb.textContent=''; var tr=el('tr'); [t('a_role'),t('a_org'),t('a_contact'),t('a_since'),t('a_approved'),''].forEach(function(h){ tr.appendChild(el('th',null,h)); }); tb.appendChild(tr);
+  list.forEach(function(p){ var r2=el('tr'); r2.appendChild(el('td',null,p.role)); r2.appendChild(el('td',null,p.org+(p.address?' · '+p.address:''))); r2.appendChild(el('td',null,p.contact+' · '+p.phone)); r2.appendChild(el('td',null,fmt(p.created_at))); r2.appendChild(el('td',null,p.approved?'✓':'—'));
+    var td=el('td'); var b=el('button','btn '+(p.approved?'danger':'primary'), t(p.approved?'b_block':'b_approve')); b.type='button'; b.addEventListener('click', async function(){ var u=await sb.from('profiles').update({approved:!p.approved}).eq('id',p.id); if(u.error) toast(t('err_generic')+u.error.message); else loadAdmin(); }); td.appendChild(b); r2.appendChild(td); tb.appendChild(r2); });
+}
+
+/* ---- realtime ---- */
+function startRealtime(){
+  stopRealtime(); if(!sb||!session) return;
+  channel=sb.channel('offers-live').on('postgres_changes',{event:'*',schema:'public',table:'offers'}, function(){ if(view==='board') loadBoard(); if(view==='mine') loadMine(); })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+session.user.id}, function(p){ profile=p.new; route(); }).subscribe();
+}
+function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel=null; } }
+setInterval(function(){ if(session&&profile&&profile.approved&&view==='board') loadBoard(); if(session&&profile&&!profile.approved) loadProfile(); }, 60000);
+
+var h=location.hash.replace('#',''); if(['board','new','mine','admin','profile'].indexOf(h)>=0) view=h;
+boot();
+})();
+</script>
+</body>
+</html>
