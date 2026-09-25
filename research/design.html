@@ -194,7 +194,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <li><b>Šírka:</b> 430 px maximum, centrované; na desktope ten istý stĺpec na papierovom pozadí – Übrig je telefón, desktop je len náhľad.</li>
 <li><b>Okraje:</b> 20 px; vertikálny rytmus 8 px; medzera medzi kartami 8 px, medzi blokmi 24 px.</li>
 <li><b>Riadok dotyku:</b> min. 62 px (kruh, chip-rad, pole s popiskom). Cieľ dotyku min. 44 × 44 px vždy.</li>
-<li><b>Hlavička:</b> krok vľavo (<span class="mono">1 PRÜFEN</span>, Pečiať), počítadlo vpravo (<span class="mono">4 / 7</span>, Tlmená); pod tým znamenie 36 px + wordmark 34 px.</li>
+<li><b>Sticky lišta:</b> krok vľavo (<span class="mono">1 PRÜFEN</span>, Pečiať); vpravo počítadlo (<span class="mono">4 / 7</span>, Tlmená), prepínač DE · EN, ⓘ a Unterstützen. Pod lištou znamenie 36 px + wordmark 34 px. Pod 380 px šírky sa z Unterstützen zobrazí len srdce.</li>
 <li><b>Začiatok obrazovky:</b> každá nová obrazovka (krok, návrat z detailu, „Neue Freigabe“) sa otvára úplne hore. Inde sa posúva len vtedy, keď na to má dôvod – záblesk na nesplnený riadok alebo pole.</li>
 <li><b>Dock:</b> jedno tlačidlo pripnuté dole, gradient Papier → priehľadný 70 %, rešpektuje safe-area. Nikdy dve tlačidlá v docku.</li>
 <li><b>Kroky:</b> Prüfen → Meldung → Etikett → Protokoll ako podčiarknuté záložky (Pečiať 2 px), nie ako wizard s číslami v kruhoch.</li>
@@ -260,7 +260,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <tr><td><b>Lis</b> – klepnutie na aktívne tlačidlo</td><td>blok sadne na kváder</td><td>translate 3 px, 80 ms, haptika 10 ms</td><td>pri každom klepnutí</td></tr>
 <tr><td><b>Zatrasenie</b> – klepnutie na tichý lis (menej než 7/7, prázdne povinné pole)</td><td>tlačidlo sa horizontálne zatrasie – pomaly a zreteľne</td><td>±6 → ±4 → ±2 px, 600 ms, 3 kmity, ease-in-out, bez zvuku (25. 9.: pôvodných ±3 px / 240 ms bolo príliš nenápadné)</td><td><b>raz na pokus</b>; ďalšie klepnutie do 2 s nič nerobí</td></tr>
 <tr><td><b>Záblesk</b> – hneď po zatrasení</td><td>okrový lesk prejde cez <b>prvý</b> nesplnený riadok/pole; stránka sa naň plynulo posunie</td><td>105°, 200 % šírka, 600 ms ease-out, 1×; scrollIntoView smooth</td><td>len na jednom prvku naraz; nikdy na vyplnenom</td></tr>
-<tr><td><b>Kruhy pri vstupe</b> – prvé zobrazenie Prüfen</td><td>sedem krúžkov postupne raz „preblikne“ okrovým prstencom</td><td>box-shadow 0 → 5 px okrová 45 %, 700 ms, rozostup 70 ms</td><td>raz za návštevu; nie pri reduced-motion</td></tr>
+<tr><td><b>Kruhy pri vstupe</b> – keď sa Prüfen skutočne ukáže (po zavretí konceptu, pri návrate na krok)</td><td>sedem krúžkov postupne raz „preblikne“ okrovým prstencom</td><td>box-shadow 0 → 5 px okrová 45 %, 700 ms, rozostup 70 ms</td><td>raz pri každom vstupe na obrazovku; nikdy pod introm alebo listom (chyba nájdená 25. 9.: bliklo pod introm, nikto to nevidel); nie pri reduced-motion</td></tr>
 <tr><td><b>Siedme áno</b></td><td>dock sa prefarbí na Pečiať a raz sa jemne zatrasie</td><td>±4 → ±3 → ±2 px, 900 ms, ease-in-out</td><td>raz pri dosiahnutí 7/7</td></tr>
 <tr><td><b>Klepnutie na „Weiter zur Meldung“</b> (jediná oslava)</td><td>krátke konfety v papierových farbách (Pečiať, Okrová, Hárok, Linka, Atrament) a zdola sa „rozroluje“ uvítacie okno „Freigegeben.“</td><td>90 útržkov, 1,6 s, gravitácia; okno clip-path 520 ms</td><td>raz na freigabe; nie pri reduced-motion</td></tr>
 <tr><td><b>Kruh</b> – klepnutie na otázku</td><td>bod sa objaví zo stredu, obrys karty prefarbí</td><td>scale 0 → 1, 120 ms</td><td>vždy</td></tr>
@@ -288,7 +288,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <li>Cieľ dotyku ≥ 44 × 44 px; riadky 62 px; medzera medzi cieľmi ≥ 8 px.</li>
 <li>Farba nikdy sama: kruh má bod aj zmenu textu; lis má text; pečiať má slovo FREIGEGEBEN.</li>
 <li>Fokus viditeľný: 2 px Atrament obrys s odsadením 2 px; poradie tabulátora = poradie čítania.</li>
-<li>Pohyb: všetko okrem lisu (80 ms) sa vypne pri <span class="mono">prefers-reduced-motion: reduce</span>; zatrasenie sa nahradí textom pod tlačidlom.</li>
+<li>Pohyb: všetko okrem lisu (80 ms) sa vypne pri <span class="mono">prefers-reduced-motion: reduce</span>; zatrasenie sa nahradí textom pod tlačidlom. Aby používateľ vedel, prečo sa nič nehýbe, pätička ukáže vetu „Bewegung reduziert: dein Gerät hat ‹Bewegung reduzieren› aktiv“ (iOS: Nastavenia → Prístupnosť → Pohyb).</li>
 <li>Písmo sa škáluje so systémom (rem), rozloženie funguje do 200 % zväčšenia bez horizontálneho posunu.</li>
 <li>Jazyk jednoduchý: krátke vety, žiadne skratky okrem °C a Port.; nemčina na ploche, lebo kuchyňa hovorí nemecky.</li>
 <li>Semantika: <span class="mono">role="checkbox"</span> na kruhu, <span class="mono">aria-live="polite"</span> na počítadle 4 / 7, <span class="mono">aria-describedby</span> pre vetu pod poľom.</li>
@@ -301,7 +301,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <li>Tón: pokojný kolega po smene. Rozkazovací spôsob v tlačidlách („Freigeben“, „Etikett zeigen“), oznamovací v texte („Sieben Fragen. Alle Ja.“).</li>
 <li>Žiadne výkričníky, žiadne emoji, žiadne „Super!“, žiadne „Oops“. Chyba znie: „Noch 3 von 7.“</li>
 <li>Formáty: čas 21:30–22:15 (en dash, bez medzier), dátum 25.09. 18:40, porcie „18 Port.“ v meta, „18 Portionen“ na lístku.</li>
-<li>Značka sa neprekladá: wordmark „übrig“, tagline „nach dem service“ a pečiať <span class="mono">FREIGEGEBEN</span> ostávajú nemecké vo všetkých jazykoch. Navigácia a texty sa prekladajú (EN: Check · Message · Label · Log); prepínač jazyka je v hlavičke vpravo, Plex Mono, aktívny jazyk podčiarknutý Pečiaťou. Interné kľúče (názvy alergénov, otázok) ostávajú nemecké, preklad je len na povrchu.</li>
+<li>Značka sa neprekladá: wordmark „übrig“, tagline „nach dem service“ a pečiať <span class="mono">FREIGEGEBEN</span> ostávajú nemecké vo všetkých jazykoch. Navigácia a texty sa prekladajú (EN: Check · Message · Label · Log); prepínač jazyka DE · EN je v hornej sticky lište (Plex Mono, aktívny jazyk podčiarknutý Pečiaťou), aby bol dostupný na každej obrazovke. Interné kľúče (názvy alergénov, otázok) ostávajú nemecké, preklad je len na povrchu.</li>
 </ul>
 
 <!-- 10 -->

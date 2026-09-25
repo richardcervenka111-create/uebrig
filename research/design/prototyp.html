@@ -88,8 +88,9 @@ header.top{position:sticky;top:0;z-index:30;background:var(--paper);display:flex
 header.top.scrolled{border-bottom-color:var(--rule)}
 header.top .step{color:var(--stamp);letter-spacing:.12em;text-transform:uppercase;font-size:11px;white-space:nowrap}
 header.top .count{color:var(--mute);font-size:11px}
-header.top .right{display:flex;align-items:center;gap:4px}
-.support{border:1.1px solid var(--ink);background:var(--sheet);color:var(--ink);border-radius:999px;padding:0 12px;height:34px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+header.top .right{display:flex;align-items:center;gap:2px}
+@media (max-width:380px){header.top .support span{display:none}header.top .support{padding:0 9px}}
+.support{border:1.1px solid var(--ink);background:var(--sheet);color:var(--ink);border-radius:999px;padding:0 10px;height:34px;margin-left:2px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .support svg{width:14px;height:14px}
 .support:active{transform:translate(1px,1px)}
 .info{width:40px;height:40px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
@@ -99,8 +100,8 @@ header.top .right{display:flex;align-items:center;gap:4px}
 .brand button{background:none;border:0;padding:0;display:flex;align-items:center;gap:12px;color:inherit;text-align:left}
 .brand h1{margin:0;font-size:34px;letter-spacing:-.02em;line-height:1}
 .mark{width:36px;height:36px;flex:none}
-.langs{display:flex;gap:2px;font-family:var(--f-fact);font-size:11px;letter-spacing:.12em}
-.langs button{gap:0;padding:8px 8px;min-height:44px;color:var(--mute);border-bottom:2px solid transparent;border-radius:0}
+.langs{display:flex;gap:0;font-family:var(--f-fact);font-size:11px;letter-spacing:.1em;margin:0 2px}
+.langs button{background:none;border:0;padding:0 6px;min-height:40px;min-width:32px;color:var(--mute);border-bottom:2px solid transparent;border-radius:0}
 .langs button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--stamp)}
 .tabs{display:flex;padding:0 var(--gutter) 16px}
 .tabs button{background:transparent;border:0;color:var(--mute);padding:6px 0;margin-right:18px;border-bottom:2px solid transparent;transition:border-color 160ms ease,color 160ms ease}
@@ -275,6 +276,7 @@ label.field.glint::after{top:22px}
     <span class="mono step" id="stepLabel">1  Prüfen</span>
     <span class="right">
       <span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
+      <span class="langs" role="group" aria-label="Sprache / Language"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="en" aria-pressed="false">EN</button></span>
       <button type="button" class="info" id="infoBtn" aria-pressed="true" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
       <button type="button" class="support" data-open="support"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-i18n="support">Unterstützen</span></button>
     </span>
@@ -284,7 +286,6 @@ label.field.glint::after{top:22px}
       <svg class="mark" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="33" fill="none" stroke="#9C3B2E" stroke-width="2.2"/><circle cx="36" cy="36" r="27" fill="none" stroke="#9C3B2E" stroke-width="1.5"/><path d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2" fill="none" stroke="#9C3B2E" stroke-width="2.4" stroke-linecap="round"/><circle cx="36" cy="36" r="3.2" fill="#9C3B2E"/></svg>
       <h1>übrig</h1>
     </button>
-    <div class="langs" role="group" aria-label="Sprache / Language"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
   </div>
 
   <nav class="tabs no-print" aria-label="Schritte">
@@ -359,6 +360,7 @@ label.field.glint::after{top:22px}
     <p class="dockhint mono" id="dockhint" aria-live="polite"></p>
   </div>
   <p class="foot no-print" data-i18n="foot">Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals</p>
+  <p class="foot no-print" id="rmNote" hidden></p>
 </div>
 
 <script>
@@ -387,7 +389,7 @@ label.field.glint::after{top:22px}
               form:'Was, wie viel, wann, wo – und wer. Gericht, Portionen, Ort, Betrieb und Telefon sind Pflicht; ganz unten bestätigst du Allergene und Frist.',
               ticket:'So sieht das Etikett aus. Drucken (eine Seite) oder den Text darunter in WhatsApp kopieren. «In Protokoll legen» hält die Übergabe fest.',
               log:'Das Protokoll bleibt nur in diesem Browser. Tippe einen Eintrag: ansehen, bearbeiten, Etikett nochmals zeigen oder löschen.'},
-        info_close:'Schliessen',info_btn:'Hinweise ein/aus',enter:'Eintreten',support:'Unterstützen',close:'Schliessen',
+        info_close:'Schliessen',info_btn:'Hinweise ein/aus',rm:'Bewegung reduziert: dein Gerät hat «Bewegung reduzieren» aktiv – Animationen sind deshalb aus.',enter:'Eintreten',support:'Unterstützen',close:'Schliessen',
         c_k:'Das Konzept',c_title:'Was in der Küche übrig bleibt, geht sicher weiter.',
         c_p1:'übrig ist der Zettel für die letzten fünfzehn Minuten der Schicht: sieben Hygiene-Fragen, eine Meldung, ein Etikett, ein Protokoll. Was freigegeben ist, holt eine soziale Organisation ab – am selben Abend.',
         c_s1:'Prüfen',c_s1t:'Sieben Fragen. Alle Ja, sonst geht nichts raus.',c_s2:'Meldung',c_s2t:'Was, wie viel, wann, wo – und wer es abgibt.',c_s3:'Etikett',c_s3t:'Auf den Behälter und in die Gruppe. Gleiche Form, gleiche Reihenfolge.',c_s4:'Protokoll',c_s4t:'Bleibt im Browser. Beide Seiten wissen, was wann übergeben wurde.',
@@ -419,7 +421,7 @@ label.field.glint::after{top:22px}
               form:'What, how much, when, where – and who. Dish, portions, place, business and phone are required; at the bottom you confirm allergens and deadline.',
               ticket:'This is the label. Print it (one page) or copy the text below into WhatsApp. “Add to log” records the hand-over.',
               log:'The log stays in this browser only. Tap an entry to view, edit, show the label again or delete it.'},
-        info_close:'Close',info_btn:'Tips on/off',enter:'Enter',support:'Support',close:'Close',
+        info_close:'Close',info_btn:'Tips on/off',rm:'Reduced motion: your device has “Reduce Motion” on – animations are therefore off.',enter:'Enter',support:'Support',close:'Close',
         c_k:'The concept',c_title:'What is left in the kitchen moves on safely.',
         c_p1:'übrig is the slip for the last fifteen minutes of the shift: seven hygiene questions, one message, one label, one log. What is released gets picked up by a social organisation – the same evening.',
         c_s1:'Check',c_s1t:'Seven questions. All yes, or nothing leaves.',c_s2:'Message',c_s2t:'What, how much, when, where – and who hands it over.',c_s3:'Label',c_s3t:'Onto the container and into the group. Same form, same order.',c_s4:'Log',c_s4t:'Stays in the browser. Both sides know what was handed over when.',
@@ -441,7 +443,7 @@ label.field.glint::after{top:22px}
 
   /* ---- overlays ---- */
   function openV(id){var v=$(id);v.hidden=false;void v.offsetWidth;requestAnimationFrame(function(){v.classList.add('in')});var f=v.querySelector('.x');if(f)f.focus({preventScroll:true})}
-  function closeV(id){var v=$(id);v.classList.remove('in');setTimeout(function(){v.hidden=true},REDUCED?0:260)}
+  function closeV(id){var v=$(id);v.classList.remove('in');setTimeout(function(){v.hidden=true;if(id==='concept'||id==='detail')setTimeout(blinkRings,120)},REDUCED?0:260)}
   document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openV(b.dataset.open)})});
   document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){closeV(b.dataset.close)})});
   document.querySelectorAll('.veil').forEach(function(v){v.addEventListener('click',function(e){if(e.target===v)closeV(v.id)})});
@@ -457,7 +459,7 @@ label.field.glint::after{top:22px}
   function playIntro(force){
     var recent=false;
     try{var t=+sessionStorage.getItem('uebrig-intro')||0;recent=(Date.now()-t)<10*60*1000}catch(e){}
-    if(!force&&recent){intro.hidden=true;return}
+    if(!force&&recent){intro.hidden=true;setTimeout(blinkRings,300);return}
     intro.hidden=false;intro.classList.remove('play','still','leave');void intro.offsetWidth;
     intro.classList.add(REDUCED?'still':'play');
     if(!REDUCED)setTimeout(function(){buzz(10)},1640);
@@ -504,8 +506,9 @@ label.field.glint::after{top:22px}
     b.querySelector('.i').addEventListener('click',function(){var w=b.querySelector('.why'),open=w.hidden;w.hidden=!open;this.setAttribute('aria-expanded',open?'true':'false')});
     checksEl.appendChild(b);
   });
+  function anyVeil(){return !!document.querySelector('.veil:not([hidden])')||!intro.hidden}
   function blinkRings(){
-    if(blinked||REDUCED)return;blinked=true;
+    if(blinked||REDUCED||view!=='check'||anyVeil())return;blinked=true;
     Array.prototype.forEach.call(checksEl.children,function(el,i){setTimeout(function(){el.classList.add('blink');setTimeout(function(){el.classList.remove('blink')},800)},i*70)});
   }
 
@@ -543,7 +546,7 @@ label.field.glint::after{top:22px}
     Array.prototype.forEach.call(allEl.children,function(el){el.textContent=allergenLabel(el.dataset.key)});
     document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang?'true':'false')});
     document.querySelectorAll('.veil .x, .tip .x').forEach(function(x){x.setAttribute('aria-label',T('close'))});
-    applyTips();
+    applyTips();$('rmNote').textContent=T('rm');
   }
   document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem('uebrig-prototyp-lang',lang)}catch(e){}applyLang();render()})});
 
@@ -635,10 +638,10 @@ label.field.glint::after{top:22px}
     Array.prototype.forEach.call(allEl.children,function(el){var on=state.allergens.indexOf(el.dataset.key)>=0;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on?'true':'false')});
     $('confirm').classList.toggle('on',state.confirm);$('confirm').setAttribute('aria-checked',state.confirm?'true':'false');
     views.forEach(function(v){$('view-'+v).hidden=(v!==view)});
-    if(view!==prevView){prevView=view;try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(e){window.scrollTo(0,0)}}
+    if(view!==prevView){if(view==='check')blinked=false;prevView=view;try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(e){window.scrollTo(0,0)}}
     document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.view===view)});
     $('stepLabel').textContent=T('step')[view];
-    if(view==='check')blinkRings();
+    if(view==='check')setTimeout(blinkRings,80);
     $('t-dish').textContent=$('dish').value||'—';
     $('t-meta').textContent=($('portions').value||'—')+' '+T('portions')+'  ·  '+T('state')[$('state').value];
     $('t-contact').textContent=contactLine({business:$('business').value,phone:$('phone').value,email:$('email').value});
@@ -659,6 +662,7 @@ label.field.glint::after{top:22px}
     else{btn.classList.add('ghost');face.textContent=T('new_check')}
     if(view!=='check')$('dockhint').textContent='';
   }
+  if(REDUCED){$('rmNote').hidden=false}
   applyLang();render();
 })();
 </script>
