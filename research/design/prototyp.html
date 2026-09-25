@@ -14,10 +14,10 @@
   --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#7A746C;
   --radius:4px;--radius-card:10px;--shadow:3px;--row:62px;--gutter:20px;--col:430px;
   --f-name:"Fraunces",Georgia,serif;--f-text:"Atkinson Hyperlegible",system-ui,sans-serif;--f-fact:"IBM Plex Mono",ui-monospace,monospace;
-  --t-touch:80ms;--t-answer:240ms;--t-cue:600ms;--e-answer:cubic-bezier(.36,.07,.19,.97);
+  --t-touch:80ms;--t-answer:240ms;--t-cue:600ms;--t-shake:600ms;--t-nudge:900ms;--e-answer:cubic-bezier(.36,.07,.19,.97);
   --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
 }
-@media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms}}
+@media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms;--t-shake:0ms;--t-nudge:0ms}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
@@ -52,7 +52,7 @@ html.nojs #intro{display:none}
 #intro.play .dot{animation:press 219ms var(--e-answer) 1640ms forwards}
 #intro.play .tag{animation:settle 547ms ease-out 1823ms forwards}
 #intro.play .enter{animation:rise 400ms var(--e-answer) 2450ms forwards}
-#intro.play .enter .face{animation:nudge 520ms var(--e-answer) 3150ms 1}
+#intro.play .enter .face{animation:nudge var(--t-nudge) ease-in-out 3150ms 1}
 #intro.still .word,#intro.still .dots,#intro.still .tag,#intro.still .enter{opacity:1;transform:none}
 #intro.still .c1,#intro.still .c2,#intro.still .wedge{stroke-dashoffset:0}
 #intro.still .dot{transform:scale(1)}
@@ -63,7 +63,7 @@ html.nojs #intro{display:none}
 @keyframes press{0%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes settle{from{opacity:0;letter-spacing:.6em}to{opacity:1;letter-spacing:.32em}}
 @keyframes fade{to{opacity:0;visibility:hidden}}
-@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}}
+@keyframes nudge{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
 
 /* ---------- overlays (concept, support, welcome, log detail) ---------- */
 .veil{position:fixed;inset:0;background:rgba(26,24,20,.42);z-index:40;display:grid;place-items:end center;padding:0}
@@ -175,9 +175,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
 .press.ghost .face{background:var(--sheet);color:var(--ink)}
 .press.danger .face{background:var(--sheet);color:var(--stamp-dk);border-color:var(--stamp)}
 .press:not(.quiet):active .face{transform:translate(3px,3px)}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
-.press.shake .face{animation:shake var(--t-answer) var(--e-answer)}
-.press.gentle .face{animation:nudge 520ms var(--e-answer) 1}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
+.press.shake .face{animation:shake var(--t-shake) ease-in-out}
+.press.gentle .face{animation:nudge var(--t-nudge) ease-in-out 1}
 @keyframes glint{from{background-position:-160% 0}to{background-position:260% 0}}
 .glint::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(196,163,106,.5) 50%,transparent 60%);background-size:200% 100%;animation:glint var(--t-cue) ease-out 1}
 label.field.glint::after{top:22px}
@@ -476,7 +476,7 @@ label.field.glint::after{top:22px}
   var state={checks:RULES.map(function(){return false}),allergens:[],log:[],fields:{},confirm:false};
   try{var raw=localStorage.getItem(KEY)||localStorage.getItem('uebrig-prototyp-v1');if(raw){var d=JSON.parse(raw);state.checks=d.checks||state.checks;state.allergens=d.allergens||[];state.log=(d.log||[]).map(function(e,i){e.id=e.id||('old'+i);return e});state.fields=d.fields||{};state.confirm=!!d.confirm;
     if(state.fields.contact&&!state.fields.business){state.fields.business=state.fields.contact}}}catch(e){}
-  var views=['check','form','ticket','log'],view='check',lastCue=0,editingId=null,blinked=false;
+  var views=['check','form','ticket','log'],view='check',prevView='check',lastCue=0,editingId=null,blinked=false;
   var FIELDS=['dish','portions','state','from','until','place','business','phone','email','cooked','best'];
   FIELDS.forEach(function(id){if(state.fields[id]!=null)$(id).value=state.fields[id]});
   var now=new Date(),later=new Date(now.getTime()+17.5*3600*1000);
@@ -496,7 +496,7 @@ label.field.glint::after{top:22px}
       var before=state.checks.filter(Boolean).length;
       state.checks[i]=!state.checks[i];save();render();
       var after=state.checks.filter(Boolean).length;
-      if(after===7&&before<7){var cta=$('cta');cta.classList.remove('gentle');void cta.offsetWidth;cta.classList.add('gentle');setTimeout(function(){cta.classList.remove('gentle')},600);buzz(10)}
+      if(after===7&&before<7){var cta=$('cta');cta.classList.remove('gentle');void cta.offsetWidth;cta.classList.add('gentle');setTimeout(function(){cta.classList.remove('gentle')},1000);buzz(10)}
     }
     b.querySelector('.ring').addEventListener('click',toggle);
     b.querySelector('.ring').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}});
@@ -551,7 +551,7 @@ label.field.glint::after{top:22px}
   function cue(el,hintId,hintText){
     var t=Date.now();if(t-lastCue<1200)return;lastCue=t;
     var cta=$('cta');cta.classList.remove('shake');void cta.offsetWidth;cta.classList.add('shake');
-    setTimeout(function(){cta.classList.remove('shake')},300);
+    setTimeout(function(){cta.classList.remove('shake')},700);
     if(el){
       el.classList.remove('glint');void el.offsetWidth;el.classList.add('glint');
       setTimeout(function(){el.classList.remove('glint')},700);
@@ -635,6 +635,7 @@ label.field.glint::after{top:22px}
     Array.prototype.forEach.call(allEl.children,function(el){var on=state.allergens.indexOf(el.dataset.key)>=0;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on?'true':'false')});
     $('confirm').classList.toggle('on',state.confirm);$('confirm').setAttribute('aria-checked',state.confirm?'true':'false');
     views.forEach(function(v){$('view-'+v).hidden=(v!==view)});
+    if(view!==prevView){prevView=view;try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(e){window.scrollTo(0,0)}}
     document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.view===view)});
     $('stepLabel').textContent=T('step')[view];
     if(view==='check')blinkRings();

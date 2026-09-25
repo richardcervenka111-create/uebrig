@@ -65,8 +65,8 @@ pre{background:var(--ink);color:var(--paper);padding:14px 16px;border-radius:8px
 .ticket h5{margin:0 0 4px;font-size:19px}.ticket .meta{color:var(--mute);font-size:13px;margin-bottom:14px}.ticket p{margin:0 0 6px;font-size:14px}
 .ok{color:var(--stamp);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em}
 /* motion demos */
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
-.shake .face{animation:shake 240ms cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
+.shake .face{animation:shake 600ms ease-in-out}
 @keyframes glint{0%{background-position:-160% 0}100%{background-position:260% 0}}
 .glint{position:relative;overflow:hidden}
 .glint::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(196,163,106,.45) 50%,transparent 60%);background-size:200% 100%;animation:glint 600ms ease-out 1}
@@ -195,6 +195,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <li><b>Okraje:</b> 20 px; vertikálny rytmus 8 px; medzera medzi kartami 8 px, medzi blokmi 24 px.</li>
 <li><b>Riadok dotyku:</b> min. 62 px (kruh, chip-rad, pole s popiskom). Cieľ dotyku min. 44 × 44 px vždy.</li>
 <li><b>Hlavička:</b> krok vľavo (<span class="mono">1 PRÜFEN</span>, Pečiať), počítadlo vpravo (<span class="mono">4 / 7</span>, Tlmená); pod tým znamenie 36 px + wordmark 34 px.</li>
+<li><b>Začiatok obrazovky:</b> každá nová obrazovka (krok, návrat z detailu, „Neue Freigabe“) sa otvára úplne hore. Inde sa posúva len vtedy, keď na to má dôvod – záblesk na nesplnený riadok alebo pole.</li>
 <li><b>Dock:</b> jedno tlačidlo pripnuté dole, gradient Papier → priehľadný 70 %, rešpektuje safe-area. Nikdy dve tlačidlá v docku.</li>
 <li><b>Kroky:</b> Prüfen → Meldung → Etikett → Protokoll ako podčiarknuté záložky (Pečiať 2 px), nie ako wizard s číslami v kruhoch.</li>
 <li><b>Prázdny stav:</b> jedna veta v Tlmenej („Noch kein Eintrag. Lokal im Browser.“), žiadna ilustrácia.</li>
@@ -254,21 +255,21 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 
 <!-- 7 -->
 <h2 id="pohyb"><span class="k">07 · Pohyb</span>Lis, zatrasenie, záblesk, pečiať, otvorenie</h2>
-<p>Pohyb v Übrig má jednu úlohu: povedať, čo urobiť ďalej. Nikdy nezabáva, nikdy sa neopakuje v slučke, nikdy nebeží dva naraz. Trvania sú tri: <span class="mono">80 ms</span> (dotyk), <span class="mono">240 ms</span> (odpoveď), <span class="mono">600 ms</span> (upozornenie). Krivka: <span class="mono">cubic-bezier(.36,.07,.19,.97)</span> pre odpoveď, <span class="mono">ease-out</span> pre záblesk.</p>
+<p>Pohyb v Übrig má jednu úlohu: povedať, čo urobiť ďalej. Nikdy nezabáva, nikdy sa neopakuje v slučke, nikdy nebeží dva naraz. Trvania sú štyri: <span class="mono">80 ms</span> (dotyk), <span class="mono">240 ms</span> (odpoveď), <span class="mono">600 ms</span> (upozornenie: zatrasenie, záblesk), <span class="mono">900 ms</span> (pozvanie: jemné zatrasenie lisu). Krivka: <span class="mono">cubic-bezier(.36,.07,.19,.97)</span> pre odpoveď, <span class="mono">ease-out</span> pre záblesk.</p>
 <div class="tw"><table><thead><tr><th>Podnet</th><th>Reakcia</th><th>Parametre</th><th>Frekvencia</th></tr></thead><tbody>
 <tr><td><b>Lis</b> – klepnutie na aktívne tlačidlo</td><td>blok sadne na kváder</td><td>translate 3 px, 80 ms, haptika 10 ms</td><td>pri každom klepnutí</td></tr>
-<tr><td><b>Zatrasenie</b> – klepnutie na tichý lis (menej než 7/7, prázdne povinné pole)</td><td>tlačidlo sa horizontálne zatrasie</td><td>±3 px → ±2 px, 240 ms, 2 kmity, bez zvuku</td><td><b>raz na pokus</b>; ďalšie klepnutie do 2 s nič nerobí</td></tr>
+<tr><td><b>Zatrasenie</b> – klepnutie na tichý lis (menej než 7/7, prázdne povinné pole)</td><td>tlačidlo sa horizontálne zatrasie – pomaly a zreteľne</td><td>±6 → ±4 → ±2 px, 600 ms, 3 kmity, ease-in-out, bez zvuku (25. 9.: pôvodných ±3 px / 240 ms bolo príliš nenápadné)</td><td><b>raz na pokus</b>; ďalšie klepnutie do 2 s nič nerobí</td></tr>
 <tr><td><b>Záblesk</b> – hneď po zatrasení</td><td>okrový lesk prejde cez <b>prvý</b> nesplnený riadok/pole; stránka sa naň plynulo posunie</td><td>105°, 200 % šírka, 600 ms ease-out, 1×; scrollIntoView smooth</td><td>len na jednom prvku naraz; nikdy na vyplnenom</td></tr>
 <tr><td><b>Kruhy pri vstupe</b> – prvé zobrazenie Prüfen</td><td>sedem krúžkov postupne raz „preblikne“ okrovým prstencom</td><td>box-shadow 0 → 5 px okrová 45 %, 700 ms, rozostup 70 ms</td><td>raz za návštevu; nie pri reduced-motion</td></tr>
-<tr><td><b>Siedme áno</b></td><td>dock sa prefarbí na Pečiať a raz sa jemne zatrasie</td><td>±2 px, 520 ms</td><td>raz pri dosiahnutí 7/7</td></tr>
+<tr><td><b>Siedme áno</b></td><td>dock sa prefarbí na Pečiať a raz sa jemne zatrasie</td><td>±4 → ±3 → ±2 px, 900 ms, ease-in-out</td><td>raz pri dosiahnutí 7/7</td></tr>
 <tr><td><b>Klepnutie na „Weiter zur Meldung“</b> (jediná oslava)</td><td>krátke konfety v papierových farbách (Pečiať, Okrová, Hárok, Linka, Atrament) a zdola sa „rozroluje“ uvítacie okno „Freigegeben.“</td><td>90 útržkov, 1,6 s, gravitácia; okno clip-path 520 ms</td><td>raz na freigabe; nie pri reduced-motion</td></tr>
 <tr><td><b>Kruh</b> – klepnutie na otázku</td><td>bod sa objaví zo stredu, obrys karty prefarbí</td><td>scale 0 → 1, 120 ms</td><td>vždy</td></tr>
 <tr><td><b>Pečiať</b> – siedme áno</td><td>dock prefarbí na Pečiať a „sadne“ ako po stlačení</td><td>120 ms farba + 80 ms sadnutie; haptika 10 ms</td><td>raz pri dosiahnutí 7/7</td></tr>
 <tr><td><b>Lístok</b> – prechod na Etikett</td><td>lístok sa vysunie zdola o 12 px a pečiať FREIGEGEBEN sa „opečiatkuje“</td><td>240 ms; pečiať scale 1,15 → 1 za 160 ms s 80 ms oneskorením</td><td>pri každom zobrazení lístka</td></tr>
-<tr><td><b>Prechod krokov</b></td><td>obsah sa vymení bez posunu; podčiarknutie záložky sa presunie</td><td>160 ms</td><td>vždy</td></tr>
+<tr><td><b>Prechod krokov</b></td><td>obsah sa vymení a <b>stránka sa otvorí úplne hore</b>; podčiarknutie záložky sa presunie</td><td>scrollTo 0 bez animácie, 160 ms podčiarknutie</td><td>vždy pri zmene obrazovky; jediná výnimka je záblesk, ktorý posunie na nesplnený riadok</td></tr>
 </tbody></table></div>
 <h3>Spúšťacia animácia (cold start)</h3>
-<p>Scenár ≈ 2,4 s do tlačidla „Eintreten“ (pôvodných 1,3 s dvakrát predĺžených o 35 % na Richardovu požiadavku, 25. 9. 2026); animácia sa už nekončí sama – čaká na tlačidlo, aby bol tagline vždy dočítaný. Hrá sa raz pri studenom štarte (nie pri prepínaní krokov, nie pri návrate z pozadia do 10 minút). Ukončí ju tlačidlo „Eintreten“ (lis, jemne sa raz zatrasie o 3,15 s), po ňom sa otvorí konceptová obrazovka. Pri <span class="mono">prefers-reduced-motion</span> je celý záber statický a tlačidlo hneď viditeľné.</p>
+<p>Scenár ≈ 2,4 s do tlačidla „Eintreten“ (pôvodných 1,3 s dvakrát predĺžených o 35 % na Richardovu požiadavku, 25. 9. 2026); animácia sa už nekončí sama – čaká na tlačidlo, aby bol tagline vždy dočítaný. Hrá sa raz pri studenom štarte (nie pri prepínaní krokov, nie pri návrate z pozadia do 10 minút). Ukončí ju tlačidlo „Eintreten“ (lis, jemne sa raz zatrasie o 3,15 s: ±4 px, 900 ms), po ňom sa otvorí konceptová obrazovka. Pri <span class="mono">prefers-reduced-motion</span> je celý záber statický a tlačidlo hneď viditeľné.</p>
 <div class="sheet"><div class="timeline">
 <span class="t">0 ms</span><span>Papier. Nič iné. (Papier je vždy prvý – aplikácia nikdy nezačína bielou ani čiernou.)</span>
 <span class="t">220 ms</span><span>Wordmark „übrig“ vystúpi zdola o 8 px a z 0 na 100 % krytia, 655 ms, Fraunces italic. Umlaut príde o 145 ms neskôr – dve porcie dopadnú.</span>
@@ -332,10 +333,10 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
   --f-name:"Fraunces",Georgia,serif;  --f-text:"Atkinson Hyperlegible",system-ui,sans-serif;  --f-fact:"IBM Plex Mono",ui-monospace,monospace;
   --fs-word:34px; --fs-dish:20px; --fs-text:16px; --fs-line:14px; --fs-meta:13px; --fs-label:11px;
   /* pohyb */
-  --t-touch:80ms;  --t-answer:240ms;  --t-cue:600ms;  --e-answer:cubic-bezier(.36,.07,.19,.97);
+  --t-touch:80ms;  --t-answer:240ms;  --t-cue:600ms;  --t-shake:600ms;  --t-nudge:900ms;  --e-answer:cubic-bezier(.36,.07,.19,.97);
 }
 @media (prefers-color-scheme: dark){:root{--paper:#1A1814;--sheet:#23201B;--ink:#F3EEE6;--ink-2:#E6DFD3;--rule:#3A352E;--mute:#A79F93;--stamp:#B5483A}}
-@media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms}}</pre>
+@media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms;--t-shake:0ms;--t-nudge:0ms}}</pre>
 <p>Tokeny sa neprepisujú v komponentoch. Kto potrebuje nové číslo, mení tento blok a manuál – v tom istom commite.</p>
 
 <!-- 13 -->
