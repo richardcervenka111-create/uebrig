@@ -1,11 +1,16 @@
 # Übrig Bern
 
-Was in der Küche übrig bleibt, sicher weitergeben statt wegwerfen. Drei Schritte am Handy:
-**Freigabe-Check** (sieben Hygienefragen), **Meldung** (fertiger Text für die WhatsApp- oder
-Signal-Gruppe der Abnehmer), **Übergabe** (Etikett drucken, Protokoll führen).
-Ohne Konto, ohne Server; Protokoll und Adressbuch bleiben im Browser.
+Was in der Küche übrig bleibt, sicher weitergeben statt wegwerfen – am Handy, in den letzten fünfzehn
+Minuten der Schicht. **Prüfen** (sieben Hygienefragen, jede mit Erklärung), **Meldung** (was, wie viel,
+wann, wo, wer – mit Pflicht-Bestätigung für Allergene und Frist), **Etikett** (eine Druckseite, gleicher
+Text für WhatsApp/Signal), **Protokoll** (im Browser; Einträge öffnen, bearbeiten, löschen).
+Dazu «Wer nimmt Essen an» (Startliste Bern), Unterstützen-Blatt, DE/FR/IT/EN. Ohne Konto, ohne Server.
 
-Live (sobald GitHub Pages aktiviert ist): https://richardcervenka111-create.github.io/uebrig/
+Live: https://richardcervenka111-create.github.io/uebrig/
+
+Gestaltung «Lístok a pečiať» (Papier, Atrament, Pečiať; Fraunces/Atkinson/Plex Mono) nach dem
+[Designmanual](https://richardcervenka111-create.github.io/uebrig/research/design.html); live seit 25. 9. 2026.
+Protokolle der alten Startseite (`ub_state`) werden beim ersten Öffnen übernommen.
 
 ## Die App (`app/`): Angebote live melden und reservieren
 
@@ -33,8 +38,8 @@ Kartendaten © OpenStreetMap-Mitwirkende (ODbL).
 
 Weitere Dokumente (25. 9. 2026): [Zu prüfende Quellen](https://richardcervenka111-create.github.io/uebrig/research/doverit.html) (Checkliste),
 [Architektur für die Expansion](https://richardcervenka111-create.github.io/uebrig/research/architektura.html) (Mandanten, Regelwerke, Ereignisprotokoll, PWA, Phasenplan),
-[Designmanual „Lístok a pečiať“](https://richardcervenka111-create.github.io/uebrig/research/design.html) und der
-[lokale Redesign-Prototyp](https://richardcervenka111-create.github.io/uebrig/research/design/prototyp.html) (Intro-Animation, Lis, Zatrasenie, Záblesk). Nichts davon ist in `index.html`/`app/` eingebaut – Entscheidungsgrundlage.
+[Designmanual „Lístok a pečiať“](https://richardcervenka111-create.github.io/uebrig/research/design.html). Der Redesign-Prototyp
+ist seit 25. 9. 2026 die Startseite (`index.html`); `research/design/prototyp.html` leitet dorthin weiter. `app/` folgt.
 
 ## Was die Checkliste (Startseite) bewusst nicht ist
 

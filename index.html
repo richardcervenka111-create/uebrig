@@ -1,422 +1,796 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="nojs">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#B85C00">
-<title>Übrig Bern</title>
-<meta name="description" content="Übrig gebliebenes Essen aus der Küche sicher weitergeben: Freigabe-Check, Meldung für die Gruppe, Etikett zum Drucken, Protokoll für die Kontrolle. Ohne Konto, ohne Server.">
+<title>übrig Bern – Freigabe, Etikett, Protokoll</title>
+<meta name="description" content="Was in der Küche übrig bleibt, sicher weitergeben: sieben Hygiene-Fragen, Meldung, Etikett, Protokoll. Ohne Konto, ohne Server – alles bleibt im Browser. Bern.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,360;1,9..144,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.remove("nojs");</script>
 <style>
 :root{
-  --bg:#F7F4EF; --surface:#FFFFFF; --surface-2:#EFEAE2; --line:#D6CDBF;
-  --ink:#1B1712; --ink-2:#4A4136; --muted:#7A6E60;
-  --acc:#B85C00; --acc-soft:#F8E5CF; --red:#C8102E; --red-soft:#FBE3E7; --go:#2E7D4F; --go-soft:#DDF1E4; --gold:#E3B505;
-  --shadow:0 10px 30px rgba(27,23,18,.10);
-  --body:"Atkinson Hyperlegible","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#7A746C;
+  --radius:4px;--radius-card:10px;--shadow:3px;--row:62px;--gutter:20px;--col:430px;
+  --f-name:"Fraunces",Georgia,serif;--f-text:"Atkinson Hyperlegible",system-ui,sans-serif;--f-fact:"IBM Plex Mono",ui-monospace,monospace;
+  --t-touch:80ms;--t-answer:240ms;--t-cue:600ms;--t-shake:600ms;--t-nudge:900ms;--e-answer:cubic-bezier(.36,.07,.19,.97);
+  --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){color-scheme:dark;
-    --bg:#15120E; --surface:#1F1A14; --surface-2:#2A241C; --line:#433A2E;
-    --ink:#F3EEE6; --ink-2:#D2C9BC; --muted:#9C9182;
-    --acc:#E8893A; --acc-soft:#3E2A14; --red:#E5333F; --red-soft:#3D1A20; --go:#5CC98A; --go-soft:#173626; --gold:#F2C530;
-    --shadow:0 10px 30px rgba(0,0,0,.45)}
-}
-:root[data-theme="dark"]{color-scheme:dark;
-  --bg:#15120E; --surface:#1F1A14; --surface-2:#2A241C; --line:#433A2E;
-  --ink:#F3EEE6; --ink-2:#D2C9BC; --muted:#9C9182;
-  --acc:#E8893A; --acc-soft:#3E2A14; --red:#E5333F; --red-soft:#3D1A20; --go:#5CC98A; --go-soft:#173626; --gold:#F2C530;
-  --shadow:0 10px 30px rgba(0,0,0,.45)}
+@media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms;--t-shake:0ms;--t-nudge:0ms}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 var(--body)}
-.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:12px 64px;display:grid;gap:20px}
-h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
-h1{font-size:30px;font-weight:700}
-h2{font-size:21px;font-weight:700}
-p{margin:0;max-width:66ch}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.brand small{display:block;font-size:15px;color:var(--muted)}
-.langs{display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:999px}
-.langs button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px;color:var(--ink-2)}
-.langs button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.intro{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:12px}
-.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.step3{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:start;background:var(--surface-2);border-radius:12px;padding:12px}
-.step3 .n{width:40px;height:40px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:700;font-size:18px}
-.step3 b{display:block}
-.step3 span{font-size:15px;color:var(--ink-2)}
-.note{display:flex;gap:10px;align-items:flex-start;border-radius:12px;padding:12px 14px;font-size:15px;background:var(--go-soft)}
-.note .dot{flex:none;width:12px;height:12px;border-radius:50%;background:var(--go);margin-top:6px}
-section.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:14px;min-width:0}
-.row{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-label.f{display:grid;gap:4px;font-size:14px;color:var(--ink-2);min-width:0}
-label.f span{font-weight:700}
-input[type=text],input[type=tel],input[type=time],input[type=date],input[type=number],textarea,select{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:46px}
-textarea{min-height:64px;resize:vertical}
-.chk{display:flex;gap:12px;align-items:flex-start;background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:16px;min-height:46px}
-.chk input{width:22px;height:22px;flex:none;accent-color:var(--go);margin-top:2px}
-.chk.bad{background:var(--red-soft)}
-.rules{display:grid;gap:8px}
-.verdict{border-radius:12px;padding:12px 14px;font-weight:700;display:flex;gap:10px;align-items:center}
-.verdict.ok{background:var(--go-soft);color:var(--ink)} .verdict.no{background:var(--red-soft);color:var(--ink)}
-.agrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-@media (max-width:560px){.agrid{grid-template-columns:repeat(4,1fr)}}
-.ab{display:grid;justify-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;padding:6px 2px;background:var(--surface-2);cursor:pointer;min-height:54px;font-size:11px;line-height:1.1;text-align:center;color:var(--ink-2);user-select:none;position:relative}
-.ab b{font-size:15px;color:var(--ink)}
-.ab[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}.ab[aria-pressed="true"] b{color:#fff}
-.ab input{position:absolute;opacity:0;width:0;height:0}
-.flags{display:flex;gap:8px;flex-wrap:wrap}
-.flag{display:flex;gap:8px;align-items:center;background:var(--surface-2);border-radius:999px;padding:8px 14px;font-size:15px}
-.flag input{width:18px;height:18px;accent-color:var(--go)}
-.msg{background:var(--surface-2);border:1px dashed var(--line);border-radius:12px;padding:14px;white-space:pre-wrap;font-size:16px;line-height:1.5;min-height:120px;overflow-wrap:anywhere}
-.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;font-size:16px;min-height:48px;background:var(--surface-2);color:var(--ink)}
-.btn.primary{background:var(--acc);color:#fff;box-shadow:var(--shadow)}
-.btn.ghost{background:transparent;border:2px solid var(--line)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.small{font-size:14px;color:var(--muted)}
-table.log{border-collapse:collapse;width:100%;font-size:15px}
-table.log th,table.log td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-table.log th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-table.log td.x button{border:0;background:transparent;color:var(--muted);font-size:18px}
-.scroll{overflow-x:auto}
-.orgs{display:grid;gap:8px}
-.org{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) 40px;gap:8px;align-items:center}
-@media (max-width:700px){.org{grid-template-columns:1fr 1fr}.org input:first-child{grid-column:1/-1}}
-.org .x{height:44px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:20px;line-height:1;color:var(--ink-2)}
-.org input{font-size:15px;min-height:44px}
-footer.site{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;display:grid;gap:6px}
-footer.site a{color:var(--ink-2)}
-.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s}
-.toast.show{opacity:1}
-/* labels (print) */
-.labels{display:none}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-text);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3.name,.name{font-family:var(--f-name);font-weight:500;font-style:italic}
+.mono{font-family:var(--f-fact)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- intro (×1.35 ×1.35 of the original; ends on the Enter button, no auto-fade) ---------- */
+html.nojs #intro{display:none}
+#intro{position:fixed;inset:0;background:var(--paper);z-index:50;display:grid;place-items:center}
+#intro .scene{display:grid;justify-items:center;gap:18px;transform:translateY(-3vh);width:100%;padding:0 var(--gutter)}
+#intro .word{font-family:var(--f-name);font-style:italic;font-weight:500;font-size:clamp(64px,18vw,96px);line-height:1;letter-spacing:-.02em;position:relative;opacity:0;transform:translateY(8px)}
+#intro .word .u{position:relative}
+#intro .word .dots{position:absolute;left:0;right:0;top:-.02em;display:flex;justify-content:center;gap:.14em;opacity:0;transform:translateY(-6px)}
+#intro .word .dots i{width:.11em;height:.11em;border-radius:50%;background:var(--ink);display:block}
+#intro svg.seal{width:120px;height:120px}
+#intro .c1,#intro .c2,#intro .wedge{fill:none;stroke:var(--stamp);stroke-linecap:round}
+#intro .c1{stroke-width:2.2;stroke-dasharray:208;stroke-dashoffset:208}
+#intro .c2{stroke-width:1.5;stroke-dasharray:170;stroke-dashoffset:170}
+#intro .wedge{stroke-width:2.4;stroke-dasharray:70;stroke-dashoffset:70}
+#intro .dot{fill:var(--stamp);transform-origin:36px 36px;transform:scale(0)}
+#intro .tag{font-family:var(--f-fact);font-size:13px;letter-spacing:.6em;color:var(--ink-2);opacity:0;white-space:nowrap}
+#intro .enter{width:min(320px,100%);margin-top:18px;opacity:0;transform:translateY(8px)}
+#intro.play .word{animation:rise 656ms var(--e-answer) 219ms forwards}
+#intro.play .dots{animation:drop 401ms var(--e-answer) 693ms forwards}
+#intro.play .c1{animation:draw 729ms ease-out 765ms forwards}
+#intro.play .c2{animation:draw 729ms ease-out 911ms forwards}
+#intro.play .wedge{animation:draw 474ms ease-out 1276ms forwards}
+#intro.play .dot{animation:press 219ms var(--e-answer) 1640ms forwards}
+#intro.play .tag{animation:settle 547ms ease-out 1823ms forwards}
+#intro.play .enter{animation:rise 400ms var(--e-answer) 2450ms forwards}
+#intro.play .enter .face{animation:nudge var(--t-nudge) ease-in-out 3150ms 1}
+#intro.still .word,#intro.still .dots,#intro.still .tag,#intro.still .enter{opacity:1;transform:none}
+#intro.still .c1,#intro.still .c2,#intro.still .wedge{stroke-dashoffset:0}
+#intro.still .dot{transform:scale(1)}
+#intro.leave{animation:fade 216ms ease-out forwards}
+@keyframes rise{to{opacity:1;transform:translateY(0)}}
+@keyframes drop{to{opacity:1;transform:translateY(0)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes press{0%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes settle{from{opacity:0;letter-spacing:.6em}to{opacity:1;letter-spacing:.32em}}
+@keyframes fade{to{opacity:0;visibility:hidden}}
+@keyframes nudge{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+
+/* ---------- overlays (concept, support, welcome, log detail) ---------- */
+.veil{position:fixed;inset:0;background:rgba(26,24,20,.42);z-index:40;display:grid;place-items:end center;padding:0}
+.sheetbox{width:min(var(--col),100%);max-height:calc(100dvh - 24px);overflow:auto;background:var(--sheet);border:1px solid var(--rule);border-radius:14px 14px 0 0;padding:20px var(--gutter) calc(20px + var(--safe-b));position:relative;transform:translateY(24px);opacity:0;transition:transform var(--t-answer) var(--e-answer),opacity var(--t-answer) ease}
+.veil.in .sheetbox{transform:none;opacity:1}
+.sheetbox h2{margin:0 0 6px;font-size:30px;line-height:1.05}
+.sheetbox .k{font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);display:block;margin-bottom:8px}
+.sheetbox p{margin:0 0 12px;color:var(--ink-2)}
+.sheetbox .x{position:absolute;top:8px;right:8px;width:44px;height:44px;border:0;background:none;color:var(--mute);font-size:24px;line-height:1;border-radius:8px}
+.steps{display:grid;gap:10px;margin:14px 0 18px}
+.stepc{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px}
+.stepc b{display:block}.stepc small{color:var(--ink-2)}
+.stepc .n{font-family:var(--f-fact);color:var(--stamp);font-size:13px;padding-top:2px}
+.org{display:grid;gap:6px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px}
+.org b{font-size:15px}.org small{color:var(--ink-2);display:block}.org .mono{font-size:12px;color:var(--mute)}
+.org a{color:var(--stamp);font-weight:700;text-decoration:none}
+.org textarea{min-height:44px;font-size:13px;padding:8px 10px}
+.actions{display:grid;gap:10px;margin-top:8px}
+.unroll{overflow:hidden;clip-path:inset(0 0 100% 0);transform-origin:top;transition:clip-path 520ms var(--e-answer)}
+.veil.in .unroll{clip-path:inset(0 0 0 0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:45}
+
+/* ---------- app ---------- */
+.app{max-width:var(--col);margin:0 auto;min-height:100dvh;position:relative;padding-bottom:calc(112px + var(--safe-b))}
+header.top{position:sticky;top:0;z-index:30;background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(10px + var(--safe-t)) var(--gutter) 8px;border-bottom:1px solid transparent}
+header.top.scrolled{border-bottom-color:var(--rule)}
+header.top .step{color:var(--stamp);letter-spacing:.12em;text-transform:uppercase;font-size:11px;white-space:nowrap}
+header.top .count{color:var(--mute);font-size:11px}
+header.top .right{display:flex;align-items:center;gap:2px}
+@media (max-width:380px){header.top .support span{display:none}header.top .support{padding:0 9px}}
+.support{border:1.1px solid var(--ink);background:var(--sheet);color:var(--ink);border-radius:999px;padding:0 10px;height:34px;margin-left:2px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.support svg{width:14px;height:14px}
+.support:active{transform:translate(1px,1px)}
+.info{width:40px;height:40px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
+.info svg{width:22px;height:22px}
+.info[aria-pressed=true]{color:var(--ink)}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px var(--gutter) 14px}
+.brand button{background:none;border:0;padding:0;display:flex;align-items:center;gap:12px;color:inherit;text-align:left}
+.brand h1{margin:0;font-size:34px;letter-spacing:-.02em;line-height:1}
+.mark{width:36px;height:36px;flex:none}
+.langmenu{position:relative;margin:0 2px}
+.langbtn{background:none;border:0;padding:0 6px;min-height:40px;font-family:var(--f-fact);font-size:11px;letter-spacing:.1em;color:var(--ink)}
+.langs{position:absolute;top:100%;right:0;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:6px;display:grid;gap:2px;min-width:150px;box-shadow:4px 4px 0 var(--rule);z-index:35}
+.langs button{background:none;border:0;text-align:left;padding:10px 12px;min-height:44px;color:var(--ink-2);border-radius:6px;font-size:14px}
+.langs button[aria-pressed=true]{color:var(--ink);font-weight:700;background:var(--paper)}
+.tabs{display:flex;padding:0 var(--gutter) 16px}
+.tabs button{background:transparent;border:0;color:var(--mute);padding:6px 0;margin-right:18px;border-bottom:2px solid transparent;transition:border-color 160ms ease,color 160ms ease}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--stamp)}
+.panel{padding:0 var(--gutter) 24px}
+/* info bubble */
+.tip{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px 44px 12px 14px;margin:0 0 12px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.tip::before{content:"";position:absolute;top:-7px;left:26px;width:12px;height:12px;background:var(--sheet);border-left:1px solid var(--rule);border-top:1px solid var(--rule);transform:rotate(45deg)}
+.tip .k{font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);display:block;margin-bottom:4px}
+.tip .x{position:absolute;top:4px;right:4px;width:40px;height:40px;border:0;background:none;color:var(--mute);font-size:20px;line-height:1;border-radius:8px}
+/* check rows */
+.checks{display:grid;gap:8px}
+.check{display:grid;grid-template-columns:28px 1fr 40px;gap:10px;align-items:center;width:100%;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px 6px 12px 12px;min-height:var(--row);transition:border-color 120ms ease;position:relative;overflow:hidden}
+.check.on{border-color:var(--stamp)}
+.check .main{display:contents}
+.check .ring{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;cursor:pointer}
+.check.on .ring{border-color:var(--stamp)}
+.check .dot{width:10px;height:10px;border-radius:50%;background:var(--stamp);transform:scale(0);transition:transform 120ms var(--e-answer)}
+.check.on .dot{transform:scale(1)}
+.check .lbl{color:var(--mute);cursor:pointer;padding:8px 0}
+.check.on .lbl{color:var(--ink)}
+.check .i{width:40px;height:40px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
+.check .i svg{width:20px;height:20px}
+.check .i[aria-expanded=true]{color:var(--ink)}
+.check .why{grid-column:1 / -1;font-size:13px;color:var(--ink-2);padding:2px 6px 4px 0;border-top:1px dashed var(--rule);margin-top:4px;padding-top:8px}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(196,163,106,0)}40%{box-shadow:0 0 0 5px rgba(196,163,106,.45)}}
+.check.blink .ring{animation:blink 700ms ease-out 1}
+.note{color:var(--mute);font-size:13px;margin:10px 0 0}
+/* fields */
+label.field{display:block;margin:0 0 14px;position:relative}
+label.field .k{display:block;font-family:var(--f-fact);font-size:11px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+label.field .hint{display:block;color:var(--mute);font-size:13px;margin-top:6px}
+input[type=text],input[type=number],input[type=time],input[type=email],input[type=tel],textarea,select{width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px;outline:none;min-height:46px}
+input:focus,textarea:focus,select:focus{border-color:var(--ink)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--rule);background:var(--sheet);border-radius:999px;padding:8px 12px;font-size:13px;color:var(--mute);min-height:36px}
+.chip.on{border-color:var(--stamp);color:var(--ink)}
+.confirm{margin-top:6px}
+/* ticket */
+.ticket{background:var(--sheet);border:1.25px solid var(--ink);border-radius:var(--radius);padding:22px 20px 24px;box-shadow:6px 6px 0 var(--rule);position:relative;transform:translateY(12px);opacity:0;transition:transform var(--t-answer) var(--e-answer),opacity var(--t-answer) ease}
+.ticket.in{transform:none;opacity:1}
+.ticket .head{display:flex;justify-content:space-between;align-items:flex-start}
+.ticket h2{margin:0;font-size:32px}
+.ticket .seal{text-align:right;transform:scale(1.15);opacity:0;transition:transform 160ms var(--e-answer) 80ms,opacity 160ms ease 80ms}
+.ticket.in .seal{transform:scale(1);opacity:1}
+.ticket .ok{color:var(--stamp);font-size:10px;letter-spacing:.08em}
+.perf{display:flex;justify-content:space-between;margin:16px -6px 18px}
+.perf i{width:7px;height:7px;border-radius:50%;background:var(--rule);display:block}
+.ticket h3{margin:0 0 4px;font-family:var(--f-text);font-style:normal;font-weight:700;font-size:20px}
+.ticket .meta{color:var(--mute);font-size:13px;margin-bottom:16px}
+.ticket p{margin:0 0 8px;font-size:14px}
+.msg{white-space:pre-wrap;background:var(--sheet);border:1px dashed var(--rule);border-radius:8px;padding:14px;font-size:14px;margin-top:14px}
+/* log */
+.log{display:grid;gap:8px}
+.log button{text-align:left;width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;display:grid;gap:2px}
+.log .when{color:var(--mute);font-size:11px}
+.log strong{font-size:16px}
+.empty{color:var(--mute);padding:24px 0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:8px 0 14px}
+.kv dt{font-family:var(--f-fact);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding-top:3px}
+.kv dd{margin:0}
+/* dock + press */
+.dock{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(var(--col),100%);padding:12px var(--gutter) calc(16px + var(--safe-b));background:linear-gradient(to top,var(--paper) 70%,transparent);z-index:20}
+.press{position:relative;width:100%;border:0;background:transparent;padding:0}
+.press .shade{position:absolute;inset:var(--shadow) calc(-1*var(--shadow)) calc(-1*var(--shadow)) var(--shadow);background:var(--stamp);border-radius:var(--radius);transition:background 120ms ease}
+.press .face{position:relative;display:block;width:100%;border:1.1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:var(--radius);padding:16px;font-weight:700;min-height:54px;transform:translate(0,0);transition:transform var(--t-touch) ease,background 120ms ease,color 120ms ease,border-color 120ms ease}
+.press.quiet .shade{background:var(--rule)}
+.press.quiet .face{background:var(--rule);color:var(--mute);border-color:var(--rule)}
+.press.stamp .face{background:var(--stamp);color:var(--paper)}
+.press.ghost .shade{display:none}
+.press.ghost .face{background:var(--sheet);color:var(--ink)}
+.press.danger .face{background:var(--sheet);color:var(--stamp-dk);border-color:var(--stamp)}
+.press:not(.quiet):active .face{transform:translate(3px,3px)}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
+.press.shake .face{animation:shake var(--t-shake) ease-in-out}
+.press.gentle .face{animation:nudge var(--t-nudge) ease-in-out 1}
+@keyframes glint{from{background-position:-160% 0}to{background-position:260% 0}}
+.glint::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(196,163,106,.5) 50%,transparent 60%);background-size:200% 100%;animation:glint var(--t-cue) ease-out 1}
+label.field.glint::after{top:22px}
+.dockhint{text-align:center;color:var(--mute);font-size:13px;margin:8px 0 0;min-height:18px}
+.foot{padding:0 var(--gutter);color:var(--mute);font-size:11px;font-family:var(--f-fact);letter-spacing:.06em}
+@media (prefers-reduced-motion: reduce){.check.blink .ring,.press.gentle .face,#intro.play .enter .face{animation:none}.unroll{clip-path:none;transition:none}}
+
+/* ---------- print: one page, only the label ---------- */
 @media print{
-  @page{size:A4;margin:10mm}
-  body{background:#fff;color:#000}
-  .wrap>*{display:none!important}
-  body.print-labels .labels{display:grid;grid-template-columns:1fr 1fr;gap:6mm;color:#000}
-  body.print-log .printlog{display:block;color:#000}
-  .lab{border:.4mm solid #000;border-radius:2mm;padding:4mm;height:64mm;display:grid;grid-template-rows:auto 1fr auto;gap:1.5mm;page-break-inside:avoid;font:10pt/1.3 var(--body)}
-  .lab .h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:.3mm solid #000;padding-bottom:1mm}
-  .lab .h b{font-size:13pt}.lab .h span{font-size:8.5pt}
-  .lab .d{font-size:15pt;font-weight:700;line-height:1.15}
-  .lab .a{font-size:9.5pt}.lab .a b{color:#C8102E}
-  .lab .f{font-size:8.5pt;display:grid;gap:.5mm}
-  .printlog h2{font-size:16pt;margin:0 0 4mm}
-  .printlog table{border-collapse:collapse;width:100%;font-size:10pt}
-  .printlog th,.printlog td{border:.3mm solid #000;padding:1.5mm 2mm;text-align:left;vertical-align:top}
+  @page{size:A4 portrait;margin:14mm}
+  html,body{height:auto;background:#fff}
+  .app{max-width:none;min-height:0;padding:0}
+  header.top,.tabs,.dock,.brand,.no-print,#intro,.veil,#confetti,.tip,.foot,.dockhint,.msg{display:none!important}
+  section.panel{display:none!important}
+  #view-ticket{display:block!important;padding:0;break-inside:avoid;page-break-inside:avoid}
+  .ticket{box-shadow:none;transform:none;opacity:1;max-width:120mm;break-inside:avoid}
+  .ticket .seal{transform:none;opacity:1}
 }
-.printlog{display:none}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="brand"><h1>Übrig Bern</h1><small data-i18n="tagline">Was in der Küche übrig bleibt, sicher weitergeben statt wegwerfen.</small></div>
-    <div class="langs" role="group" aria-label="Sprache">
-      <button type="button" data-lang="de" aria-pressed="true">DE</button>
-      <button type="button" data-lang="fr" aria-pressed="false">FR</button>
-      <button type="button" data-lang="it" aria-pressed="false">IT</button>
-      <button type="button" data-lang="en" aria-pressed="false">EN</button>
-    </div>
-  </header>
-
-  <section class="intro">
-    <p data-i18n="intro_p">Am Ende des Abends bleibt Essen übrig, und irgendwo in Bern hätte es jemand gebraucht. Was fehlt, ist selten der Wille, sondern die Sicherheit: Darf ich das weitergeben? Was muss auf den Behälter? Wen rufe ich an? Diese Seite ist die Checkliste dafür, in drei Minuten am Handy.</p>
-    <div class="steps3">
-      <div class="step3"><div class="n">1</div><div><b data-i18n="s1b">Prüfen</b><span data-i18n="s1">Sieben Fragen. Nur wenn alle mit Ja beantwortet sind, wird die Speise freigegeben.</span></div></div>
-      <div class="step3"><div class="n">2</div><div><b data-i18n="s2b">Melden</b><span data-i18n="s2">Eine fertige Nachricht für die WhatsApp- oder Signal-Gruppe der Abnehmer, mit allem, was sie wissen müssen.</span></div></div>
-      <div class="step3"><div class="n">3</div><div><b data-i18n="s3b">Übergeben</b><span data-i18n="s3">Etikett drucken, auf den Behälter, Eintrag ins Protokoll. Für die Lebensmittelkontrolle und für das eigene Gewissen.</span></div></div>
-    </div>
-    <div class="note"><span class="dot"></span><span data-i18n="note">Nichts wird gesendet. Protokoll und Adressbuch bleiben in deinem Browser. Die Seite verbindet niemanden automatisch: die Gruppe mit den Abnehmern gründest du, zum Beispiel mit der Gassenküche, dem Passantenheim oder einem Fairteiler. Sie gibt dir dafür Text, Etikett und Protokoll.</span></div>
-  </section>
-
-  <section class="card" id="check">
-    <div><div class="eyebrow">1</div><h2 data-i18n="h_check">Freigabe-Check</h2></div>
-    <div class="rules" id="rules"></div>
-    <div class="verdict no" id="verdict"></div>
-    <p class="small" data-i18n="check_note">Grundlage: Lebensmittelgesetz und Hygieneverordnung (HyV), wie sie in jeder Betriebsküche gelten. Bis zur Übergabe ist der Betrieb für die Sicherheit verantwortlich, danach der Empfänger. Im Zweifel: nicht weitergeben.</p>
-  </section>
-
-  <section class="card" id="report">
-    <div><div class="eyebrow">2</div><h2 data-i18n="h_report">Meldung</h2></div>
-    <div class="row">
-      <label class="f"><span data-i18n="f_biz">Betrieb</span><input type="text" id="biz" data-k="biz" placeholder="Restaurant Sonne"></label>
-      <label class="f"><span data-i18n="f_contact">Kontakt (Name, Telefon)</span><input type="text" id="contact" data-k="contact" placeholder="Marco, 079 555 11 22"></label>
-    </div>
-    <div class="row">
-      <label class="f" style="grid-column:span 2"><span data-i18n="f_dish">Speise</span><input type="text" id="dish" data-k="dish" data-i18n-ph="ph_dish" placeholder="Gemüserisotto, Salat separat"></label>
-      <label class="f"><span data-i18n="f_portions">Portionen</span><input type="number" id="portions" data-k="portions" min="1" max="999" inputmode="numeric" placeholder="20"></label>
-    </div>
-    <div class="flags">
-      <label class="flag"><input type="checkbox" id="veg" data-k="veg"><span data-i18n="c_veg">vegetarisch</span></label>
-      <label class="flag"><input type="checkbox" id="vegan" data-k="vegan"><span data-i18n="c_vegan">vegan</span></label>
-      <label class="flag"><input type="checkbox" id="halal" data-k="halal"><span data-i18n="c_pork">ohne Schweinefleisch</span></label>
-      <label class="flag"><input type="checkbox" id="hot" data-k="hot"><span data-i18n="c_hot">heiss (≥ 65 °C)</span></label>
-    </div>
-    <div>
-      <div class="eyebrow" style="margin-bottom:6px" data-i18n="f_allerg">Enthaltene Allergene (LIV, Anhang 6)</div>
-      <div class="agrid" id="allerg"></div>
-    </div>
-    <div class="row">
-      <label class="f"><span data-i18n="f_made">Zubereitet am</span><input type="date" id="madeD" data-k="madeD"></label>
-      <label class="f"><span data-i18n="f_made_t">um</span><input type="time" id="madeT" data-k="madeT"></label>
-      <label class="f"><span data-i18n="f_until">Konsumieren bis</span><input type="date" id="untilD" data-k="untilD"></label>
-      <label class="f"><span data-i18n="f_until_t">um</span><input type="time" id="untilT" data-k="untilT"></label>
-    </div>
-    <div class="row">
-      <label class="f"><span data-i18n="f_from">Abholung von</span><input type="time" id="pickFrom" data-k="pickFrom"></label>
-      <label class="f"><span data-i18n="f_to">bis</span><input type="time" id="pickTo" data-k="pickTo"></label>
-      <label class="f" style="grid-column:span 2"><span data-i18n="f_where">Übergabeort</span><input type="text" id="where" data-k="where" data-i18n-ph="ph_where" placeholder="Länggassstrasse 42, Hintereingang Küche, klingeln"></label>
-    </div>
-    <label class="f"><span data-i18n="f_note">Hinweis</span><input type="text" id="note" data-k="note" data-i18n-ph="ph_note" placeholder="Eigene Behälter mitbringen. Sauce separat, vor dem Servieren erhitzen."></label>
-    <div>
-      <div class="eyebrow" style="margin-bottom:6px" data-i18n="msg_h">Nachricht für die Gruppe</div>
-      <div class="msg" id="msg"></div>
-    </div>
-    <div class="actions">
-      <button type="button" class="btn primary" id="copyBtn" data-i18n="b_copy">Nachricht kopieren</button>
-      <button type="button" class="btn ghost" id="labelBtn" data-i18n="b_label">Etiketten drucken</button>
-      <button type="button" class="btn ghost" id="logBtn" data-i18n="b_log">Ins Protokoll</button>
-      <button type="button" class="btn ghost" id="clearBtn" data-i18n="b_clear">Formular leeren</button>
-    </div>
-    <p class="small" id="blocked" hidden data-i18n="blocked">Erst alle Punkte im Freigabe-Check bestätigen. Bis dahin bleibt die Nachricht mit dem Hinweis NICHT FREIGEGEBEN.</p>
-  </section>
-
-  <section class="card" id="logsec">
-    <div><div class="eyebrow">3</div><h2 data-i18n="h_log">Protokoll</h2></div>
-    <p class="small" data-i18n="log_note">Jede Weitergabe mit Datum, Speise, Menge und Empfänger. Bleibt auf diesem Gerät. Für die Lebensmittelkontrolle als Tabelle druckbar.</p>
-    <div class="scroll"><table class="log" id="logTable"></table></div>
-    <div class="actions">
-      <button type="button" class="btn ghost" id="printLogBtn" data-i18n="b_printlog">Protokoll drucken</button>
-      <button type="button" class="btn ghost" id="clearLogBtn" data-i18n="b_clearlog">Protokoll löschen</button>
-    </div>
-  </section>
-
-  <section class="card" id="orgsec">
-    <div><div class="eyebrow">＋</div><h2 data-i18n="h_orgs">Wer nimmt Essen an</h2></div>
-    <p class="small" data-i18n="orgs_note">Startliste mit Organisationen in Bern, die erfahrungsgemäss Lebensmittel annehmen. Kontakt und Bedingungen vor der ersten Weitergabe direkt klären und hier eintragen; die Liste bleibt in deinem Browser.</p>
-    <div class="orgs" id="orgs"></div>
-    <div class="actions"><button type="button" class="btn ghost" id="addOrg" data-i18n="b_addorg">+ Organisation</button></div>
-  </section>
-
-  <footer class="site">
-    <p data-i18n="site_1">Übrig Bern ist frei (CC0). Keine Rechtsberatung: verbindlich sind Lebensmittelgesetz, Hygieneverordnung und die Auskunft der kantonalen Lebensmittelkontrolle. Für Bern: Amt für Veterinärwesen des Kantons Bern.</p>
-    <p><a href="app/" style="font-weight:700">Übrig App: Angebote live melden und reservieren (Anmeldung)</a></p>
-    <p><a href="https://foodsharing.ch" target="_blank" rel="noopener">foodsharing.ch</a> · <a href="https://www.schweizertafel.ch" target="_blank" rel="noopener">schweizertafel.ch</a> · <a href="https://www.tischlein.ch" target="_blank" rel="noopener">tischlein.ch</a> · <a href="https://richardcervenka111-create.github.io/allergen-poster/" target="_blank" rel="noopener">Allergen-Poster</a> · <a href="https://richardcervenka111-create.github.io/baern-hilft/" target="_blank" rel="noopener">Bärn hilft</a></p>
-  </footer>
+<div id="intro">
+  <div class="scene">
+    <div class="word"><span class="u">u<span class="dots" aria-hidden="true"><i></i><i></i></span></span>brig</div>
+    <svg class="seal" viewBox="0 0 72 72" aria-hidden="true"><circle class="c1" cx="36" cy="36" r="33"/><circle class="c2" cx="36" cy="36" r="27"/><path class="wedge" d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2"/><circle class="dot" cx="36" cy="36" r="3.2"/></svg>
+    <div class="tag">nach dem service</div>
+    <button class="press enter" id="enter" type="button"><span class="shade"></span><span class="face" data-i18n="enter">Eintreten</span></button>
+  </div>
 </div>
-<div class="labels" id="labels"></div>
-<div class="printlog" id="printlog"></div>
-<div class="toast" id="toast" role="status"></div>
+
+<canvas id="confetti" hidden></canvas>
+
+<!-- concept -->
+<div class="veil" id="concept" hidden role="dialog" aria-modal="true" aria-labelledby="c-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="concept" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="c_k">Das Konzept</span>
+    <h2 id="c-title" data-i18n="c_title">Was in der Küche übrig bleibt, geht sicher weiter.</h2>
+    <p data-i18n="c_p1">übrig ist der Zettel für die letzten fünfzehn Minuten der Schicht: sieben Hygiene-Fragen, eine Meldung, ein Etikett, ein Protokoll. Was freigegeben ist, holt eine soziale Organisation ab – am selben Abend.</p>
+    <div class="steps">
+      <div class="stepc"><span class="n">01</span><div><b data-i18n="c_s1">Prüfen</b><small data-i18n="c_s1t">Sieben Fragen. Alle Ja, sonst geht nichts raus.</small></div></div>
+      <div class="stepc"><span class="n">02</span><div><b data-i18n="c_s2">Meldung</b><small data-i18n="c_s2t">Was, wie viel, wann, wo – und wer es abgibt.</small></div></div>
+      <div class="stepc"><span class="n">03</span><div><b data-i18n="c_s3">Etikett</b><small data-i18n="c_s3t">Auf den Behälter und in die Gruppe. Gleiche Form, gleiche Reihenfolge.</small></div></div>
+      <div class="stepc"><span class="n">04</span><div><b data-i18n="c_s4">Protokoll</b><small data-i18n="c_s4t">Bleibt im Browser. Beide Seiten wissen, was wann übergeben wurde.</small></div></div>
+    </div>
+    <p data-i18n="c_p2">Kein Konto, kein Server, kein Dashboard. Gebaut in Bern von Freiwilligen – für Küchen und für Menschen, die abends noch etwas Warmes brauchen.</p>
+    <div class="actions">
+      <button class="press stamp" type="button" data-close="concept"><span class="shade"></span><span class="face" data-i18n="c_go">Los geht's</span></button>
+      <button class="press ghost" type="button" data-open="orgs"><span class="shade"></span><span class="face" data-i18n="orgs_btn">Wer nimmt Essen an</span></button>
+      <button class="press ghost" type="button" data-open="support"><span class="shade"></span><span class="face" data-i18n="support">Unterstützen</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- support -->
+<div class="veil" id="support" hidden role="dialog" aria-modal="true" aria-labelledby="s-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="support" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="s_k">Unterstützen</span>
+    <h2 id="s-title" data-i18n="s_title">Ein Abend übrig kostet elf Franken.</h2>
+    <p data-i18n="s_p1">So viel kostet ein E-Cargo-Bike für eine Abholrunde (carvelo2go, drei Stunden). Thermoboxen, Etiketten, die Koordination – alles trägt der Verein. Kein Investor, keine Werbung.</p>
+    <p data-i18n="s_p2">Drei Arten zu helfen: als Küche mitmachen, als Organisation abholen, oder mit einem Beitrag. Das Spendenkonto folgt mit der Vereinsgründung – bis dahin zählt jeder Kontakt.</p>
+    <div class="actions">
+      <button class="press stamp" type="button" id="shareBtn"><span class="shade"></span><span class="face" data-i18n="s_share">Link teilen</span></button>
+      <button class="press ghost" type="button" data-close="support"><span class="shade"></span><span class="face" data-i18n="close">Schliessen</span></button>
+    </div>
+    <p class="note" id="shareNote"></p>
+  </div>
+</div>
+
+<!-- organisations that take food -->
+<div class="veil" id="orgs" hidden role="dialog" aria-modal="true" aria-labelledby="o-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="orgs" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="o_k">Abnehmer in Bern</span>
+    <h2 id="o-title" data-i18n="o_title">Wer nimmt Essen an</h2>
+    <p data-i18n="o_note">Startliste (Stand 25.9.2026). Vor der ersten Übergabe anrufen und Bedingungen klären; deine Notizen bleiben in diesem Browser.</p>
+    <div class="steps" id="orgList"></div>
+  </div>
+</div>
+
+<!-- welcome after 7/7 -->
+<div class="veil" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="w-title">
+  <div class="sheetbox unroll"><button type="button" class="x" data-close="welcome" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="w_k">Sieben Mal Ja</span>
+    <h2 id="w-title" data-i18n="w_title">Freigegeben.</h2>
+    <p data-i18n="w_p">Das Essen darf raus. Jetzt noch drei Dinge: was es ist, wie viel, und wann es abgeholt werden kann. Dann druckst du das Etikett.</p>
+    <div class="actions"><button class="press stamp" type="button" data-close="welcome"><span class="shade"></span><span class="face" data-i18n="w_go">Zur Meldung</span></button></div>
+  </div>
+</div>
+
+<!-- log detail -->
+<div class="veil" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="d-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="detail" aria-label="Schliessen">×</button>
+    <span class="k mono" id="d-when"></span>
+    <h2 id="d-title" style="font-family:var(--f-text);font-style:normal;font-weight:700;font-size:22px"></h2>
+    <dl class="kv" id="d-kv"></dl>
+    <div class="actions">
+      <button class="press" type="button" id="d-edit"><span class="shade"></span><span class="face" data-i18n="d_edit">Bearbeiten</span></button>
+      <button class="press ghost" type="button" id="d-label"><span class="shade"></span><span class="face" data-i18n="d_label">Etikett zeigen</span></button>
+      <button class="press danger ghost" type="button" id="d-del"><span class="shade"></span><span class="face" data-i18n="d_del">Eintrag löschen</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <noscript><p class="note" style="padding:12px 20px;border:1px solid var(--rule);border-radius:8px;margin:12px 20px">Diese Vorschau läuft ohne JavaScript (z. B. Dateivorschau auf dem iPhone). Bitte die Datei in Safari oder Chrome öffnen – oder den Link unter github.io verwenden.</p></noscript>
+  <header class="top" id="topbar">
+    <span class="mono step" id="stepLabel">1  Prüfen</span>
+    <span class="right">
+      <span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
+      <span class="langmenu"><button type="button" class="langbtn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Sprache">DE <span aria-hidden="true">▾</span></button>
+        <div class="langs" id="langList" role="listbox" aria-label="Sprache / Langue / Lingua / Language" hidden><button type="button" role="option" data-lang="de" aria-pressed="true">Deutsch</button><button type="button" role="option" data-lang="fr" aria-pressed="false">Français</button><button type="button" role="option" data-lang="it" aria-pressed="false">Italiano</button><button type="button" role="option" data-lang="en" aria-pressed="false">English</button></div></span>
+      <button type="button" class="info" id="infoBtn" aria-pressed="true" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <button type="button" class="support" data-open="support"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-i18n="support">Unterstützen</span></button>
+    </span>
+  </header>
+  <div class="brand">
+    <button type="button" id="replay" title="Intro nochmals abspielen">
+      <svg class="mark" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="33" fill="none" stroke="#9C3B2E" stroke-width="2.2"/><circle cx="36" cy="36" r="27" fill="none" stroke="#9C3B2E" stroke-width="1.5"/><path d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2" fill="none" stroke="#9C3B2E" stroke-width="2.4" stroke-linecap="round"/><circle cx="36" cy="36" r="3.2" fill="#9C3B2E"/></svg>
+      <h1>übrig</h1>
+    </button>
+  </div>
+
+  <nav class="tabs no-print" aria-label="Schritte">
+    <button type="button" class="on" data-view="check" data-i18n="tab_check">Prüfen</button>
+    <button type="button" data-view="form" data-i18n="tab_form">Meldung</button>
+    <button type="button" data-view="ticket" data-i18n="tab_ticket">Etikett</button>
+    <button type="button" data-view="log" data-i18n="tab_log">Protokoll</button>
+  </nav>
+
+  <section id="view-check" class="panel">
+    <div class="tip" data-tip="check"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
+    <div class="checks" id="checks"></div>
+    <p class="note" data-i18n="note_check">Sieben Fragen. Alle Ja — sonst geht nichts raus. Das i erklärt jede Zeile.</p>
+  </section>
+
+  <section id="view-form" class="panel" hidden>
+    <div class="tip" data-tip="form"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
+    <div style="margin:0 0 14px"><button class="press ghost" type="button" data-open="orgs"><span class="shade"></span><span class="face" data-i18n="orgs_btn">Wer nimmt Essen an</span></button></div>
+    <label class="field"><span class="k" data-i18n="f_dish">Gericht</span><input id="dish" type="text" placeholder="z. B. Gemüserisotto, Salat separat" data-i18n-ph="ph_dish"><span class="hint" id="h-dish"></span></label>
+    <div class="row2">
+      <label class="field"><span class="k" data-i18n="f_portions">Portionen</span><input id="portions" type="number" min="1" inputmode="numeric" placeholder="18"><span class="hint" id="h-portions"></span></label>
+      <label class="field"><span class="k" data-i18n="f_state">Zustand</span><select id="state"><option value="gekühlt" data-i18n="st_cold">gekühlt</option><option value="heiss" data-i18n="st_hot">heiss</option></select></label>
+    </div>
+    <div class="row2">
+      <label class="field"><span class="k" data-i18n="f_from">Abholen von</span><input id="from" type="time" value="21:30"></label>
+      <label class="field"><span class="k" data-i18n="f_until">bis</span><input id="until" type="time" value="22:15"></label>
+    </div>
+    <label class="field"><span class="k" data-i18n="f_place">Ort</span><input id="place" type="text" placeholder="Strasse, Eingang" data-i18n-ph="ph_place"><span class="hint" id="h-place"></span></label>
+    <label class="field"><span class="k" data-i18n="f_business">Betrieb</span><input id="business" type="text" placeholder="Restaurant Sonne" data-i18n-ph="ph_business" autocomplete="organization"><span class="hint" id="h-business"></span></label>
+    <div class="row2">
+      <label class="field"><span class="k" data-i18n="f_phone">Telefon</span><input id="phone" type="tel" placeholder="079 555 11 22" inputmode="tel" autocomplete="tel"><span class="hint" id="h-phone"></span></label>
+      <label class="field"><span class="k" data-i18n="f_email">E-Mail</span><input id="email" type="email" placeholder="kueche@sonne.ch" inputmode="email" autocomplete="email"><span class="hint" id="h-email"></span></label>
+    </div>
+    <label class="field"><span class="k" data-i18n="f_allergens">Allergene</span><div class="chips" id="allergens"></div></label>
+    <div class="row2">
+      <label class="field"><span class="k" data-i18n="f_cooked">Zubereitet</span><input id="cooked" type="text"></label>
+      <label class="field"><span class="k" data-i18n="f_best">Konsumieren bis</span><input id="best" type="text"></label>
+    </div>
+    <div class="confirm">
+      <button type="button" class="check" id="confirm" role="checkbox" aria-checked="false"><span class="ring"><i class="dot"></i></span><span class="lbl" data-i18n="confirm">Allergene und «Konsumieren bis» sind geprüft und richtig.</span><span></span></button>
+      <p class="hint note" id="h-confirm" style="margin-top:6px"></p>
+    </div>
+  </section>
+
+  <section id="view-ticket" class="panel" hidden>
+    <div class="tip no-print" data-tip="ticket"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
+    <article class="ticket" id="ticket">
+      <div class="head">
+        <h2>übrig</h2>
+        <div class="seal">
+          <div class="mono ok">FREIGEGEBEN</div>
+          <svg width="44" height="44" viewBox="0 0 72 72" aria-hidden="true" style="margin-top:6px"><circle cx="36" cy="36" r="33" fill="none" stroke="#9C3B2E" stroke-width="2.2"/><circle cx="36" cy="36" r="27" fill="none" stroke="#9C3B2E" stroke-width="1.5"/><path d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2" fill="none" stroke="#9C3B2E" stroke-width="2.4" stroke-linecap="round"/><circle cx="36" cy="36" r="3.2" fill="#9C3B2E"/></svg>
+        </div>
+      </div>
+      <div class="perf" aria-hidden="true" id="perf"></div>
+      <h3 id="t-dish"></h3>
+      <div class="mono meta" id="t-meta"></div>
+      <p id="t-contact"></p><p id="t-all"></p><p id="t-cooked"></p><p id="t-best"></p><p id="t-win"></p><p id="t-place"></p>
+      <p data-i18n="reheat">Vor dem Servieren durcherhitzen.</p>
+    </article>
+    <p class="note no-print" data-i18n="note_ticket">Dieselbe Form geht in WhatsApp und auf den Behälter.</p>
+    <div class="msg no-print" id="msg"></div>
+    <div class="no-print" style="margin-top:12px"><button class="press ghost" id="print" type="button"><span class="shade"></span><span class="face" data-i18n="print">Etikett drucken</span></button></div>
+  </section>
+
+  <section id="view-log" class="panel" hidden>
+    <div class="tip" data-tip="log"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
+    <div class="log" id="log"></div>
+  </section>
+
+  <div class="dock no-print">
+    <button class="press quiet" id="cta" type="button"><span class="shade"></span><span class="face" id="ctaFace">Noch 7 von 7</span></button>
+    <p class="dockhint mono" id="dockhint" aria-live="polite"></p>
+  </div>
+  <p class="foot no-print" data-i18n="foot">übrig Bern · nichts verlässt den Browser · Logo tippen = Intro nochmals</p>
+  <p class="foot no-print"><a href="app/" data-i18n="app_link" style="color:var(--stamp)">Plattform: Angebote live melden und reservieren (Anmeldung)</a> · <a href="research/" style="color:var(--mute)">Research</a> · <a href="https://github.com/richardcervenka111-create/uebrig" rel="noopener" style="color:var(--mute)">GitHub</a></p>
+  <p class="foot no-print" id="rmNote" hidden></p>
+</div>
 
 <script>
 (function(){
-'use strict';
-var ALLERG = {
-de:['Gluten','Krebstiere','Eier','Fisch','Erdnüsse','Soja','Milch','Nüsse','Sellerie','Senf','Sesam','Sulfite','Lupinen','Weichtiere'],
-fr:['Gluten','Crustacés','Œufs','Poisson','Arachides','Soja','Lait','Fruits à coque','Céleri','Moutarde','Sésame','Sulfites','Lupin','Mollusques'],
-it:['Glutine','Crostacei','Uova','Pesce','Arachidi','Soia','Latte','Frutta a guscio','Sedano','Senape','Sesamo','Solfiti','Lupini','Molluschi'],
-en:['Gluten','Crustaceans','Eggs','Fish','Peanuts','Soy','Milk','Tree nuts','Celery','Mustard','Sesame','Sulphites','Lupin','Molluscs']};
-var I18N = {
-de:{tagline:'Was in der Küche übrig bleibt, sicher weitergeben statt wegwerfen.',
- intro_p:'Am Ende des Abends bleibt Essen übrig, und irgendwo in Bern hätte es jemand gebraucht. Was fehlt, ist selten der Wille, sondern die Sicherheit: Darf ich das weitergeben? Was muss auf den Behälter? Wen rufe ich an? Diese Seite ist die Checkliste dafür, in drei Minuten am Handy.',
- s1b:'Prüfen', s1:'Sieben Fragen. Nur wenn alle mit Ja beantwortet sind, wird die Speise freigegeben.', s2b:'Melden', s2:'Eine fertige Nachricht für die WhatsApp- oder Signal-Gruppe der Abnehmer, mit allem, was sie wissen müssen.', s3b:'Übergeben', s3:'Etikett drucken, auf den Behälter, Eintrag ins Protokoll. Für die Lebensmittelkontrolle und für das eigene Gewissen.',
- note:'Nichts wird gesendet. Protokoll und Adressbuch bleiben in deinem Browser. Die Seite verbindet niemanden automatisch: die Gruppe mit den Abnehmern gründest du, zum Beispiel mit der Gassenküche, dem Passantenheim oder einem Fairteiler. Sie gibt dir dafür Text, Etikett und Protokoll.',
- h_check:'Freigabe-Check',
- rules:['Die Speise war nie im Gästebereich: kein Buffet, kein Rückläufer vom Tisch, keine angebrochene Portion.','Heiss gehalten bei mindestens 65 °C, oder innert 2 Stunden nach dem Kochen auf 5 °C oder kälter gekühlt. Nie länger als 2 Stunden bei Raumtemperatur.','Zubereitungsdatum und -zeit sind bekannt und kommen aufs Etikett.','Alle 14 Allergene der Speise sind bekannt und werden angegeben.','Sauberer, geschlossener, beschrifteter Behälter. Keine Speisen mit rohem Ei, rohem Fisch oder rohem Fleisch.','Transport in der Kühlkette (Kühlbox) oder heiss in der Warmhaltebox; keine offenen Behälter im Auto.','Der Empfänger weiss, bis wann zu konsumieren ist und dass die Speise vor dem Servieren durcherhitzt wird (mindestens 72 °C im Kern).'],
- v_ok:'Freigegeben. Nachricht, Etikett und Protokoll sind bereit.', v_no:'Nicht freigegeben: noch nicht alle Punkte bestätigt.',
- check_note:'Grundlage: Lebensmittelgesetz und Hygieneverordnung (HyV), wie sie in jeder Betriebsküche gelten. Bis zur Übergabe ist der Betrieb für die Sicherheit verantwortlich, danach der Empfänger. Im Zweifel: nicht weitergeben.',
- h_report:'Meldung', f_biz:'Betrieb', f_contact:'Kontakt (Name, Telefon)', f_dish:'Speise', ph_dish:'Gemüserisotto, Salat separat', f_portions:'Portionen', c_veg:'vegetarisch', c_vegan:'vegan', c_pork:'ohne Schweinefleisch', c_hot:'heiss (≥ 65 °C)', f_allerg:'Enthaltene Allergene (LIV, Anhang 6)', f_made:'Zubereitet am', f_made_t:'um', f_until:'Konsumieren bis', f_until_t:'um', f_from:'Abholung von', f_to:'bis', f_where:'Übergabeort', ph_where:'Länggassstrasse 42, Hintereingang Küche, klingeln', f_note:'Hinweis', ph_note:'Eigene Behälter mitbringen. Sauce separat, vor dem Servieren erhitzen.',
- msg_h:'Nachricht für die Gruppe', b_copy:'Nachricht kopieren', b_label:'Etiketten drucken', b_log:'Ins Protokoll', b_clear:'Formular leeren', blocked:'Erst alle Punkte im Freigabe-Check bestätigen. Bis dahin bleibt die Nachricht mit dem Hinweis NICHT FREIGEGEBEN.',
- m_head:'ÜBRIG', m_notok:'⚠️ NICHT FREIGEGEBEN (Check unvollständig)', m_portions:'Portionen', m_allerg:'Allergene', m_none:'keine der 14', m_made:'Zubereitet', m_until:'Konsumieren bis', m_pick:'Abholen', m_where:'Ort', m_contact:'Kontakt', m_hot:'heiss', m_cold:'gekühlt', m_reheat:'Vor dem Servieren durcherhitzen.',
- l_made:'Zubereitet', l_until:'Konsumieren bis', l_store:'Kühl lagern (≤ 5 °C). Vor dem Servieren durcherhitzen.', l_allerg:'Allergene:', l_none:'keine der 14 deklarationspflichtigen',
- h_log:'Protokoll', log_note:'Jede Weitergabe mit Datum, Speise, Menge und Empfänger. Bleibt auf diesem Gerät. Für die Lebensmittelkontrolle als Tabelle druckbar.', lg_date:'Datum', lg_dish:'Speise', lg_qty:'Menge', lg_to:'Empfänger', lg_by:'Freigabe', lg_empty:'Noch keine Einträge.', b_printlog:'Protokoll drucken', b_clearlog:'Protokoll löschen', b_sure:'Sicher? Nochmals tippen.', log_to_prompt:'Empfänger (Organisation oder Name)', log_title:'Protokoll Lebensmittelweitergabe',
- h_orgs:'Wer nimmt Essen an', orgs_note:'Startliste mit Organisationen in Bern, die erfahrungsgemäss Lebensmittel annehmen. Kontakt und Bedingungen vor der ersten Weitergabe direkt klären und hier eintragen; die Liste bleibt in deinem Browser.', o_name:'Organisation', o_takes:'Nimmt an / Bedingungen', o_contact:'Kontakt', b_addorg:'+ Organisation',
- orgs:[['Gassenküche Bern (Kirchliche Gassenarbeit)','Warme Mahlzeiten für Menschen auf der Gasse. Bedingungen vor Ort klären.',''],['Passantenheim Bern (Heilsarmee)','Notschlafstelle mit Küche. Bedingungen vor Ort klären.',''],['foodsharing Bern, Fairteiler','Öffentliche Kühlschränke; Regeln auf foodsharing.ch.',''],['Schweizer Tafel, Region Bern','Holt grössere Mengen bei Betrieben ab; Anmeldung nötig.',''],['Tischlein deck dich','Abgabestellen; nimmt v. a. ungeöffnete Ware.','']],
- site_1:'Übrig Bern ist frei (CC0). Keine Rechtsberatung: verbindlich sind Lebensmittelgesetz, Hygieneverordnung und die Auskunft der kantonalen Lebensmittelkontrolle. Für Bern: Amt für Veterinärwesen des Kantons Bern.',
- t_copied:'Nachricht kopiert', t_logged:'Ins Protokoll eingetragen', t_cleared:'Geleert', t_need:'Bitte zuerst Speise und Portionen eintragen.'},
-fr:{tagline:'Donner ce qui reste en cuisine, en sécurité, au lieu de le jeter.',
- intro_p:'En fin de soirée il reste à manger, et quelque part à Berne quelqu’un en aurait eu besoin. Ce qui manque, c’est rarement la volonté, c’est la sécurité : ai-je le droit ? que mettre sur le récipient ? qui appeler ? Cette page est la check-list, en trois minutes sur le téléphone.',
- s1b:'Vérifier', s1:'Sept questions. La denrée n’est libérée que si toutes ont un oui.', s2b:'Annoncer', s2:'Un message prêt pour le groupe WhatsApp ou Signal des receveurs, avec tout ce qu’ils doivent savoir.', s3b:'Remettre', s3:'Imprimer l’étiquette, la coller, inscrire au protocole. Pour le contrôle des denrées et pour la conscience.',
- note:'Rien n’est envoyé. Protocole et carnet d’adresses restent dans votre navigateur. La page ne met personne en relation automatiquement : le groupe des receveurs, c’est vous qui le créez, par exemple avec la Gassenküche, le Passantenheim ou un Fairteiler. Elle vous fournit le texte, l’étiquette et le protocole.',
- h_check:'Check de libération',
- rules:['La denrée n’a jamais été côté clients : pas de buffet, pas de retour de table, pas de portion entamée.','Maintenue chaude à 65 °C au moins, ou refroidie à 5 °C ou moins dans les 2 heures après cuisson. Jamais plus de 2 heures à température ambiante.','Date et heure de préparation connues et inscrites sur l’étiquette.','Les 14 allergènes de la denrée sont connus et indiqués.','Récipient propre, fermé, étiqueté. Pas de plats à l’œuf cru, poisson cru ou viande crue.','Transport dans la chaîne du froid (boîte isotherme) ou chaud en boîte de maintien ; pas de récipients ouverts en voiture.','Le receveur sait jusqu’à quand consommer et que le plat est réchauffé à cœur avant le service (72 °C au moins).'],
- v_ok:'Libéré. Message, étiquette et protocole sont prêts.', v_no:'Non libéré : tous les points ne sont pas confirmés.',
- check_note:'Base : loi sur les denrées alimentaires et ordonnance sur l’hygiène (OHyg), telles qu’elles s’appliquent en cuisine professionnelle. Jusqu’à la remise, l’établissement est responsable de la sécurité, ensuite le receveur. En cas de doute : ne pas donner.',
- h_report:'Annonce', f_biz:'Établissement', f_contact:'Contact (nom, téléphone)', f_dish:'Plat', ph_dish:'Risotto aux légumes, salade à part', f_portions:'Portions', c_veg:'végétarien', c_vegan:'végane', c_pork:'sans porc', c_hot:'chaud (≥ 65 °C)', f_allerg:'Allergènes présents (OIDAl, annexe 6)', f_made:'Préparé le', f_made_t:'à', f_until:'Consommer jusqu’au', f_until_t:'à', f_from:'Retrait de', f_to:'à', f_where:'Lieu de remise', ph_where:'Länggassstrasse 42, entrée arrière cuisine, sonner', f_note:'Remarque', ph_note:'Apporter ses récipients. Sauce à part, réchauffer avant service.',
- msg_h:'Message pour le groupe', b_copy:'Copier le message', b_label:'Imprimer les étiquettes', b_log:'Au protocole', b_clear:'Vider le formulaire', blocked:'Confirmer d’abord tous les points du check. Jusque-là le message porte la mention NON LIBÉRÉ.',
- m_head:'RESTES', m_notok:'⚠️ NON LIBÉRÉ (check incomplet)', m_portions:'portions', m_allerg:'Allergènes', m_none:'aucun des 14', m_made:'Préparé', m_until:'Consommer jusqu’au', m_pick:'Retrait', m_where:'Lieu', m_contact:'Contact', m_hot:'chaud', m_cold:'réfrigéré', m_reheat:'Réchauffer à cœur avant le service.',
- l_made:'Préparé', l_until:'Consommer jusqu’au', l_store:'Conserver au frais (≤ 5 °C). Réchauffer à cœur avant le service.', l_allerg:'Allergènes :', l_none:'aucun des 14 soumis à déclaration',
- h_log:'Protocole', log_note:'Chaque remise avec date, plat, quantité et receveur. Reste sur cet appareil. Imprimable en tableau pour le contrôle des denrées.', lg_date:'Date', lg_dish:'Plat', lg_qty:'Quantité', lg_to:'Receveur', lg_by:'Libération', lg_empty:'Pas encore d’entrées.', b_printlog:'Imprimer le protocole', b_clearlog:'Effacer le protocole', b_sure:'Sûr ? Touchez encore.', log_to_prompt:'Receveur (organisation ou nom)', log_title:'Protocole de remise de denrées',
- h_orgs:'Qui accepte de la nourriture', orgs_note:'Liste de départ d’organisations à Berne qui acceptent habituellement des denrées. Clarifier contact et conditions avant la première remise et les noter ici ; la liste reste dans votre navigateur.', o_name:'Organisation', o_takes:'Accepte / conditions', o_contact:'Contact', b_addorg:'+ Organisation',
- orgs:[['Gassenküche Bern (Kirchliche Gassenarbeit)','Repas chauds pour personnes de la rue. Conditions à clarifier sur place.',''],['Passantenheim Bern (Armée du Salut)','Hébergement d’urgence avec cuisine. Conditions à clarifier.',''],['foodsharing Bern, Fairteiler','Frigos publics ; règles sur foodsharing.ch.',''],['Table Suisse, région Berne','Collecte de grandes quantités ; inscription nécessaire.',''],['Table couvre-toi','Points de distribution ; surtout produits non ouverts.','']],
- site_1:'Übrig Bern est libre (CC0). Pas un conseil juridique : font foi la loi sur les denrées alimentaires, l’ordonnance sur l’hygiène et l’avis du contrôle cantonal des denrées. Pour Berne : Office vétérinaire du canton de Berne.',
- t_copied:'Message copié', t_logged:'Inscrit au protocole', t_cleared:'Vidé', t_need:'Indiquer d’abord le plat et les portions.'},
-it:{tagline:'Ciò che resta in cucina: passarlo avanti in sicurezza invece di buttarlo.',
- intro_p:'A fine serata resta del cibo e da qualche parte a Berna qualcuno ne avrebbe avuto bisogno. Raramente manca la volontà, manca la sicurezza: posso darlo? cosa scrivere sul contenitore? chi chiamo? Questa pagina è la check-list, tre minuti sul telefono.',
- s1b:'Verificare', s1:'Sette domande. Il cibo è liberato solo se tutte hanno un sì.', s2b:'Annunciare', s2:'Un messaggio pronto per il gruppo WhatsApp o Signal dei riceventi, con tutto ciò che devono sapere.', s3b:'Consegnare', s3:'Stampare l’etichetta, attaccarla, registrare nel protocollo. Per il controllo alimentare e per la coscienza.',
- note:'Nulla viene inviato. Protocollo e rubrica restano nel browser. La pagina non collega nessuno in automatico: il gruppo dei riceventi lo crei tu, per esempio con la Gassenküche, il Passantenheim o un Fairteiler. Ti dà testo, etichetta e protocollo.',
- h_check:'Check di liberazione',
- rules:['Il cibo non è mai stato in sala: niente buffet, niente ritorni dal tavolo, niente porzioni iniziate.','Tenuto caldo ad almeno 65 °C, oppure raffreddato a 5 °C o meno entro 2 ore dalla cottura. Mai più di 2 ore a temperatura ambiente.','Data e ora di preparazione note e riportate sull’etichetta.','I 14 allergeni del piatto sono noti e indicati.','Contenitore pulito, chiuso, etichettato. Niente piatti con uovo crudo, pesce crudo o carne cruda.','Trasporto nella catena del freddo (borsa termica) o caldo in contenitore termico; niente contenitori aperti in auto.','Il ricevente sa entro quando consumare e che il piatto va riscaldato a fondo prima del servizio (almeno 72 °C al cuore).'],
- v_ok:'Liberato. Messaggio, etichetta e protocollo sono pronti.', v_no:'Non liberato: non tutti i punti sono confermati.',
- check_note:'Base: legge sulle derrate alimentari e ordinanza sull’igiene (OIg), come valgono in ogni cucina professionale. Fino alla consegna l’esercizio è responsabile della sicurezza, poi il ricevente. Nel dubbio: non consegnare.',
- h_report:'Annuncio', f_biz:'Esercizio', f_contact:'Contatto (nome, telefono)', f_dish:'Piatto', ph_dish:'Risotto alle verdure, insalata a parte', f_portions:'Porzioni', c_veg:'vegetariano', c_vegan:'vegano', c_pork:'senza maiale', c_hot:'caldo (≥ 65 °C)', f_allerg:'Allergeni presenti (OID, allegato 6)', f_made:'Preparato il', f_made_t:'alle', f_until:'Consumare entro', f_until_t:'alle', f_from:'Ritiro dalle', f_to:'alle', f_where:'Luogo di consegna', ph_where:'Länggassstrasse 42, ingresso cucina sul retro, suonare', f_note:'Nota', ph_note:'Portare i propri contenitori. Salsa a parte, riscaldare prima di servire.',
- msg_h:'Messaggio per il gruppo', b_copy:'Copia il messaggio', b_label:'Stampa etichette', b_log:'Nel protocollo', b_clear:'Svuota il modulo', blocked:'Prima confermare tutti i punti del check. Fino ad allora il messaggio porta la nota NON LIBERATO.',
- m_head:'AVANZI', m_notok:'⚠️ NON LIBERATO (check incompleto)', m_portions:'porzioni', m_allerg:'Allergeni', m_none:'nessuno dei 14', m_made:'Preparato', m_until:'Consumare entro', m_pick:'Ritiro', m_where:'Luogo', m_contact:'Contatto', m_hot:'caldo', m_cold:'refrigerato', m_reheat:'Riscaldare a fondo prima di servire.',
- l_made:'Preparato', l_until:'Consumare entro', l_store:'Conservare in frigo (≤ 5 °C). Riscaldare a fondo prima di servire.', l_allerg:'Allergeni:', l_none:'nessuno dei 14 soggetti a dichiarazione',
- h_log:'Protocollo', log_note:'Ogni consegna con data, piatto, quantità e ricevente. Resta su questo dispositivo. Stampabile come tabella per il controllo alimentare.', lg_date:'Data', lg_dish:'Piatto', lg_qty:'Quantità', lg_to:'Ricevente', lg_by:'Liberazione', lg_empty:'Ancora nessuna voce.', b_printlog:'Stampa protocollo', b_clearlog:'Cancella protocollo', b_sure:'Sicuro? Tocca di nuovo.', log_to_prompt:'Ricevente (organizzazione o nome)', log_title:'Protocollo consegna derrate',
- h_orgs:'Chi accetta cibo', orgs_note:'Elenco iniziale di organizzazioni a Berna che di solito accettano derrate. Chiarire contatto e condizioni prima della prima consegna e annotarli qui; l’elenco resta nel browser.', o_name:'Organizzazione', o_takes:'Accetta / condizioni', o_contact:'Contatto', b_addorg:'+ Organizzazione',
- orgs:[['Gassenküche Bern (Kirchliche Gassenarbeit)','Pasti caldi per persone di strada. Condizioni da chiarire sul posto.',''],['Passantenheim Bern (Esercito della Salvezza)','Alloggio d’emergenza con cucina. Condizioni da chiarire.',''],['foodsharing Bern, Fairteiler','Frigoriferi pubblici; regole su foodsharing.ch.',''],['Tavola Svizzera, regione Berna','Ritira grandi quantità; iscrizione necessaria.',''],['Tavolino magico','Punti di distribuzione; soprattutto prodotti chiusi.','']],
- site_1:'Übrig Bern è libero (CC0). Non è consulenza legale: fanno fede la legge sulle derrate alimentari, l’ordinanza sull’igiene e il controllo cantonale delle derrate. Per Berna: Ufficio veterinario del Cantone di Berna.',
- t_copied:'Messaggio copiato', t_logged:'Registrato nel protocollo', t_cleared:'Svuotato', t_need:'Indicare prima piatto e porzioni.'},
-en:{tagline:'Pass on what is left in the kitchen, safely, instead of throwing it away.',
- intro_p:'At the end of the evening food is left over, and somewhere in Bern someone would have needed it. What is missing is rarely the will but the certainty: may I pass this on? what goes on the container? whom do I call? This page is that checklist, three minutes on a phone.',
- s1b:'Check', s1:'Seven questions. The food is released only when all are answered yes.', s2b:'Announce', s2:'A ready message for the WhatsApp or Signal group of recipients, with everything they need to know.', s3b:'Hand over', s3:'Print the label, stick it on, log the entry. For the food inspector and for your own conscience.',
- note:'Nothing is sent. Log and address book stay in your browser. The page connects nobody automatically: you create the recipients’ group, for example with the Gassenküche, the Passantenheim or a Fairteiler. It gives you the text, the label and the log.',
- h_check:'Release check',
- rules:['The food was never in the guest area: no buffet, no returns from tables, no opened portion.','Kept hot at 65 °C or more, or chilled to 5 °C or below within 2 hours of cooking. Never more than 2 hours at room temperature.','Preparation date and time are known and go on the label.','All 14 allergens in the dish are known and declared.','Clean, closed, labelled container. No dishes with raw egg, raw fish or raw meat.','Transport in the cold chain (cooler box) or hot in an insulated box; no open containers in the car.','The recipient knows the use-by time and that the dish is reheated thoroughly before serving (72 °C core at least).'],
- v_ok:'Released. Message, label and log are ready.', v_no:'Not released: not all points confirmed.',
- check_note:'Basis: the Swiss Foodstuffs Act and Hygiene Ordinance as they apply in every professional kitchen. Until handover the business is responsible for safety, afterwards the recipient. When in doubt: do not pass on.',
- h_report:'Announcement', f_biz:'Business', f_contact:'Contact (name, phone)', f_dish:'Dish', ph_dish:'Vegetable risotto, salad separate', f_portions:'Portions', c_veg:'vegetarian', c_vegan:'vegan', c_pork:'no pork', c_hot:'hot (≥ 65 °C)', f_allerg:'Allergens contained (LIV Annex 6)', f_made:'Prepared on', f_made_t:'at', f_until:'Use by', f_until_t:'at', f_from:'Pick-up from', f_to:'to', f_where:'Handover place', ph_where:'Länggassstrasse 42, kitchen back entrance, ring the bell', f_note:'Note', ph_note:'Bring your own containers. Sauce separate, reheat before serving.',
- msg_h:'Message for the group', b_copy:'Copy message', b_label:'Print labels', b_log:'Add to log', b_clear:'Clear form', blocked:'Confirm all points in the release check first. Until then the message carries the note NOT RELEASED.',
- m_head:'LEFTOVERS', m_notok:'⚠️ NOT RELEASED (check incomplete)', m_portions:'portions', m_allerg:'Allergens', m_none:'none of the 14', m_made:'Prepared', m_until:'Use by', m_pick:'Pick-up', m_where:'Place', m_contact:'Contact', m_hot:'hot', m_cold:'chilled', m_reheat:'Reheat thoroughly before serving.',
- l_made:'Prepared', l_until:'Use by', l_store:'Keep chilled (≤ 5 °C). Reheat thoroughly before serving.', l_allerg:'Allergens:', l_none:'none of the 14 declarable',
- h_log:'Log', log_note:'Every handover with date, dish, quantity and recipient. Stays on this device. Printable as a table for the food inspector.', lg_date:'Date', lg_dish:'Dish', lg_qty:'Quantity', lg_to:'Recipient', lg_by:'Release', lg_empty:'No entries yet.', b_printlog:'Print log', b_clearlog:'Clear log', b_sure:'Sure? Tap again.', log_to_prompt:'Recipient (organisation or name)', log_title:'Food handover log',
- h_orgs:'Who accepts food', orgs_note:'Starter list of organisations in Bern that usually accept food. Clarify contact and conditions before the first handover and note them here; the list stays in your browser.', o_name:'Organisation', o_takes:'Accepts / conditions', o_contact:'Contact', b_addorg:'+ Organisation',
- orgs:[['Gassenküche Bern (Kirchliche Gassenarbeit)','Hot meals for people on the street. Clarify conditions on site.',''],['Passantenheim Bern (Salvation Army)','Emergency shelter with kitchen. Clarify conditions.',''],['foodsharing Bern, Fairteiler','Public fridges; rules on foodsharing.ch.',''],['Schweizer Tafel, Bern region','Collects larger quantities from businesses; registration needed.',''],['Tischlein deck dich','Distribution points; mainly unopened goods.','']],
- site_1:'Übrig Bern is free (CC0). Not legal advice: the Foodstuffs Act, the Hygiene Ordinance and the cantonal food inspectorate are authoritative. For Bern: the Cantonal Veterinary Office.',
- t_copied:'Message copied', t_logged:'Added to the log', t_cleared:'Cleared', t_need:'Enter the dish and portions first.'}};
+  var I18N={
+    de:{tab_check:'Prüfen',tab_form:'Meldung',tab_ticket:'Etikett',tab_log:'Protokoll',
+        step:{check:'1  Prüfen',form:'2  Meldung',ticket:'3  Etikett',log:'4  Protokoll'},
+        rules:["Nicht im Gästebereich","Heiss ≥ 65 °C oder ≤ 5 °C","Zeit aufs Etikett","14 Allergene bekannt","Geschlossener Behälter","Kühlkette / Warmhaltebox","Empfänger kennt Frist"],
+        why:["Nur Essen, das nie im Gästebereich stand: aus der Küche, vom Pass, aus dem Buffet-Nachschub. Was auf dem Tisch war, geht nicht weiter.",
+             "Heiss gehalten über 65 °C – oder innert zwei Stunden auf 5 °C oder kälter gekühlt. Dazwischen wachsen Keime.",
+             "Zubereitet wann, essbar bis wann: beides kommt aufs Etikett. Ohne Zeit kann der Empfänger nichts entscheiden.",
+             "Du weisst für dieses Gericht, welche der 14 deklarationspflichtigen Allergene drin sind – und schreibst sie auf.",
+             "Deckel drauf, sauber, nicht offen im Blech. Der Behälter geht mit; er kommt zurück oder bleibt.",
+             "Auf dem Weg bleibt es kalt (Kühlbox) oder heiss (Warmhaltebox). Kein Kofferraum ohne Box.",
+             "Die Organisation weiss, bis wann sie es ausgeben oder verwerfen muss – das steht auf dem Etikett und in der Meldung."],
+        allergens:["Gluten","Krebstiere","Ei","Fisch","Erdnuss","Soja","Milch","Schalenfrüchte","Sellerie","Senf","Sesam","Sulfite","Lupine","Weichtiere"],
+        note_check:'Sieben Fragen. Alle Ja — sonst geht nichts raus. Das i erklärt jede Zeile.',
+        f_dish:'Gericht',ph_dish:'z. B. Gemüserisotto, Salat separat',f_portions:'Portionen',f_state:'Zustand',st_cold:'gekühlt',st_hot:'heiss',
+        f_from:'Abholen von',f_until:'bis',f_place:'Ort',ph_place:'Strasse, Eingang',f_business:'Betrieb',ph_business:'Restaurant Sonne',f_phone:'Telefon',f_email:'E-Mail',f_allergens:'Allergene',f_cooked:'Zubereitet',f_best:'Konsumieren bis',
+        confirm:'Allergene und «Konsumieren bis» sind geprüft und richtig.',confirm_hint:'Bitte bestätigen – ohne das gibt es kein Etikett.',
+        reheat:'Vor dem Servieren durcherhitzen.',note_ticket:'Dieselbe Form geht in WhatsApp und auf den Behälter.',print:'Etikett drucken',foot:'Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals',
+        left:function(n){return 'Noch '+n+' von 7'},hint_check:function(n){return 'Noch '+n+' von 7 — diese Frage zuerst.'},next_form:'Weiter zur Meldung',show_ticket:'Etikett zeigen',to_log:'In Protokoll legen',save_edit:'Änderung speichern',new_check:'Neue Freigabe',
+        missing:'Fehlt noch.',bad_email:'Das sieht nicht wie eine E-Mail aus.',without:function(f){return 'Ohne '+f+' kein Etikett.'},portions:'Portionen',port:'Port.',allerg:'Allergene',cooked:'Zubereitet',best:'Konsumieren bis',pickup:'Abholen',none:'keine angegeben',empty:'Noch kein Eintrag. Lokal im Browser.',edited:'geändert',
+        state:{'gekühlt':'gekühlt','heiss':'heiss'},
+        tips:{check:'Sieben Hygiene-Fragen. Tippe jede an, die stimmt; das i daneben erklärt sie. Erst bei 7 von 7 wird der Knopf unten rot und es geht weiter.',
+              form:'Was, wie viel, wann, wo – und wer. Gericht, Portionen, Ort, Betrieb und Telefon sind Pflicht; ganz unten bestätigst du Allergene und Frist.',
+              ticket:'So sieht das Etikett aus. Drucken (eine Seite) oder den Text darunter in WhatsApp kopieren. «In Protokoll legen» hält die Übergabe fest.',
+              log:'Das Protokoll bleibt nur in diesem Browser. Tippe einen Eintrag: ansehen, bearbeiten, Etikett nochmals zeigen oder löschen.'},
+        info_close:'Schliessen',info_btn:'Hinweise ein/aus',rm:'Bewegung reduziert: dein Gerät hat «Bewegung reduzieren» aktiv – Animationen sind deshalb aus.',enter:'Eintreten',support:'Unterstützen',close:'Schliessen',
+        c_k:'Das Konzept',c_title:'Was in der Küche übrig bleibt, geht sicher weiter.',
+        c_p1:'übrig ist der Zettel für die letzten fünfzehn Minuten der Schicht: sieben Hygiene-Fragen, eine Meldung, ein Etikett, ein Protokoll. Was freigegeben ist, holt eine soziale Organisation ab – am selben Abend.',
+        c_s1:'Prüfen',c_s1t:'Sieben Fragen. Alle Ja, sonst geht nichts raus.',c_s2:'Meldung',c_s2t:'Was, wie viel, wann, wo – und wer es abgibt.',c_s3:'Etikett',c_s3t:'Auf den Behälter und in die Gruppe. Gleiche Form, gleiche Reihenfolge.',c_s4:'Protokoll',c_s4t:'Bleibt im Browser. Beide Seiten wissen, was wann übergeben wurde.',
+        c_p2:'Kein Konto, kein Server, kein Dashboard. Gebaut in Bern von Freiwilligen – für Küchen und für Menschen, die abends noch etwas Warmes brauchen.',c_go:'Los geht’s',
+        s_k:'Unterstützen',s_title:'Ein Abend übrig kostet elf Franken.',s_p1:'So viel kostet ein E-Cargo-Bike für eine Abholrunde (carvelo2go, drei Stunden). Thermoboxen, Etiketten, die Koordination – alles trägt der Verein. Kein Investor, keine Werbung.',
+        s_p2:'Drei Arten zu helfen: als Küche mitmachen, als Organisation abholen, oder mit einem Beitrag. Das Spendenkonto folgt mit der Vereinsgründung – bis dahin zählt jeder Kontakt.',s_share:'Link teilen',share_ok:'Link kopiert.',share_fail:'Kopieren nicht möglich – Adresse oben im Browser kopieren.',
+        w_k:'Sieben Mal Ja',w_title:'Freigegeben.',w_p:'Das Essen darf raus. Jetzt noch drei Dinge: was es ist, wie viel, und wann es abgeholt werden kann. Dann druckst du das Etikett.',w_go:'Zur Meldung',
+        d_edit:'Bearbeiten',d_label:'Etikett zeigen',d_del:'Eintrag löschen',d_confirm:'Diesen Eintrag löschen?',d_place:'Ort',d_contact:'Kontakt',d_window:'Abholen',d_all:'Allergene',d_cooked:'Zubereitet',d_best:'Konsumieren bis',
+        orgs_btn:'Wer nimmt Essen an',o_k:'Abnehmer in Bern',o_title:'Wer nimmt Essen an',o_note:'Startliste (Stand 25.9.2026). Vor der ersten Übergabe anrufen und Bedingungen klären; deine Notizen bleiben in diesem Browser.',o_call:'Anrufen',o_notes:'Meine Notizen (Ansprechperson, Bedingungen, Zeiten)',
+        orgs_desc:{passantenheim:'Notschlafstelle mit Halbpension, 50–60 Betten. Eintritt bis 23:00 – geeignet für späte Küchen.',sleeper:'20 Betten, kocht selbst (Schweizer Tafel). Abendessen 18–20 Uhr; gekühlte Ware für den nächsten Tag anfragen.',punkt6:'Winter 18:00–22:30, bisher Kaffee und Sandwiches. Ob warme Speisen erlaubt sind: nachfragen.',pluto:'Jugendliche 14–23, 7 Betten, 18:00–09:00, warmes Abendessen. Kleine Mengen.',gassenkueche:'Mahlzeiten für CHF 5, seit 1984. Adresse und Zeiten vor Ort klären.',fairteiler:'Öffentliche Kühlschränke, ohne Aufsicht. Nur nach den Regeln des jeweiligen Fairteilers – gekochte Speisen meist nicht.'},
+        app_link:'Plattform: Angebote live melden und reservieren (Anmeldung)'},
+    en:{tab_check:'Check',tab_form:'Message',tab_ticket:'Label',tab_log:'Log',
+        step:{check:'1  Check',form:'2  Message',ticket:'3  Label',log:'4  Log'},
+        rules:["Not from the guest area","Hot ≥ 65 °C or ≤ 5 °C","Time on the label","14 allergens known","Closed container","Cold chain / hot box","Receiver knows the deadline"],
+        why:["Only food that never stood in the guest area: from the kitchen, the pass, the buffet back-up. What was on a table does not go on.",
+             "Kept hot above 65 °C – or chilled to 5 °C or below within two hours. In between, germs grow.",
+             "Prepared when, edible until when: both go on the label. Without times the receiver cannot decide.",
+             "You know which of the 14 declarable allergens this dish contains – and you write them down.",
+             "Lid on, clean, not open in a tray. The container travels; it comes back or stays.",
+             "On the way it stays cold (cool box) or hot (hot box). No car boot without a box.",
+             "The organisation knows until when it must serve or discard – it is on the label and in the message."],
+        allergens:["Gluten","Crustaceans","Egg","Fish","Peanuts","Soy","Milk","Tree nuts","Celery","Mustard","Sesame","Sulphites","Lupin","Molluscs"],
+        note_check:'Seven questions. All yes — or nothing leaves. The i explains each line.',
+        f_dish:'Dish',ph_dish:'e.g. vegetable risotto, salad separate',f_portions:'Portions',f_state:'State',st_cold:'chilled',st_hot:'hot',
+        f_from:'Pick up from',f_until:'until',f_place:'Place',ph_place:'Street, entrance',f_business:'Business',ph_business:'Restaurant Sonne',f_phone:'Phone',f_email:'E-mail',f_allergens:'Allergens',f_cooked:'Prepared',f_best:'Consume by',
+        confirm:'Allergens and “consume by” are checked and correct.',confirm_hint:'Please confirm – no label without it.',
+        reheat:'Reheat thoroughly before serving.',note_ticket:'The same form goes to WhatsApp and onto the container.',print:'Print label',foot:'Prototype · nothing leaves the browser · tap the logo = intro again',
+        left:function(n){return n+' of 7 left'},hint_check:function(n){return n+' of 7 left — this one first.'},next_form:'Continue to message',show_ticket:'Show label',to_log:'Add to log',save_edit:'Save changes',new_check:'New release',
+        missing:'Still missing.',bad_email:'That does not look like an e-mail.',without:function(f){return 'No label without '+f+'.'},portions:'portions',port:'port.',allerg:'Allergens',cooked:'Prepared',best:'Consume by',pickup:'Pick up',none:'none given',empty:'No entry yet. Local in the browser.',edited:'edited',
+        state:{'gekühlt':'chilled','heiss':'hot'},
+        tips:{check:'Seven hygiene questions. Tap each one that is true; the i next to it explains it. Only at 7 of 7 does the button below turn red and let you continue.',
+              form:'What, how much, when, where – and who. Dish, portions, place, business and phone are required; at the bottom you confirm allergens and deadline.',
+              ticket:'This is the label. Print it (one page) or copy the text below into WhatsApp. “Add to log” records the hand-over.',
+              log:'The log stays in this browser only. Tap an entry to view, edit, show the label again or delete it.'},
+        info_close:'Close',info_btn:'Tips on/off',rm:'Reduced motion: your device has “Reduce Motion” on – animations are therefore off.',enter:'Enter',support:'Support',close:'Close',
+        c_k:'The concept',c_title:'What is left in the kitchen moves on safely.',
+        c_p1:'übrig is the slip for the last fifteen minutes of the shift: seven hygiene questions, one message, one label, one log. What is released gets picked up by a social organisation – the same evening.',
+        c_s1:'Check',c_s1t:'Seven questions. All yes, or nothing leaves.',c_s2:'Message',c_s2t:'What, how much, when, where – and who hands it over.',c_s3:'Label',c_s3t:'Onto the container and into the group. Same form, same order.',c_s4:'Log',c_s4t:'Stays in the browser. Both sides know what was handed over when.',
+        c_p2:'No account, no server, no dashboard. Built in Bern by volunteers – for kitchens and for people who still need something warm in the evening.',c_go:'Let’s go',
+        s_k:'Support',s_title:'One evening of übrig costs eleven francs.',s_p1:'That is one e-cargo bike for a pick-up round (carvelo2go, three hours). Thermo boxes, labels, coordination – the association carries it all. No investor, no ads.',
+        s_p2:'Three ways to help: join as a kitchen, collect as an organisation, or contribute. The donation account follows with the association – until then every contact counts.',s_share:'Share link',share_ok:'Link copied.',share_fail:'Cannot copy – copy the address bar instead.',
+        w_k:'Seven times yes',w_title:'Released.',w_p:'The food may leave. Three more things: what it is, how much, and when it can be picked up. Then you print the label.',w_go:'To the message',
+        d_edit:'Edit',d_label:'Show label',d_del:'Delete entry',d_confirm:'Delete this entry?',d_place:'Place',d_contact:'Contact',d_window:'Pick up',d_all:'Allergens',d_cooked:'Prepared',d_best:'Consume by',
+        orgs_btn:'Who accepts food',o_k:'Receivers in Bern',o_title:'Who accepts food',o_note:'Starter list (as of 25 Sept 2026). Call before the first hand-over and agree the conditions; your notes stay in this browser.',o_call:'Call',o_notes:'My notes (contact person, conditions, times)',
+        orgs_desc:{passantenheim:'Night shelter with half board, 50–60 beds. Entry until 23:00 – suits late kitchens.',sleeper:'20 beds, cooks itself (Schweizer Tafel). Dinner 18–20; ask about chilled food for the next day.',punkt6:'Winter 18:00–22:30, so far coffee and sandwiches. Ask whether hot dishes are allowed.',pluto:'Youth 14–23, 7 beds, 18:00–09:00, warm dinner. Small quantities.',gassenkueche:'Meals for CHF 5, since 1984. Clarify address and times on site.',fairteiler:'Public fridges, unattended. Only by the rules of each Fairteiler – cooked dishes usually not.'},
+        app_link:'Platform: post and reserve offers live (sign-in)'},
+    fr:{tab_check:'Vérifier',tab_form:'Annonce',tab_ticket:'Étiquette',tab_log:'Journal',
+        step:{check:'1  Vérifier',form:'2  Annonce',ticket:'3  Étiquette',log:'4  Journal'},
+        rules:["Pas de l’espace clients","Chaud ≥ 65 °C ou ≤ 5 °C","L’heure sur l’étiquette","14 allergènes connus","Récipient fermé","Chaîne du froid / caisson chaud","Le receveur connaît le délai"],
+        why:["Seulement des plats qui n’ont jamais été dans l’espace clients : cuisine, passe, réserve du buffet. Ce qui était sur une table ne repart pas.",
+             "Maintenu chaud au-dessus de 65 °C – ou refroidi à 5 °C ou moins en deux heures. Entre les deux, les germes se multiplient.",
+             "Préparé quand, à consommer jusqu’à quand : les deux vont sur l’étiquette. Sans heures, le receveur ne peut rien décider.",
+             "Tu sais lesquels des 14 allergènes à déclarer ce plat contient – et tu les notes.",
+             "Couvercle fermé, propre, pas à l’air libre dans un bac. Le récipient voyage ; il revient ou il reste.",
+             "En route, ça reste froid (glacière) ou chaud (caisson chaud). Pas de coffre de voiture sans caisson.",
+             "L’organisation sait jusqu’à quand elle doit servir ou jeter – c’est sur l’étiquette et dans l’annonce."],
+        allergens:["Gluten","Crustacés","Œufs","Poissons","Arachides","Soja","Lait","Fruits à coque","Céleri","Moutarde","Sésame","Sulfites","Lupin","Mollusques"],
+        note_check:'Sept questions. Toutes oui — sinon rien ne sort. Le i explique chaque ligne.',
+        f_dish:'Plat',ph_dish:'p. ex. risotto aux légumes, salade à part',f_portions:'Portions',f_state:'État',st_cold:'réfrigéré',st_hot:'chaud',
+        f_from:'À retirer dès',f_until:'jusqu’à',f_place:'Lieu',ph_place:'Rue, entrée',f_business:'Établissement',ph_business:'Restaurant Sonne',f_phone:'Téléphone',f_email:'E-mail',f_allergens:'Allergènes',f_cooked:'Préparé',f_best:'À consommer jusqu’au',
+        confirm:'Allergènes et « à consommer jusqu’au » sont vérifiés et corrects.',confirm_hint:'Merci de confirmer – sans cela, pas d’étiquette.',
+        reheat:'Bien réchauffer avant de servir.',note_ticket:'La même forme va sur WhatsApp et sur le récipient.',print:'Imprimer l’étiquette',foot:'übrig Berne · rien ne quitte le navigateur · toucher le logo = revoir l’intro',
+        left:function(n){return 'Encore '+n+' sur 7'},hint_check:function(n){return 'Encore '+n+' sur 7 — celle-ci d’abord.'},next_form:'Vers l’annonce',show_ticket:'Voir l’étiquette',to_log:'Mettre au journal',save_edit:'Enregistrer la modification',new_check:'Nouvelle libération',
+        missing:'Manque encore.',bad_email:'Cela ne ressemble pas à un e-mail.',without:function(f){return 'Sans '+f+', pas d’étiquette.'},portions:'portions',port:'port.',allerg:'Allergènes',cooked:'Préparé',best:'À consommer jusqu’au',pickup:'Retrait',none:'aucun indiqué',empty:'Pas encore d’entrée. Local, dans le navigateur.',edited:'modifié',
+        state:{'gekühlt':'réfrigéré','heiss':'chaud'},
+        tips:{check:'Sept questions d’hygiène. Touche chacune qui est vraie ; le i à côté l’explique. À 7 sur 7 seulement, le bouton en bas devient rouge et on continue.',
+              form:'Quoi, combien, quand, où – et qui. Plat, portions, lieu, établissement et téléphone sont obligatoires ; tout en bas, tu confirmes allergènes et délai.',
+              ticket:'Voici l’étiquette. Imprimer (une page) ou copier le texte ci-dessous dans WhatsApp. « Mettre au journal » enregistre la remise.',
+              log:'Le journal reste uniquement dans ce navigateur. Touche une entrée : voir, modifier, revoir l’étiquette ou supprimer.'},
+        info_close:'Fermer',info_btn:'Conseils on/off',rm:'Mouvement réduit : ton appareil a « Réduire les animations » activé – les animations sont donc désactivées.',enter:'Entrer',support:'Soutenir',close:'Fermer',
+        c_k:'Le concept',c_title:'Ce qui reste en cuisine repart en sécurité.',
+        c_p1:'übrig est le bout de papier des quinze dernières minutes du service : sept questions d’hygiène, une annonce, une étiquette, un journal. Ce qui est libéré est retiré par une organisation sociale – le soir même.',
+        c_s1:'Vérifier',c_s1t:'Sept questions. Toutes oui, sinon rien ne sort.',c_s2:'Annonce',c_s2t:'Quoi, combien, quand, où – et qui remet.',c_s3:'Étiquette',c_s3t:'Sur le récipient et dans le groupe. Même forme, même ordre.',c_s4:'Journal',c_s4t:'Reste dans le navigateur. Les deux côtés savent ce qui a été remis, et quand.',
+        c_p2:'Pas de compte, pas de serveur, pas de tableau de bord. Construit à Berne par des bénévoles – pour les cuisines et pour les personnes qui ont encore besoin d’un plat chaud le soir.',c_go:'C’est parti',
+        s_k:'Soutenir',s_title:'Une soirée übrig coûte onze francs.',s_p1:'C’est le prix d’un vélo-cargo électrique pour une tournée (carvelo2go, trois heures). Caissons isothermes, étiquettes, coordination – l’association porte tout. Pas d’investisseur, pas de publicité.',
+        s_p2:'Trois façons d’aider : participer comme cuisine, retirer comme organisation, ou contribuer. Le compte de dons suivra la fondation de l’association – d’ici là, chaque contact compte.',s_share:'Partager le lien',share_ok:'Lien copié.',share_fail:'Copie impossible – copier l’adresse en haut du navigateur.',
+        w_k:'Sept fois oui',w_title:'Libéré.',w_p:'Le plat peut sortir. Encore trois choses : ce que c’est, combien, et quand on peut le retirer. Puis tu imprimes l’étiquette.',w_go:'Vers l’annonce',
+        d_edit:'Modifier',d_label:'Voir l’étiquette',d_del:'Supprimer l’entrée',d_confirm:'Supprimer cette entrée ?',d_place:'Lieu',d_contact:'Contact',d_window:'Retrait',d_all:'Allergènes',d_cooked:'Préparé',d_best:'À consommer jusqu’au',
+        orgs_btn:'Qui accepte de la nourriture',o_k:'Receveurs à Berne',o_title:'Qui accepte de la nourriture',o_note:'Liste de départ (état au 25.9.2026). Appeler avant la première remise et clarifier les conditions ; tes notes restent dans ce navigateur.',o_call:'Appeler',o_notes:'Mes notes (personne de contact, conditions, horaires)',
+        orgs_desc:{passantenheim:'Hébergement d’urgence en demi-pension, 50–60 lits. Entrée jusqu’à 23h – convient aux cuisines tardives.',sleeper:'20 lits, cuisine elle-même (Table Suisse). Repas 18–20h ; demander pour des denrées réfrigérées pour le lendemain.',punkt6:'Hiver 18h–22h30, jusqu’ici café et sandwiches. Demander si les plats chauds sont admis.',pluto:'Jeunes 14–23 ans, 7 lits, 18h–9h, repas chaud le soir. Petites quantités.',gassenkueche:'Repas à CHF 5, depuis 1984. Adresse et horaires à clarifier sur place.',fairteiler:'Frigos publics, sans surveillance. Uniquement selon les règles de chaque Fairteiler – plats cuisinés en général non.'},
+        app_link:'Plateforme : annoncer et réserver des offres en direct (connexion)'},
+    it:{tab_check:'Verifica',tab_form:'Annuncio',tab_ticket:'Etichetta',tab_log:'Registro',
+        step:{check:'1  Verifica',form:'2  Annuncio',ticket:'3  Etichetta',log:'4  Registro'},
+        rules:["Non dalla zona ospiti","Caldo ≥ 65 °C o ≤ 5 °C","L’ora sull’etichetta","14 allergeni noti","Contenitore chiuso","Catena del freddo / box termico","Chi riceve conosce la scadenza"],
+        why:["Solo cibo che non è mai stato nella zona ospiti: cucina, pass, scorta del buffet. Ciò che era su un tavolo non prosegue.",
+             "Tenuto caldo sopra i 65 °C – oppure raffreddato a 5 °C o meno entro due ore. Nel mezzo i germi crescono.",
+             "Preparato quando, da consumare entro quando: entrambi vanno sull’etichetta. Senza orari chi riceve non può decidere.",
+             "Sai quali dei 14 allergeni da dichiarare contiene questo piatto – e li scrivi.",
+             "Coperchio chiuso, pulito, non aperto in una teglia. Il contenitore viaggia; torna o resta.",
+             "Lungo il tragitto resta freddo (borsa frigo) o caldo (box termico). Niente bagagliaio senza box.",
+             "L’organizzazione sa entro quando deve servire o smaltire – è sull’etichetta e nell’annuncio."],
+        allergens:["Glutine","Crostacei","Uova","Pesce","Arachidi","Soia","Latte","Frutta a guscio","Sedano","Senape","Sesamo","Solfiti","Lupini","Molluschi"],
+        note_check:'Sette domande. Tutte sì — altrimenti non esce nulla. La i spiega ogni riga.',
+        f_dish:'Piatto',ph_dish:'es. risotto alle verdure, insalata a parte',f_portions:'Porzioni',f_state:'Stato',st_cold:'refrigerato',st_hot:'caldo',
+        f_from:'Ritiro dalle',f_until:'alle',f_place:'Luogo',ph_place:'Via, ingresso',f_business:'Esercizio',ph_business:'Restaurant Sonne',f_phone:'Telefono',f_email:'E-mail',f_allergens:'Allergeni',f_cooked:'Preparato',f_best:'Consumare entro',
+        confirm:'Allergeni e «consumare entro» sono verificati e corretti.',confirm_hint:'Conferma per favore – senza, niente etichetta.',
+        reheat:'Riscaldare bene prima di servire.',note_ticket:'La stessa forma va su WhatsApp e sul contenitore.',print:'Stampa etichetta',foot:'übrig Berna · nulla lascia il browser · tocca il logo = intro di nuovo',
+        left:function(n){return 'Ancora '+n+' su 7'},hint_check:function(n){return 'Ancora '+n+' su 7 — prima questa.'},next_form:'Avanti all’annuncio',show_ticket:'Mostra etichetta',to_log:'Metti nel registro',save_edit:'Salva modifica',new_check:'Nuova liberatoria',
+        missing:'Manca ancora.',bad_email:'Non sembra un’e-mail.',without:function(f){return 'Senza '+f+' niente etichetta.'},portions:'porzioni',port:'porz.',allerg:'Allergeni',cooked:'Preparato',best:'Consumare entro',pickup:'Ritiro',none:'nessuno indicato',empty:'Ancora nessuna voce. Locale, nel browser.',edited:'modificato',
+        state:{'gekühlt':'refrigerato','heiss':'caldo'},
+        tips:{check:'Sette domande d’igiene. Tocca ogni riga che è vera; la i accanto la spiega. Solo a 7 su 7 il pulsante in basso diventa rosso e si prosegue.',
+              form:'Cosa, quanto, quando, dove – e chi. Piatto, porzioni, luogo, esercizio e telefono sono obbligatori; in fondo confermi allergeni e scadenza.',
+              ticket:'Ecco l’etichetta. Stampala (una pagina) o copia il testo qui sotto in WhatsApp. «Metti nel registro» registra la consegna.',
+              log:'Il registro resta solo in questo browser. Tocca una voce: vedere, modificare, rivedere l’etichetta o eliminare.'},
+        info_close:'Chiudi',info_btn:'Suggerimenti on/off',rm:'Movimento ridotto: il tuo dispositivo ha «Riduci movimento» attivo – le animazioni sono quindi disattivate.',enter:'Entra',support:'Sostieni',close:'Chiudi',
+        c_k:'Il concetto',c_title:'Ciò che resta in cucina prosegue in sicurezza.',
+        c_p1:'übrig è il foglietto degli ultimi quindici minuti del turno: sette domande d’igiene, un annuncio, un’etichetta, un registro. Ciò che è liberato viene ritirato da un’organizzazione sociale – la sera stessa.',
+        c_s1:'Verifica',c_s1t:'Sette domande. Tutte sì, altrimenti non esce nulla.',c_s2:'Annuncio',c_s2t:'Cosa, quanto, quando, dove – e chi consegna.',c_s3:'Etichetta',c_s3t:'Sul contenitore e nel gruppo. Stessa forma, stesso ordine.',c_s4:'Registro',c_s4t:'Resta nel browser. Entrambe le parti sanno cosa è stato consegnato e quando.',
+        c_p2:'Nessun account, nessun server, nessuna dashboard. Costruito a Berna da volontari – per le cucine e per le persone che la sera hanno ancora bisogno di qualcosa di caldo.',c_go:'Si parte',
+        s_k:'Sostieni',s_title:'Una sera di übrig costa undici franchi.',s_p1:'Tanto costa una e-cargo bike per un giro di ritiro (carvelo2go, tre ore). Box termici, etichette, coordinamento – tutto a carico dell’associazione. Nessun investitore, nessuna pubblicità.',
+        s_p2:'Tre modi per aiutare: partecipare come cucina, ritirare come organizzazione, o contribuire. Il conto per le donazioni arriva con la fondazione dell’associazione – fino ad allora conta ogni contatto.',s_share:'Condividi il link',share_ok:'Link copiato.',share_fail:'Copia non riuscita – copia l’indirizzo in alto nel browser.',
+        w_k:'Sette volte sì',w_title:'Liberato.',w_p:'Il cibo può uscire. Ancora tre cose: cos’è, quanto, e quando si può ritirare. Poi stampi l’etichetta.',w_go:'All’annuncio',
+        d_edit:'Modifica',d_label:'Mostra etichetta',d_del:'Elimina voce',d_confirm:'Eliminare questa voce?',d_place:'Luogo',d_contact:'Contatto',d_window:'Ritiro',d_all:'Allergeni',d_cooked:'Preparato',d_best:'Consumare entro',
+        orgs_btn:'Chi accetta cibo',o_k:'Riceventi a Berna',o_title:'Chi accetta cibo',o_note:'Elenco iniziale (stato 25.9.2026). Chiamare prima della prima consegna e chiarire le condizioni; le tue note restano in questo browser.',o_call:'Chiama',o_notes:'Le mie note (referente, condizioni, orari)',
+        orgs_desc:{passantenheim:'Alloggio d’emergenza con mezza pensione, 50–60 letti. Ingresso fino alle 23 – adatto a cucine tardive.',sleeper:'20 letti, cucina in proprio (Tavola Svizzera). Cena 18–20; chiedere per merce refrigerata per il giorno dopo.',punkt6:'Inverno 18:00–22:30, finora caffè e panini. Chiedere se i piatti caldi sono ammessi.',pluto:'Giovani 14–23, 7 letti, 18:00–09:00, cena calda. Piccole quantità.',gassenkueche:'Pasti a CHF 5, dal 1984. Indirizzo e orari da chiarire sul posto.',fairteiler:'Frigoriferi pubblici, senza sorveglianza. Solo secondo le regole del singolo Fairteiler – piatti cucinati di norma no.'},
+        app_link:'Piattaforma: annunciare e prenotare offerte in diretta (accesso)'}
+  };
+  var lang='de';try{lang=localStorage.getItem('uebrig-lang')||localStorage.getItem('uebrig-prototyp-lang')||localStorage.getItem('ub_lang')||(navigator.language||'de').slice(0,2).toLowerCase()}catch(e){}
+  if(!I18N[lang])lang='de';
+  var T=function(k){return I18N[lang][k]};
+  var RULES=I18N.de.rules, ALLERGENS=I18N.de.allergens;  /* deutsche Namen bleiben interne IDs */
+  var REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(id){return document.getElementById(id)};
+  var pad=function(n){return String(n).padStart(2,'0')};
+  var stampT=function(d){return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'. '+pad(d.getHours())+':'+pad(d.getMinutes())};
+  var buzz=function(ms){try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}};
 
-var $=function(id){return document.getElementById(id);}, el=function(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;};
-var lang='de'; try{ var sl=localStorage.getItem('ub_lang'); if(sl&&I18N[sl]) lang=sl; }catch(e){}
-if(!sl){ var nav=(navigator.language||'de').slice(0,2).toLowerCase(); if(I18N[nav]) lang=nav; }
-function t(k){ return I18N[lang][k]; }
-var TEXT=['biz','contact','dish','portions','madeD','madeT','untilD','untilT','pickFrom','pickTo','where','note'], FLAGS=['veg','vegan','halal','hot'];
-var st={rules:[false,false,false,false,false,false,false], allerg:[], log:[], orgs:null};
-TEXT.forEach(function(k){ st[k]=''; }); FLAGS.forEach(function(k){ st[k]=false; });
-try{ var raw=localStorage.getItem('ub_state'); if(raw){ var s=JSON.parse(raw); ['biz','contact','log','orgs'].forEach(function(k){ if(s[k]!==undefined) st[k]=s[k]; }); } }catch(e){}
-function save(){ try{ localStorage.setItem('ub_state', JSON.stringify({biz:st.biz, contact:st.contact, log:st.log, orgs:st.orgs})); }catch(e){} }
-function today(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
-function fmtD(iso){ if(!iso) return ''; var p=iso.split('-'); return p.length===3 ? p[2]+'.'+p[1]+'.'+p[0] : iso; }
-function allOk(){ return st.rules.every(Boolean); }
-
-/* rules */
-function buildRules(){
-  var box=$('rules'); box.textContent='';
-  t('rules').forEach(function(r,i){
-    var l=el('label','chk'+(st.rules[i]?'':' bad')); var c=document.createElement('input'); c.type='checkbox'; c.checked=st.rules[i]; c.id='rule_'+i;
-    c.addEventListener('change', function(){ st.rules[i]=c.checked; l.classList.toggle('bad', !c.checked); renderAll(); });
-    l.appendChild(c); l.appendChild(el('span',null,r)); box.appendChild(l);
+  /* ---- overlays ---- */
+  function openV(id){var v=$(id);v.hidden=false;void v.offsetWidth;requestAnimationFrame(function(){v.classList.add('in')});var f=v.querySelector('.x');if(f)f.focus({preventScroll:true})}
+  function closeV(id){var v=$(id);v.classList.remove('in');setTimeout(function(){v.hidden=true;if(id==='concept'||id==='detail')setTimeout(blinkRings,120)},REDUCED?0:260)}
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openV(b.dataset.open)})});
+  document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){closeV(b.dataset.close)})});
+  document.querySelectorAll('.veil').forEach(function(v){v.addEventListener('click',function(e){if(e.target===v)closeV(v.id)})});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.veil:not([hidden])').forEach(function(v){closeV(v.id)})});
+  $('shareBtn').addEventListener('click',function(){
+    var url=location.href.split('#')[0],n=$('shareNote');
+    if(navigator.share){navigator.share({title:'übrig',url:url}).catch(function(){});return}
+    if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){n.textContent=T('share_ok')},function(){n.textContent=T('share_fail')})}else n.textContent=T('share_fail');
   });
-}
-function renderVerdict(){ var v=$('verdict'); var ok=allOk(); v.className='verdict '+(ok?'ok':'no'); v.textContent=(ok?'✅ ':'⛔ ')+t(ok?'v_ok':'v_no'); $('blocked').hidden=ok; }
 
-/* allergens */
-function buildAllerg(){
-  var g=$('allerg'); g.textContent='';
-  ALLERG[lang].forEach(function(a,i){ var n=i+1; var b=el('label','ab'); b.setAttribute('aria-pressed', String(st.allerg.indexOf(n)>=0));
-    var c=document.createElement('input'); c.type='checkbox'; c.checked=st.allerg.indexOf(n)>=0; c.id='al_'+n;
-    c.addEventListener('change', function(){ var k=st.allerg.indexOf(n); if(c.checked&&k<0) st.allerg.push(n); if(!c.checked&&k>=0) st.allerg.splice(k,1); st.allerg.sort(function(p,q){return p-q;}); b.setAttribute('aria-pressed', String(c.checked)); renderMsg(); });
-    b.appendChild(c); b.appendChild(el('b',null,String(n))); b.appendChild(el('span',null,a)); g.appendChild(b); });
-}
-function allergText(){ if(!st.allerg.length) return t('m_none'); return st.allerg.map(function(n){ return n+' '+ALLERG[lang][n-1]; }).join(', '); }
-
-/* message */
-function buildMsg(){
-  var L=[]; L.push(t('m_head')+' · '+(st.biz||'—'));
-  if(!allOk()) L.push(t('m_notok'));
-  var fl=[]; if(st.vegan) fl.push(t('c_vegan')); else if(st.veg) fl.push(t('c_veg')); if(st.halal) fl.push(t('c_pork')); fl.push(t(st.hot?'m_hot':'m_cold'));
-  L.push((st.portions||'?')+' '+t('m_portions')+' '+(st.dish||'—')+' ('+fl.join(', ')+')');
-  L.push(t('m_allerg')+': '+allergText());
-  if(st.madeD||st.madeT) L.push(t('m_made')+': '+[fmtD(st.madeD), st.madeT].filter(Boolean).join(' '));
-  if(st.untilD||st.untilT) L.push(t('m_until')+': '+[fmtD(st.untilD), st.untilT].filter(Boolean).join(' ')+'. '+t('m_reheat'));
-  if(st.pickFrom||st.pickTo) L.push(t('m_pick')+': '+[st.pickFrom, st.pickTo].filter(Boolean).join('–'));
-  if(st.where) L.push(t('m_where')+': '+st.where);
-  if(st.contact) L.push(t('m_contact')+': '+st.contact);
-  if(st.note) L.push(st.note);
-  return L.join('\n');
-}
-function renderMsg(){ $('msg').textContent=buildMsg(); }
-
-/* labels */
-function buildLabels(){
-  var box=$('labels'); box.textContent='';
-  var n=Math.min(8, Math.max(2, Math.ceil((parseInt(st.portions,10)||4)/4)));
-  for(var i=0;i<n;i++){
-    var l=el('div','lab'); var h=el('div','h'); h.appendChild(el('b',null,st.biz||'—')); h.appendChild(el('span',null,fmtD(st.madeD||today()))); l.appendChild(h);
-    var d=el('div'); d.appendChild(el('div','d', st.dish||'—'));
-    var a=el('div','a'); a.appendChild(el('b',null,t('l_allerg')+' ')); a.appendChild(document.createTextNode(st.allerg.length ? allergText() : t('l_none'))); d.appendChild(a); l.appendChild(d);
-    var f=el('div','f'); f.appendChild(el('div',null,t('l_made')+': '+[fmtD(st.madeD), st.madeT].filter(Boolean).join(' ')));
-    f.appendChild(el('div',null,t('l_until')+': '+[fmtD(st.untilD), st.untilT].filter(Boolean).join(' ')));
-    f.appendChild(el('div',null,t('l_store'))); l.appendChild(f); box.appendChild(l);
+  /* ---- intro ---- */
+  var intro=$('intro');
+  function playIntro(force){
+    var recent=false;
+    try{var t=+sessionStorage.getItem('uebrig-intro')||0;recent=(Date.now()-t)<10*60*1000}catch(e){}
+    if(!force&&recent){intro.hidden=true;setTimeout(blinkRings,300);return}
+    intro.hidden=false;intro.classList.remove('play','still','leave');void intro.offsetWidth;
+    intro.classList.add(REDUCED?'still':'play');
+    if(!REDUCED)setTimeout(function(){buzz(10)},1640);
   }
-}
+  $('enter').addEventListener('click',function(){
+    intro.classList.add('leave');
+    setTimeout(function(){intro.hidden=true;intro.classList.remove('play','still','leave')},REDUCED?0:230);
+    try{sessionStorage.setItem('uebrig-intro',String(Date.now()))}catch(e){}
+    openV('concept');
+  });
+  $('replay').addEventListener('click',function(){playIntro(true)});
+  playIntro(false);
 
-/* log */
-function renderLog(){
-  var tb=$('logTable'); tb.textContent='';
-  var thead=el('thead'); var tr=el('tr'); [t('lg_date'),t('lg_dish'),t('lg_qty'),t('lg_to'),t('lg_by'),''].forEach(function(h){ tr.appendChild(el('th',null,h)); }); thead.appendChild(tr); tb.appendChild(thead);
-  var tbody=el('tbody');
-  if(!st.log.length){ var r=el('tr'); var td=el('td',null,t('lg_empty')); td.colSpan=6; r.appendChild(td); tbody.appendChild(r); }
-  st.log.slice().reverse().forEach(function(e, ri){ var r=el('tr'); r.appendChild(el('td',null,e.d)); r.appendChild(el('td',null,e.dish)); r.appendChild(el('td',null,e.qty)); r.appendChild(el('td',null,e.to)); r.appendChild(el('td',null,e.by));
-    var x=el('td','x'); var b=el('button',null,'×'); b.type='button'; b.addEventListener('click', function(){ var idx=st.log.length-1-ri; st.log.splice(idx,1); save(); renderLog(); }); x.appendChild(b); r.appendChild(x); tbody.appendChild(r); });
-  tb.appendChild(tbody);
-  var pl=$('printlog'); pl.textContent=''; pl.appendChild(el('h2',null,t('log_title')+' · '+(st.biz||'')));
-  var pt=el('table'); var ph=el('tr'); [t('lg_date'),t('lg_dish'),t('lg_qty'),t('lg_to'),t('lg_by')].forEach(function(h){ ph.appendChild(el('th',null,h)); }); pt.appendChild(ph);
-  st.log.forEach(function(e){ var r=el('tr'); [e.d,e.dish,e.qty,e.to,e.by].forEach(function(v){ r.appendChild(el('td',null,v)); }); pt.appendChild(r); }); pl.appendChild(pt);
-}
+  /* ---- state ---- */
+  var KEY='uebrig-v3';
+  var state={checks:RULES.map(function(){return false}),allergens:[],log:[],fields:{},confirm:false};
+  try{var raw=localStorage.getItem(KEY)||localStorage.getItem('uebrig-prototyp-v2')||localStorage.getItem('uebrig-prototyp-v1');if(raw){var d=JSON.parse(raw);state.checks=d.checks||state.checks;state.allergens=d.allergens||[];state.log=(d.log||[]).map(function(e,i){e.id=e.id||('old'+i);return e});state.fields=d.fields||{};state.confirm=!!d.confirm;
+    if(state.fields.contact&&!state.fields.business){state.fields.business=state.fields.contact}}
+    /* alte Startseite (ub_state): Protokoll und Betrieb übernehmen, wenn noch kein neues Protokoll existiert */
+    var old=localStorage.getItem('ub_state');
+    if(old&&!state.log.length){var o=JSON.parse(old);(o.log||[]).slice().reverse().forEach(function(e,i){state.log.push({id:'ub'+i,at:e.d||'',dish:e.dish||'',portions:String(e.qty||'').replace(/\D+.*$/,''),window:'',place:e.to&&e.to!=='—'?e.to:'',business:o.biz||'',phone:'',email:'',allergens:[],cooked:'',best:'',legacy:true})});
+      if(o.biz&&!state.fields.business)state.fields.business=o.biz;if(o.contact&&!state.fields.phone)state.fields.phone=o.contact}}catch(e){}
+  var views=['check','form','ticket','log'],view='check',prevView='check',lastCue=0,editingId=null,blinked=false;
+  var FIELDS=['dish','portions','state','from','until','place','business','phone','email','cooked','best'];
+  FIELDS.forEach(function(id){if(state.fields[id]!=null)$(id).value=state.fields[id]});
+  var now=new Date(),later=new Date(now.getTime()+17.5*3600*1000);
+  if(!$('cooked').value)$('cooked').value=stampT(now);
+  if(!$('best').value)$('best').value=stampT(later);
+  function save(){state.fields={};FIELDS.forEach(function(id){state.fields[id]=$(id).value});try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 
-/* orgs */
-function buildOrgs(){
-  if(!st.orgs) st.orgs=t('orgs').map(function(o){ return o.slice(); });
-  var box=$('orgs'); box.textContent='';
-  st.orgs.forEach(function(o,i){ var row=el('div','org');
-    [[0,'o_name'],[1,'o_takes'],[2,'o_contact']].forEach(function(def){ var inp=document.createElement('input'); inp.type='text'; inp.value=o[def[0]]; inp.placeholder=t(def[1]); inp.setAttribute('aria-label',t(def[1])); inp.id='org_'+i+'_'+def[0];
-      inp.addEventListener('input', function(){ o[def[0]]=inp.value; save(); }); row.appendChild(inp); });
-    var x=el('button','x','×'); x.type='button'; x.addEventListener('click', function(){ st.orgs.splice(i,1); save(); buildOrgs(); }); row.appendChild(x); box.appendChild(row); });
-}
-$('addOrg').addEventListener('click', function(){ st.orgs.push(['','','']); save(); buildOrgs(); var l=$('org_'+(st.orgs.length-1)+'_0'); if(l) l.focus(); });
+  var perf=$('perf');for(var i=0;i<22;i++)perf.appendChild(document.createElement('i'));
 
-/* form binding */
-function bind(){
-  TEXT.forEach(function(k){ var i=$(k); i.value=st[k]; i.addEventListener('input', function(){ st[k]=i.value; if(k==='biz'||k==='contact') save(); renderMsg(); }); });
-  FLAGS.forEach(function(k){ var c=$(k); c.checked=!!st[k]; c.addEventListener('change', function(){ st[k]=c.checked; if(k==='vegan'&&c.checked){ st.veg=true; $('veg').checked=true; } renderMsg(); }); });
-  if(!st.madeD){ st.madeD=today(); $('madeD').value=st.madeD; }
-}
-function renderAll(){ renderVerdict(); renderMsg(); }
+  /* ---- checks with i ---- */
+  var checksEl=$('checks');
+  RULES.forEach(function(label,i){
+    var b=document.createElement('div');b.className='check';b.dataset.i=i;
+    b.innerHTML='<span class="ring" role="checkbox" aria-checked="false" tabindex="0"><i class="dot"></i></span><span class="lbl"></span><button type="button" class="i" aria-expanded="false" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><div class="why" hidden></div>';
+    b.querySelector('.lbl').textContent=label;
+    function toggle(){
+      var before=state.checks.filter(Boolean).length;
+      state.checks[i]=!state.checks[i];save();render();
+      var after=state.checks.filter(Boolean).length;
+      if(after===7&&before<7){var cta=$('cta');cta.classList.remove('gentle');void cta.offsetWidth;cta.classList.add('gentle');setTimeout(function(){cta.classList.remove('gentle')},1000);buzz(10)}
+    }
+    b.querySelector('.ring').addEventListener('click',toggle);
+    b.querySelector('.ring').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}});
+    b.querySelector('.lbl').addEventListener('click',toggle);
+    b.querySelector('.i').addEventListener('click',function(){var w=b.querySelector('.why'),open=w.hidden;w.hidden=!open;this.setAttribute('aria-expanded',open?'true':'false')});
+    checksEl.appendChild(b);
+  });
+  function anyVeil(){return !!document.querySelector('.veil:not([hidden])')||!intro.hidden}
+  function blinkRings(){
+    if(blinked||REDUCED||view!=='check'||anyVeil())return;blinked=true;
+    Array.prototype.forEach.call(checksEl.children,function(el,i){setTimeout(function(){el.classList.add('blink');setTimeout(function(){el.classList.remove('blink')},800)},i*70)});
+  }
 
-/* actions */
-var toastTimer; function toast(m){ var tt=$('toast'); tt.textContent=m; tt.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ tt.classList.remove('show'); },1800); }
-$('copyBtn').addEventListener('click', function(){ var txt=buildMsg(); var done=function(){ toast(t('t_copied')); };
-  var fb=function(){ var r=document.createRange(); r.selectNodeContents($('msg')); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); };
-  try{ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fb); else fb(); }catch(e){ fb(); } });
-$('labelBtn').addEventListener('click', function(){ if(!st.dish){ toast(t('t_need')); return; } buildLabels(); document.body.classList.add('print-labels'); window.print(); setTimeout(function(){ document.body.classList.remove('print-labels'); },1000); });
-$('printLogBtn').addEventListener('click', function(){ renderLog(); document.body.classList.add('print-log'); window.print(); setTimeout(function(){ document.body.classList.remove('print-log'); },1000); });
-$('logBtn').addEventListener('click', function(){ if(!st.dish||!st.portions){ toast(t('t_need')); return; }
-  var to=window.prompt(t('log_to_prompt'), ''); if(to===null) return;
-  st.log.push({d: fmtD(today())+' '+new Date().toTimeString().slice(0,5), dish: st.dish, qty: st.portions+' '+t('m_portions'), to: to||'—', by: allOk()?'✓':'—'}); save(); renderLog(); toast(t('t_logged')); });
-$('clearBtn').addEventListener('click', function(){ TEXT.forEach(function(k){ if(k!=='biz'&&k!=='contact'){ st[k]=''; $(k).value=''; } }); FLAGS.forEach(function(k){ st[k]=false; $(k).checked=false; }); st.allerg=[]; st.rules=st.rules.map(function(){return false;}); st.madeD=today(); $('madeD').value=st.madeD; buildRules(); buildAllerg(); renderAll(); toast(t('t_cleared')); });
-var armed=false, armT; $('clearLogBtn').addEventListener('click', function(){ if(!armed){ armed=true; $('clearLogBtn').textContent=t('b_sure'); armT=setTimeout(function(){ armed=false; $('clearLogBtn').textContent=t('b_clearlog'); },4000); return; } clearTimeout(armT); armed=false; $('clearLogBtn').textContent=t('b_clearlog'); st.log=[]; save(); renderLog(); toast(t('t_cleared')); });
+  var allEl=$('allergens');
+  ALLERGENS.forEach(function(name){
+    var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=name;b.dataset.key=name;b.setAttribute('aria-pressed','false');
+    b.addEventListener('click',function(){var s=state.allergens.indexOf(name);if(s>=0)state.allergens.splice(s,1);else state.allergens.push(name);save();render()});
+    allEl.appendChild(b);
+  });
+  $('confirm').addEventListener('click',function(){state.confirm=!state.confirm;$('h-confirm').textContent='';save();render()});
+  document.querySelectorAll('.tabs button').forEach(function(btn){btn.addEventListener('click',function(){view=btn.dataset.view;render()})});
+  FIELDS.forEach(function(id){$(id).addEventListener('input',function(){save();clearHint(id)})});
+  $('print').addEventListener('click',function(){window.print()});
+  window.addEventListener('scroll',function(){$('topbar').classList.toggle('scrolled',scrollY>4)},{passive:true});
 
-/* i18n */
-function renderUI(){
-  document.documentElement.lang=lang;
-  document.querySelectorAll('[data-i18n]').forEach(function(n){ var v=t(n.getAttribute('data-i18n')); if(typeof v==='string') n.textContent=v; });
-  document.querySelectorAll('[data-i18n-ph]').forEach(function(n){ var v=t(n.getAttribute('data-i18n-ph')); if(typeof v==='string') n.placeholder=v; });
-  document.querySelectorAll('.langs button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-lang')===lang)); });
-  buildRules(); buildAllerg(); buildOrgs(); renderLog(); renderAll();
-}
-document.querySelectorAll('.langs button').forEach(function(b){ b.addEventListener('click', function(){ lang=b.getAttribute('data-lang'); try{ localStorage.setItem('ub_lang',lang); }catch(e){} renderUI(); }); });
-bind(); renderUI();
+  /* ---- tips ---- */
+  var tips={};try{tips=JSON.parse(localStorage.getItem('uebrig-tips')||localStorage.getItem('uebrig-prototyp-tips')||'{}')||{}}catch(e){}
+  var tipsOn=true;try{tipsOn=(localStorage.getItem('uebrig-tips-on')||localStorage.getItem('uebrig-prototyp-tips-on'))!=='0'}catch(e){}
+  function saveTips(){try{localStorage.setItem('uebrig-tips',JSON.stringify(tips));localStorage.setItem('uebrig-tips-on',tipsOn?'1':'0')}catch(e){}}
+  function applyTips(){
+    document.querySelectorAll('.tip').forEach(function(el){var k=el.dataset.tip;el.querySelector('.t').textContent=T('tips')[k];el.querySelector('.x').setAttribute('aria-label',T('info_close'));el.hidden=!tipsOn||!!tips[k]});
+    var ib=$('infoBtn');ib.setAttribute('aria-pressed',tipsOn?'true':'false');ib.setAttribute('aria-label',T('info_btn'));ib.title=T('info_btn');
+  }
+  document.querySelectorAll('.tip .x').forEach(function(x){x.addEventListener('click',function(){tips[x.parentNode.dataset.tip]=true;saveTips();applyTips()})});
+  $('infoBtn').addEventListener('click',function(){tipsOn=!tipsOn;if(tipsOn)tips={};saveTips();applyTips()});
+
+  /* ---- organisations (Startliste; Angaben aus Snippets 25.9.2026 – bestätigen) ---- */
+  var ORGS=[
+    {id:'passantenheim',name:'Passantenheim Bern (Heilsarmee)',addr:'Muristrasse 6, 3006 Bern',tel:'031 351 80 27'},
+    {id:'sleeper',name:'Sleeper – Notschlafstelle & Gassenküche',addr:'Neubrückstrasse 19, 3012 Bern',tel:'031 301 64 04'},
+    {id:'punkt6',name:'Punkt 6 – Aufenthaltsraum PINTO (Stadt Bern)',addr:'Nägeligasse 3a, 3011 Bern',tel:'031 321 76 38'},
+    {id:'pluto',name:'Pluto – Jugend-Notschlafstelle',addr:'Studerstrasse 44, 3004 Bern',tel:''},
+    {id:'gassenkueche',name:'Gassenküche Bern (Kirchliche Gassenarbeit)',addr:'',tel:''},
+    {id:'fairteiler',name:'foodsharing Bern – Fairteiler / Madame Frigo',addr:'',tel:''}
+  ];
+  var orgNotes={};try{orgNotes=JSON.parse(localStorage.getItem('uebrig-orgs')||'{}')||{}}catch(e){}
+  function renderOrgs(){
+    var box=$('orgList');box.textContent='';
+    ORGS.forEach(function(o){
+      var d=document.createElement('div');d.className='org';
+      var b=document.createElement('b');b.textContent=o.name;d.appendChild(b);
+      var s=document.createElement('small');s.textContent=T('orgs_desc')[o.id]||'';d.appendChild(s);
+      if(o.addr){var a=document.createElement('span');a.className='mono';a.textContent=o.addr;d.appendChild(a)}
+      if(o.tel){var t=document.createElement('a');t.href='tel:'+o.tel.replace(/\s+/g,'');t.textContent=T('o_call')+' '+o.tel;d.appendChild(t)}
+      var ta=document.createElement('textarea');ta.placeholder=T('o_notes');ta.value=orgNotes[o.id]||'';ta.setAttribute('aria-label',T('o_notes'));
+      ta.addEventListener('input',function(){orgNotes[o.id]=ta.value;try{localStorage.setItem('uebrig-orgs',JSON.stringify(orgNotes))}catch(e){}});
+      d.appendChild(ta);box.appendChild(d);
+    });
+  }
+
+  /* ---- language ---- */
+  function labelOf(id){return T({dish:'f_dish',portions:'f_portions',place:'f_place',business:'f_business',phone:'f_phone',email:'f_email'}[id])||id}
+  function allergenLabel(key){var i=I18N.de.allergens.indexOf(key);return i>=0?T('allergens')[i]:key}
+  function applyLang(){
+    document.documentElement.lang=lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=T(el.dataset.i18n);if(typeof v==='string')el.textContent=v});
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){el.placeholder=T(el.dataset.i18nPh)});
+    Array.prototype.forEach.call(checksEl.children,function(el){el.querySelector('.lbl').textContent=T('rules')[+el.dataset.i];el.querySelector('.why').textContent=T('why')[+el.dataset.i]});
+    Array.prototype.forEach.call(allEl.children,function(el){el.textContent=allergenLabel(el.dataset.key)});
+    document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang?'true':'false')});
+    $('langBtn').firstChild.textContent=lang.toUpperCase()+' ';
+    document.querySelectorAll('.veil .x, .tip .x').forEach(function(x){x.setAttribute('aria-label',T('close'))});
+    applyTips();$('rmNote').textContent=T('rm');renderOrgs();
+  }
+  document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem('uebrig-lang',lang)}catch(e){}$('langList').hidden=true;$('langBtn').setAttribute('aria-expanded','false');applyLang();render()})});
+  $('langBtn').addEventListener('click',function(e){e.stopPropagation();var l=$('langList');l.hidden=!l.hidden;this.setAttribute('aria-expanded',l.hidden?'false':'true')});
+  document.addEventListener('click',function(e){var l=$('langList');if(!l.hidden&&!e.target.closest('.langmenu')){l.hidden=true;$('langBtn').setAttribute('aria-expanded','false')}});
+
+  /* ---- cues ---- */
+  function cue(el,hintId,hintText){
+    var t=Date.now();if(t-lastCue<1200)return;lastCue=t;
+    var cta=$('cta');cta.classList.remove('shake');void cta.offsetWidth;cta.classList.add('shake');
+    setTimeout(function(){cta.classList.remove('shake')},700);
+    if(el){
+      el.classList.remove('glint');void el.offsetWidth;el.classList.add('glint');
+      setTimeout(function(){el.classList.remove('glint')},700);
+      try{el.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'center'})}catch(e){el.scrollIntoView()}
+      var inp=el.querySelector&&el.querySelector('input');if(inp)setTimeout(function(){inp.focus({preventScroll:true})},REDUCED?0:250);
+    }
+    if(hintId&&$(hintId))$(hintId).textContent=hintText||'';
+  }
+  function clearHint(id){var h=$('h-'+id);if(h)h.textContent='';$('dockhint').textContent=''}
+
+  /* ---- confetti (paper, brass, stamp) ---- */
+  function confetti(){
+    if(REDUCED)return;
+    var c=$('confetti'),ctx=c.getContext('2d');c.hidden=false;c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+    var cols=['#9C3B2E','#C4A36A','#FFFBF4','#D8D0C4','#1A1814'],parts=[],W=innerWidth,H=innerHeight;
+    for(var i=0;i<90;i++)parts.push({x:W/2+(Math.random()-.5)*80,y:H*0.45,vx:(Math.random()-.5)*9,vy:-6-Math.random()*7,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,w:5+Math.random()*5,h:8+Math.random()*7,c:cols[i%cols.length],a:1});
+    var t0=performance.now();
+    function frame(t){
+      var k=(t-t0)/1000;ctx.clearRect(0,0,W,H);
+      parts.forEach(function(p){p.vy+=0.28;p.x+=p.vx;p.y+=p.vy;p.vx*=0.985;p.r+=p.vr;p.a=Math.max(0,1-(k-0.9)/0.6);ctx.save();ctx.globalAlpha=p.a;ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});
+      if(k<1.6)requestAnimationFrame(frame);else{ctx.clearRect(0,0,W,H);c.hidden=true}
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---- CTA ---- */
+  $('cta').addEventListener('click',function(){
+    var done=state.checks.filter(Boolean).length;
+    if(view==='check'){
+      if(done<7){var idx=state.checks.indexOf(false);cue(checksEl.children[idx],'dockhint',T('hint_check')(7-done));return}
+      confetti();buzz(15);openV('welcome');view='form';
+    }else if(view==='form'){
+      var missing=null;['dish','portions','place','business','phone'].some(function(id){if(!$(id).value.trim()){missing=id;return true}});
+      if(missing){cue($(missing).closest('label'),'h-'+missing,T('missing'));$('dockhint').textContent=T('without')(labelOf(missing));return}
+      var em=$('email').value.trim();if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){cue($('email').closest('label'),'h-email',T('bad_email'));return}
+      if(!state.confirm){cue($('confirm'),'h-confirm',T('confirm_hint'));return}
+      view='ticket';
+    }else if(view==='ticket'){
+      var entry=snapshot();
+      if(editingId){var i=state.log.findIndex(function(e){return e.id===editingId});if(i>=0){entry.id=editingId;entry.at=state.log[i].at;entry.edited=stampT(new Date());state.log[i]=entry}else state.log.unshift(entry);editingId=null}
+      else state.log.unshift(entry);
+      save();buzz(10);view='log';
+    }else{
+      state.checks=RULES.map(function(){return false});state.confirm=false;editingId=null;save();view='check';
+    }
+    render();
+  });
+  function snapshot(){
+    return {id:'e'+Date.now().toString(36),at:stampT(new Date()),dish:$('dish').value,portions:$('portions').value,state:$('state').value,from:$('from').value,until:$('until').value,place:$('place').value,business:$('business').value,phone:$('phone').value,email:$('email').value,allergens:state.allergens.slice(),cooked:$('cooked').value,best:$('best').value,window:$('from').value+'–'+$('until').value};
+  }
+  function contactLine(o){return [o.business,o.phone,o.email].filter(Boolean).join(' · ')}
+  function draft(){
+    var all=state.allergens.length?state.allergens.map(allergenLabel).join(', '):T('none');
+    return ['übrig — '+$('dish').value,$('portions').value+' '+T('portions')+' · '+T('state')[$('state').value],contactLine({business:$('business').value,phone:$('phone').value,email:$('email').value}),T('allerg')+': '+all,T('cooked')+' '+$('cooked').value,T('best')+' '+$('best').value,T('pickup')+' '+$('from').value+'–'+$('until').value,$('place').value,T('reheat')].join('\n');
+  }
+
+  /* ---- log detail ---- */
+  var detailId=null;
+  function openDetail(id){
+    var e=state.log.find(function(x){return x.id===id});if(!e)return;detailId=id;
+    $('d-when').textContent=e.at+(e.edited?'  ·  '+T('edited')+' '+e.edited:'');
+    $('d-title').textContent=e.dish||'—';
+    var kv=$('d-kv');kv.textContent='';
+    [[T('portions'),(e.portions||'—')+(e.state?' · '+T('state')[e.state]:'')],[T('d_window'),e.window||'—'],[T('d_place'),e.place||'—'],[T('d_contact'),contactLine(e)||e.contact||'—'],[T('d_all'),(e.allergens&&e.allergens.length)?e.allergens.map(allergenLabel).join(', '):'—'],[T('d_cooked'),e.cooked||'—'],[T('d_best'),e.best||'—']].forEach(function(r){var dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=r[0];dd.textContent=r[1];kv.appendChild(dt);kv.appendChild(dd)});
+    openV('detail');
+  }
+  function loadEntry(e){
+    ['dish','portions','state','from','until','place','business','phone','email','cooked','best'].forEach(function(k){if(e[k]!=null)$(k).value=e[k]});
+    if(!e.business&&e.contact)$('business').value=e.contact;
+    state.allergens=(e.allergens||[]).slice();state.checks=RULES.map(function(){return true});state.confirm=true;save();
+  }
+  $('d-edit').addEventListener('click',function(){var e=state.log.find(function(x){return x.id===detailId});if(!e)return;loadEntry(e);editingId=detailId;closeV('detail');view='form';render()});
+  $('d-label').addEventListener('click',function(){var e=state.log.find(function(x){return x.id===detailId});if(!e)return;loadEntry(e);editingId=detailId;closeV('detail');view='ticket';render()});
+  $('d-del').addEventListener('click',function(){if(!confirm(T('d_confirm')))return;state.log=state.log.filter(function(x){return x.id!==detailId});save();closeV('detail');render()});
+
+  /* ---- render ---- */
+  function render(){
+    var done=state.checks.filter(Boolean).length;
+    $('countLabel').textContent=done+' / 7';
+    Array.prototype.forEach.call(checksEl.children,function(el,i){el.classList.toggle('on',!!state.checks[i]);el.querySelector('.ring').setAttribute('aria-checked',state.checks[i]?'true':'false')});
+    Array.prototype.forEach.call(allEl.children,function(el){var on=state.allergens.indexOf(el.dataset.key)>=0;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on?'true':'false')});
+    $('confirm').classList.toggle('on',state.confirm);$('confirm').setAttribute('aria-checked',state.confirm?'true':'false');
+    views.forEach(function(v){$('view-'+v).hidden=(v!==view)});
+    if(view!==prevView){if(view==='check')blinked=false;prevView=view;try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(e){window.scrollTo(0,0)}}
+    document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.view===view)});
+    $('stepLabel').textContent=T('step')[view];
+    if(view==='check')setTimeout(blinkRings,80);
+    $('t-dish').textContent=$('dish').value||'—';
+    $('t-meta').textContent=($('portions').value||'—')+' '+T('portions')+'  ·  '+T('state')[$('state').value];
+    $('t-contact').textContent=contactLine({business:$('business').value,phone:$('phone').value,email:$('email').value});
+    $('t-all').textContent=T('allerg')+': '+(state.allergens.map(allergenLabel).join(', ')||'—');
+    $('t-cooked').textContent=T('cooked')+' '+$('cooked').value;
+    $('t-best').textContent=T('best')+' '+$('best').value;
+    $('t-win').textContent=T('pickup')+' '+$('from').value+'–'+$('until').value;
+    $('t-place').textContent=$('place').value;
+    $('msg').textContent=draft();
+    var tk=$('ticket');if(view==='ticket'){tk.classList.remove('in');void tk.offsetWidth;requestAnimationFrame(function(){tk.classList.add('in')})}else tk.classList.remove('in');
+    var log=$('log');log.textContent='';
+    if(!state.log.length){var p=document.createElement('p');p.className='empty';p.textContent=T('empty');log.appendChild(p)}
+    else state.log.forEach(function(e){var a=document.createElement('button');a.type='button';var w=document.createElement('div');w.className='mono when';w.textContent=e.at+(e.edited?' · '+T('edited'):'');var s=document.createElement('strong');s.textContent=e.dish;var m=document.createElement('div');m.className='mono';m.textContent=[e.portions?e.portions+' '+T('port'):'',e.window,e.business].filter(Boolean).join(' · ');a.appendChild(w);a.appendChild(s);a.appendChild(m);a.addEventListener('click',function(){openDetail(e.id)});log.appendChild(a)});
+    var face=$('ctaFace'),btn=$('cta');btn.classList.remove('quiet','stamp','ghost');
+    if(view==='check'){if(done<7){btn.classList.add('quiet');face.textContent=T('left')(7-done)}else{btn.classList.add('stamp');face.textContent=T('next_form')}}
+    else if(view==='form'){face.textContent=T('show_ticket')}
+    else if(view==='ticket'){btn.classList.add('stamp');face.textContent=editingId?T('save_edit'):T('to_log')}
+    else{btn.classList.add('ghost');face.textContent=T('new_check')}
+    if(view!=='check')$('dockhint').textContent='';
+  }
+  if(REDUCED){$('rmNote').hidden=false}
+  applyLang();render();
 })();
 </script>
 </body>
