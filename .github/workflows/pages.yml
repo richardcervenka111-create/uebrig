@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["index.html", "app/**", ".github/workflows/pages.yml"]
+    paths: ["index.html", "app/**", "research/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,7 +26,7 @@ jobs:
           ! grep -qiE 'fetch\(|XMLHttpRequest|sendBeacon' index.html
       - uses: actions/configure-pages@v5
       - name: Stage site
-        run: mkdir -p _site && cp index.html _site/ && cp -r app _site/
+        run: mkdir -p _site && cp index.html _site/ && cp -r app _site/ && cp -r research _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

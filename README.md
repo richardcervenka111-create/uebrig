@@ -20,6 +20,17 @@ Zweite Stufe, mit Anmeldung (Magic-Link per E-Mail) und einer Supabase-Datenbank
 - Schema und Zugriffsregeln: `db/001_schema.sql` (2 Tabellen, RLS auf allem, 3 RPCs).
   Verbindung: `app/config.js` (öffentlicher Publishable Key; alles Weitere regelt RLS).
 
+## Research (`research/`, slowakisch)
+
+Drei Dokumente vom 25. 9. 2026 als Entscheidungsgrundlage: [Überblick](https://richardcervenka111-create.github.io/uebrig/research/)
+(Konkurrenz CH/international, Nachfrage in Bern, Angebot, Recht, Logistik),
+[Karte und Route](https://richardcervenka111-create.github.io/uebrig/research/mapa.html)
+(398 Betriebe aus OpenStreetMap nach Küchenschluss 19:00–22:00, Empfänger, E-Cargo-Route in zwei Etappen, Portionen-Schätzung) und
+[Monetarisierung und Finanzierung](https://richardcervenka111-create.github.io/uebrig/research/financovanie.html)
+(Verein/GmbH/Hybrid, Geldflüsse, nicht-verwässernde Finanzierung). Quellenlage ist in jedem Dokument markiert
+(`overené` / `snippet` / `neoverené`); Rohnotizen in `research/notes/`, Skripte `research/build_*.py`.
+Kartendaten © OpenStreetMap-Mitwirkende (ODbL).
+
 ## Was die Checkliste (Startseite) bewusst nicht ist
 
 Keine Plattform, die Kuchen und Abnehmer automatisch verbindet. Das bräuchte einen Server mit

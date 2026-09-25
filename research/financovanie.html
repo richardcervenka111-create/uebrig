@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Übrig Bern – monetizácia a financovanie</title>
+<meta name="description" content="Podnikať alebo nezisk? Ako tečú peniaze v segmente záchrany jedla a ako financovať Übrig Bern bez riedenia.">
+<style>
+:root{--bg:#fbfaf7;--card:#fff;--ink:#1b1b1b;--ink2:#52514e;--mute:#8d8b84;--line:#e6e3dc;--accent:#0d366b;--accent2:#2a78d6;--ok:#0ca30c;--warn:#eda100;--no:#d03b3b}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#8d8b84;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5}}
+:root[data-theme=dark]{--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#8d8b84;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[hidden]{display:none!important}
+main{max-width:920px;margin:0 auto;padding:24px 16px 64px}
+nav.top{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem;margin-bottom:18px}nav.top a{color:var(--accent)}
+header h1{font-size:clamp(1.6rem,3.5vw,2.3rem);margin:.2em 0 .3em;letter-spacing:-.01em;line-height:1.15}
+.sub{color:var(--ink2)}
+.bluf{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent2);border-radius:10px;padding:16px 18px;margin:18px 0;font-size:1.02rem}
+.bluf p{margin:0}
+.warn{border-left:4px solid var(--warn);background:rgba(237,161,0,.10);padding:10px 14px;border-radius:6px;margin:16px 0}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:18px 0;columns:2;column-gap:28px;font-size:.95rem}.toc a{color:var(--accent);text-decoration:none}.toc li{margin:3px 0}
+@media (max-width:640px){.toc{columns:1}}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.tile b{display:block;font-size:1.6rem;line-height:1.1}.tile small{color:var(--ink2)}
+section{margin-top:44px}h2{font-size:1.4rem;margin:0 0 12px;line-height:1.25}h3{font-size:1.1rem;margin:26px 0 8px}
+p{margin:0 0 14px}li{margin:4px 0}
+a{color:var(--accent)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--ink2);font-weight:600}
+.m{font-size:.74rem;border-radius:4px;padding:1px 6px;white-space:nowrap;vertical-align:1px;font-weight:600}
+.m.ok{background:rgba(12,163,12,.15);color:#0a7a0a}.m.sn{background:rgba(237,161,0,.18);color:#8a5d00}.m.no{background:rgba(208,59,59,.14);color:#a12c2c}.m.calc,.m.est{background:rgba(42,120,214,.14);color:#1c5cab}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .m.ok{color:#5dd35d}:root:not([data-theme=light]) .m.sn{color:#f2c159}:root:not([data-theme=light]) .m.no{color:#f08a8a}:root:not([data-theme=light]) .m.calc,:root:not([data-theme=light]) .m.est{color:#86b6ef}}
+.legend{display:flex;gap:10px 18px;flex-wrap:wrap;font-size:.9rem;color:var(--ink2);margin:10px 0 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.card h3{margin:0 0 8px;font-size:1.05rem}.card p{font-size:.94rem;margin:0 0 8px}.card ul{padding-left:18px;margin:0;font-size:.92rem}
+.flow{width:100%;height:auto;display:block;margin:6px 0 10px}
+.flow rect{fill:var(--card);stroke:var(--line);stroke-width:1.5;rx:8}.flow text{font-size:13px;fill:var(--ink)}.flow .t{font-weight:700}.flow .s{font-size:11px;fill:var(--ink2)}.flow path{fill:none;stroke:var(--accent2);stroke-width:2.2;marker-end:url(#arr)}.fig{margin:14px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}.fig figcaption{font-weight:700;font-size:.95rem;margin-bottom:4px}.flow .money{stroke:#eb6834}.flow .food{stroke:#1baf7a}
+.steps{counter-reset:s;list-style:none;padding:0}.steps li{position:relative;padding-left:44px;margin:10px 0}.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.imp{border-left:4px solid var(--no);background:rgba(208,59,59,.08);padding:10px 14px;border-radius:6px;margin:16px 0}
+footer{margin-top:48px;color:var(--ink2);font-size:.88rem;border-top:1px solid var(--line);padding-top:14px}
+blockquote{margin:0 0 14px;padding:6px 14px;border-left:3px solid var(--line);color:var(--ink2)}
+code{font-size:.9em}
+</style>
+</head>
+<body>
+<main>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="../">Übrig Bern</a></nav>
+
+<header>
+<h1>Übrig Bern – ako to monetizovať a financovať bez riedenia</h1>
+<p class="sub">Tretí z troch dokumentov. Odpovedá na tri otázky: podnikať, alebo ísť cez neziskový sektor? Ako v tomto segmente reálne tečú peniaze? A odkiaľ zohnať financie tak, aby si nikto nekupoval podiel. Stav 25. 9. 2026; pôvod každého údaju je označený.</p>
+</header>
+<div class="bluf"><p><b>Odporúčanie v jednej vete:</b> založiť <b>gemeinnütziger Verein „Übrig Bern“</b> a hneď požiadať Steuerverwaltung Kanton Bern o Steuerbefreiung – to je brána k nadáciám, Lotteriefondu a cirkevným peniazom, ktoré tento sektor reálne živia; peniaze brať od <b>ponukovej strany a donorov</b> (malý paušál od kuchýň, granty, sponzoring, mesto), <b>nikdy od prijímajúcich organizácií</b>; a ak Richard chce raz softvér predať alebo licencovať iným mestám, držať kód od prvého dňa v <b>samostatnej GmbH</b>, ktorá ho Vereinu licencuje za trhovú cenu (model C). Všetko, čo sa tvári ako „grant“ a pritom je konvertibilná pôžička alebo equity (Venture Kick stupne 2–3, Kickfund, SICTIC), je riedenie – vynechať.</p></div>
+<div class="legend"><span><span class="m ok">overené</span> primárna stránka prečítaná</span><span><span class="m sn">snippet</span> len útržok vyhľadávača, URL existuje</span><span><span class="m no">neoverené</span> stopa bez živého zdroja – úloha na overenie</span><span><span class="m calc">výpočet</span> / <span class="m est">odhad</span> vlastná aritmetika alebo predpoklad</span></div>
+<div class="warn"><b>Obmedzenie.</b> V tomto výskume sa nedala otvoriť ani jedna stránka mesta, kantónu či nadácie a vyhľadávanie sa vyčerpalo. Overených je len sedem finančných nástrojov (čítané 9. 8. 2026 v inom projekte). Všetko ostatné v mape financovania je <span class="m no">neoverené</span> – stopa, nie fakt. Preto je tu na konci zoznam, čo overiť ako prvé, a pri každej sume, ktorá nie je zo zdroja, stojí <span class="m est">odhad</span>.</div>
+
+<h2 style="margin-top:28px">Obsah</h2>
+<ol class="toc"><li><a href="#lekcia">Čo učí segment: pohyb jedla peniaze neprináša</a></li><li><a href="#modely">Tri modely, ako môžu tiecť peniaze</a></li><li><a href="#organizacia">Právna forma vo Švajčiarsku (výskum)</a></li><li><a href="#toky">Príjmové toky a ich realizmus</a></li><li><a href="#zdroje">Financovanie bez riedenia (výskum)</a></li><li><a href="#riedenie">Čo je a čo nie je riedenie</a></li><li><a href="#plan">Plán na 12 mesiacov</a></li><li><a href="#kroky">Kroky na tento týždeň</a></li><li><a href="#doverit">Čo doveriť</a></li></ol>
+
+<section id="lekcia"><h2>1 · Čo učí segment: pohyb jedla peniaze neprináša</h2>
+<p>Každý, kto sa pokúsil zarobiť na samotnom presune prebytku, narazil: Karma padla zo 100 na 18 ľudí a ziskovosť dosiahla až v Q3 2025, Sirplus skončil v insolvencii, Olio kryje poplatkami ≈30 % nákladov, Too Good To Go Schweiz sa operatívne sťahuje do Viedne (všetko <span class="m sn">snippet</span>, detail v <a href="./#konkurencia-svet">prehľade</a>). Fungujú tri veci: (a) <b>B2C predaj</b> vo veľkom objeme s tenkou maržou (TGTG: CHF 2.90/balíček + CHF 59/rok, skupinový zisk DKK 9,6 mil. na DKK 725 mil. príjmov, 2024), (b) <b>redistribúcia platená donormi</b> – Tischlein deck dich a Schweizer Tafel žijú z Coop, Migros, Ernst Göhner Stiftung a darcov, Tafel výslovne bez štátnych peňazí, (c) <b>fee-for-service platený darcom</b> (Copia, Goodr, Rescuing Leftover Cuisine v USA), kde motiváciu drží daňový odpočet, ktorý vo Švajčiarsku pre 10 porcií nič neznamená.</p>
+<p>Pre Übrig z toho plynie: <b>produktom nie je presun jedla, ale dôkaz o ňom</b> – protokol odovzdania (čas, teplota, alergény, „spotrebovať do“, podpisy), ktorý chráni kuchyňu aj útulok tam, kde švajčiarske právo žiadny „Good Samaritan“ štít nedáva. Za dôkaz sa dá platiť: mesto (Nachhaltige Ernährung, Gastro Charta), nadácie (merateľný výstup), kuchyne (ESG komunikácia, Gastro-Charta kredit) a neskôr iné mestá (licencia).</p>
+</section>
+
+<section id="modely"><h2>2 · Tri modely, ako môžu tiecť peniaze</h2>
+<div class="cards">
+<div class="card"><h3>A · gemeinnütziger Verein</h3><p><b>Kedy:</b> cieľom sú granty a dary a Richardovi stačí rola plateného Geschäftsführera (trhovo primeraná mzda je dovolená).</p><ul><li>+ založenie za deň, CHF 0 kapitálu, dve osoby</li><li>+ jediná forma, ktorú nadácie, Lotteriefonds a cirkvi financujú bez otázok</li><li>+ Steuerbefreiung (DBG Art. 56 lit. g) = žiadna daň zo zisku a odpočítateľné dary</li><li>− majetok je účelovo viazaný: <b>nedá sa predať</b>, pri zrušení ide inej gemeinnützigen organizácii</li><li>− v kantóne Bern sa predpokladá neplatené predstavenstvo</li></ul></div>
+<div class="card"><h3>B · GmbH</h3><p><b>Kedy:</b> cieľom je predajný softvérový majetok (SaaS pre mestá) a charitatívne peniaze nie sú potrebné.</p><ul><li>+ vlastníctvo a exit sú možné, licencie iným mestám sú čistý B2B/B2G obchod</li><li>+ „gemeinnützige GmbH“ ako právna forma v CH neexistuje, ale GmbH sa dá koncipovať na charitatívny účel a oslobodiť od daní <span class="m sn">snippet</span> – potom však platí zákaz rozdelenia zisku, čiže exit opäť mizne</li><li>− CHF 20 000 Stammkapital + CHF 2 500–5 000 založenie <span class="m sn">snippet</span></li><li>− nadácie a Lotteriefonds GmbH bez Steuerbefreiung spravidla nefinancujú</li></ul></div>
+<div class="card"><h3>C · hybrid Verein + GmbH</h3><p><b>Kedy:</b> Richard chce oboje – bernskú prevádzku financovanú grantmi <i>a</i> softvér, ktorý raz predá alebo licencuje.</p><ul><li>+ granty tečú do Vereinu, hodnota softvéru rastie v GmbH</li><li>+ precedens oddelenia existuje (Schweizer Tafel: Stiftung + Gönnerverein) <span class="m sn">snippet</span></li><li>− licencia Verein → GmbH musí byť za trhovú cenu a transparentná, inak Steuerverwaltung vidí skryté rozdelenie zisku; <b>potrebuje daňového poradcu pred založením</b> <span class="m no">neoverené</span></li><li>− dve účtovníctva, dve valné zhromaždenia</li></ul></div>
+</div>
+<h3>Ako v každom modeli tečú peniaze (oranžová) a jedlo (zelená)</h3>
+<figure class="fig"><figcaption>Model A · Verein</figcaption><svg class="flow" viewBox="0 0 880 225" role="img" aria-label="Model A: gemeinnütziger Verein"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#8d8b84"/></marker></defs><rect x="20" y="20" width="190" height="58"/><text class="t" x="115.0" y="45" text-anchor="middle">Kuchyne (reštaurácie)</text><text class="s" x="115.0" y="64" text-anchor="middle">darujú prebytok, CHF 0 alebo malý paušál</text><rect x="670" y="20" width="190" height="58"/><text class="t" x="765.0" y="45" text-anchor="middle">Schválené organizácie</text><text class="s" x="765.0" y="64" text-anchor="middle">vyzdvihnú a podávajú</text><rect x="20" y="150" width="260" height="58"/><text class="t" x="150.0" y="175" text-anchor="middle">Nadácie · Lotteriefonds · mesto · cirkvi</text><text class="s" x="150.0" y="194" text-anchor="middle">granty, dary, crowdfunding – nie kapitál</text><rect x="400" y="150" width="220" height="58"/><text class="t" x="510.0" y="175" text-anchor="middle">Verein Übrig Bern</text><text class="s" x="510.0" y="194" text-anchor="middle">Steuerbefreiung, neplatené predstavenstvo</text><path class="food" d="M210 49 L670 49"/><text class="s" x="440.0" y="41" text-anchor="middle">jedlo + protokol odovzdania (cez platformu Vereinu)</text><path class="money" d="M280 179 L400 179"/><text class="s" x="340.0" y="171" text-anchor="middle">granty a dary</text><path class="money" d="M115.0 78 C115.0 114.0 510.0 114.0 510.0 150"/><text class="s" x="320.5" y="118.0">paušál CHF 0–59/rok</text></svg></figure>
+<figure class="fig"><figcaption>Model B · GmbH</figcaption><svg class="flow" viewBox="0 0 880 225" role="img" aria-label="Model B: GmbH"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#8d8b84"/></marker></defs><rect x="20" y="20" width="170" height="58"/><text class="t" x="105.0" y="45" text-anchor="middle">Kuchyne</text><text class="s" x="105.0" y="64" text-anchor="middle">platia licenciu / za presun</text><rect x="355" y="20" width="190" height="58"/><text class="t" x="450.0" y="45" text-anchor="middle">Übrig GmbH</text><text class="s" x="450.0" y="64" text-anchor="middle">softvér ako majetok zakladateľa</text><rect x="690" y="20" width="170" height="58"/><text class="t" x="775.0" y="45" text-anchor="middle">Iné mestá / Städteverband</text><text class="s" x="775.0" y="64" text-anchor="middle">white-label licencie</text><rect x="355" y="150" width="190" height="58"/><text class="t" x="450.0" y="175" text-anchor="middle">Sociálne organizácie</text><text class="s" x="450.0" y="194" text-anchor="middle">používajú zdarma</text><path class="money" d="M190 49 L355 49"/><text class="s" x="272.5" y="41" text-anchor="middle">CHF/mesiac</text><path class="money" d="M690 49 L545 49"/><text class="s" x="617.5" y="41" text-anchor="middle">licencie</text><path class="food" d="M450.0 78 C450.0 114.0 450.0 114.0 450.0 150"/><text class="s" x="458.0" y="118.0">platforma zdarma</text></svg></figure>
+<figure class="fig"><figcaption>Model C · hybrid</figcaption><svg class="flow" viewBox="0 0 880 225" role="img" aria-label="Model C: hybrid Verein + GmbH"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#8d8b84"/></marker></defs><rect x="20" y="20" width="210" height="58"/><text class="t" x="125.0" y="45" text-anchor="middle">Verein Übrig Bern</text><text class="s" x="125.0" y="64" text-anchor="middle">prevádzka v Berne, granty, Steuerbefreiung</text><rect x="340" y="20" width="210" height="58"/><text class="t" x="445.0" y="45" text-anchor="middle">Übrig Software GmbH</text><text class="s" x="445.0" y="64" text-anchor="middle">vlastní kód; licencia Vereinu za trhovú cenu</text><rect x="660" y="20" width="200" height="58"/><text class="t" x="760.0" y="45" text-anchor="middle">Ďalšie mestá</text><text class="s" x="760.0" y="64" text-anchor="middle">platia GmbH za licenciu</text><rect x="20" y="150" width="210" height="58"/><text class="t" x="125.0" y="175" text-anchor="middle">Nadácie, mesto, kantón</text><text class="s" x="125.0" y="194" text-anchor="middle">financujú Verein, nie GmbH</text><path class="money" d="M125.0 150 C125.0 114.0 125.0 114.0 125.0 78"/><text class="s" x="133.0" y="118.0">granty</text><path class="money" d="M230 49 L340 49"/><text class="s" x="285.0" y="41" text-anchor="middle">licenčný poplatok (arm&#x27;s length)</text><path class="money" d="M660 49 L550 49"/><text class="s" x="605.0" y="41" text-anchor="middle">licencie</text></svg></figure>
+<p><b>Odporúčanie:</b> model A okamžite (Verein sa dá založiť tento týždeň), s klauzulou v stanovách, že softvér je licencovaný od zakladateľa/GmbH – teda model C pripravený „na papieri“, GmbH založená až vtedy, keď prvé iné mesto reálne chce licenciu. Prestavovať Verein na hybrid dodatočne je drahšie než ho tak navrhnuť od začiatku.</p>
+</section>
+
+<section id="organizacia"><h2>3 · Organizácia: Verein so Steuerbefreiung, peniaze z ponukovej strany, nie od NGO</h2><p>Jednotková ekonomika hovorí, kto môže platiť. Schweizer Tafel presunie za každý darovaný frank <strong>1,81 kg tovaru v hodnote CHF 11.80</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://schweizertafel.ch/spendenfranken/" rel="noopener" target="_blank">schweizertafel.ch</a>) — teda ≈CHF 0.55/kg, ≈CHF 0.28 na jedlo pri 0,5 kg <span class="m calc" title="pôvod údaju">výpočet</span>, s národnou flotilou kamiónov, dobrovoľníkmi a Zivis; „hodnota zachráneného tovaru" (≈CHF 6.5–7.3/kg u oboch švajčiarskych redistribútorov <span class="m calc" title="pôvod údaju">výpočet</span>) je 10–20× vyššia než peniaze, ktoré cez ne reálne tečú — nezamieňať pri dimenzovaní impact-claimov. Reštaurácia ušetrí darovaním len likvidačné náklady bioodpadu, ktoré sa v regióne Bern uvádzajú na <strong>CHF 60–120/t</strong> (rok neuvedený) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.derbund.ch/bern/Kampf-um-begehrte-BioAbfaelle-drueckt-koStrompreise/story/26028947" rel="noopener" target="_blank">Der Bund</a>) — <strong>6–12 Rp/kg, pri 5 kg denne 30–60 Rp</strong> <span class="m calc" title="pôvod údaju">výpočet</span>; to nie je motív ani príjmový základ. Skutočné motívy kuchyne sú morálka personálu, ESG/Gastro-Charta komunikácia a „nemusieť vyhadzovať", čo hovorí za nízky paušál a silný reporting, nie za poplatok za kilo. Bernská reštaurácia dnes platí TGTG CHF 2.90/balíček <strong>a dostáva peniaze</strong>; darovací kanál ju preto musí stáť menej než ≈CHF 2.50 na dávku v čase a trení, alebo ponúknuť nepeňažný výnos (certifikát pre mestský program, Gastro-Charta kredit). Marginálny náklad Übrig na jeden presun je blízko nule (príjemca si vyzdvihne, softvér na free-tier), viažuce náklady sú čas zakladateľa, obsluha potravinovoprávnej zodpovednosti a neskôr koordinátor — relevantná jednotka je „náklad na aktívnu reštauráciu a mesiac", nie na kilo. Zewo je v prvom roku zbytočné a drahé: Vorprüfung CHF 2 500, Hauptprüfung ≈CHF 5 000, ročná licencia CHF 300–13 000 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://zewo.ch/wp-content/uploads/2020/02/Gebuehrenreglement-Zewo.pdf" rel="noopener" target="_blank">Zewo Gebührenreglement</a>; <a href="https://fundraisingbox.com/ch/magazin/zewo-zertifizierung-ngo-in-der-schweiz/" rel="noopener" target="_blank">fundraisingbox</a>); lacnejší marker dôveryhodnosti, ktorý nadácie skutočne vyžadujú, je Steuerbefreiung.</p>
+<p>Právne formy: <strong>Verein</strong> je najlacnejší, najrýchlejší a v sektore najbežnejší (Tischlein deck dich, Madame Frigo, foodsharing sú Vereine; Schweizer Tafel a Partage sú Stiftungen; Äss-Bar a TGTG sú komerčné) — založí sa zhromaždením dvoch osôb a písomnými stanovami bez minimálneho kapitálu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.vitaminb.ch/vereinsthemen/gruendung/rechtsformen" rel="noopener" target="_blank">vitamin B</a>); Stiftung vyžaduje CHF 50 000 kapitálu a notára <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.swissfoundations.ch/stiftungspraxis/stiftungsgruendung/" rel="noopener" target="_blank">SwissFoundations</a>); GmbH stojí CHF 2 500–5 000 + CHF 20 000 Stammkapital <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://newco.ch/blog/gmbh-gruenden--26" rel="noopener" target="_blank">newco.ch</a>). <strong>„Gemeinnützige GmbH" ako právna forma vo Švajčiarsku neexistuje</strong> (na rozdiel od Nemecka), GmbH sa však dá koncipovať na charitatívny účel a za podmienok získať oslobodenie od daní <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.dufour-advokatur.ch/2025/11/10/die-gemeinnuetzige-gmbh-in-der-schweiz/" rel="noopener" target="_blank">Dufour Advokatur, 10. 11. 2025</a>). Podmienky Steuerbefreiung v kantóne Bern (TaxInfo): činnosť vo všeobecnom záujme, otvorený okruh beneficientov, žiadny Erwerbszweck a „významné obete" — <strong>predstavenstvo pracuje dobrovoľne</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.taxinfo.sv.fin.be.ch/taxinfo/01052ba2-c59b-4ac3-ad3f-db3143931ae3" rel="noopener" target="_blank">TaxInfo Kanton Bern</a>); prieskum BDO síce zistil, že odmena predstavenstva „už roky nie je rozhodujúce kritérium" s veľkými kantonálnymi rozdielmi <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bdo.ch/de-ch/publikationen/entschadigung-trotz-ehrenamtlichkeit-(teil-1)" rel="noopener" target="_blank">BDO</a>), ale bernské znenie je prísnejšie — predpokladať neplatené predstavenstvo, kým Steuerverwaltung nepotvrdí opak. Geschäftsführer gemeinnützigen Verein môže byť platený, ak je odmena trhovo primeraná a nie skrytým rozdelením zisku <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://bernhard-assekuranz.com/vereinswissen/vereinsfuehrung/zahlungen-an-vereinsmitglieder-und-vorstaende/" rel="noopener" target="_blank">Bernhard Assekuranz</a>). Rozhodovací strom pre Richarda: <strong>Verein so Steuerbefreiung</strong>, ak cieľom sú dary/nadačné granty a stačí mu rola plateného Geschäftsführera bez vlastného podielu (majetok je účelovo viazaný, „predaj" nemožný); <strong>GmbH</strong>, ak cieľom je predajný softvérový aktív s licenciami iným mestám a bez charitatívnych peňazí; <strong>hybrid</strong> (Verein/Stiftung vlastní alebo zmluvne viaže GmbH — Schweizer Tafel už dnes oddeľuje Stiftung a fundraisingový Gönnerverein), ak chce oboje — mechanika arm's-length licencie softvéru z GmbH zakladateľa do Verein sa v tomto behu nepotvrdila a potrebuje daňového poradcu.</p>
+<p>Porovnateľné organizácie ukazujú štyri realistické príjmové toky pre jednomestskú platformu. Prvý a empiricky dominantný: nadácie a korporátne sponzorstvo — Tischlein deck dich je „čisto z darov", dlhodobí partneri Coop, Howeg, Ernst Göhner Stiftung <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.tischlein.ch/geld-spenden/stiftungen/" rel="noopener" target="_blank">tischlein.ch Stiftungen</a>); Schweizer Tafel žije z Coop, Migros, Schindler, Ernst Göhner Stiftung, Aldi a Gönnervereinu a <strong>nedostáva žiadne federálne, kantonálne ani mestské peniaze</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://schweizertafel.ch/de/" rel="noopener" target="_blank">schweizertafel.ch</a>); SV Stiftung sponzoruje chladničky Madame Frigo <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.sv-stiftung.ch/ein-kuehlschrank-fuer-alle" rel="noopener" target="_blank">SV Stiftung</a>); Katholische Landeskirche dala z prebytku CHF 25 000 Tischlein deck dich <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://ch.headtopics.com/news/300-000-franken-aus-uberschuss-katholische-landeskirche-88016483" rel="noopener" target="_blank">headtopics</a>). Bernský Verein by súperil o tých istých darcov, pokiaľ sa nepostaví ako komplement (teplé jedlá večer, ktoré ani Tischlein ani Tafel nerobia). Druhý: malý paušál od reštaurácií — precedens CHF 59/rok TGTG ukazuje, že švajčiarske gastro nízky administratívny poplatok akceptuje; očakávať však nižšiu ochotu platiť (Übrig len odstraňuje náklad, TGTG platí). Tretí: verejné peniaze existujú, ale malé a nerovnomerné — kantón Zug dal CHF 25 000 na desať chladničiek Madame Frigo <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.zentralplus.ch/madame-frigo-geld-fuer-zehn-neue-kuehlschraenke-im-kanton-zug-2094195/" rel="noopener" target="_blank">zentralplus</a>), Ženeva subvencuje Partage sumou uvádzanou ako CHF 5 000 (2025, nepravdepodobne nízke — overiť) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.lfm.ch/actualite/suisse/romandie/geneve/les-besoins-en-aide-alimentaire-ont-augmente-a-geneve-en-2025/" rel="noopener" target="_blank">LFM</a>). Štvrtý: licencovanie iným mestám (vzor 412 Food Rescue / Food Rescue Hero, MealConnect postavený z USD 1 mil. General Mills + Google.org <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://progressivegrocer.com/walmart-among-backers-feeding-americas-mealconnect" rel="noopener" target="_blank">Progressive Grocer</a>)) — bez švajčiarskeho precedensu. Najprenositeľnejší vzor je <strong>Madame Frigo</strong>: malý centrálny Verein, prevádzkové náklady prenesené na operátorov (tu reštaurácie a prijímajúce organizácie), jednorazový aktivačný poplatok a kantóny/mestá financujúce „dávky" (napr. onboarding 10 reštaurácií), nie prevádzku <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.blick.ch/life/essen/coole-idee-gegen-foodwaste-darum-stellen-wir-kuehlschraenke-auf-die-strasse-id17884574.html" rel="noopener" target="_blank">Blick</a>). Pracovná sila zadarmo: Kompetenzzentrum Arbeit (Sozialamt Stadt Bern) má sieť 350+ partnerských firiem pre pracovnú integráciu, Drahtesel (Stiftung Sinnovativ, Liebefeld) vedie bicyklovú dielňu s účastníkmi <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bern.ch/politik-und-verwaltung/stadtverwaltung/bss/sozialamt/kompetenzzentrum-arbeit/netzwerk-arbeitsmarkt" rel="noopener" target="_blank">Stadt Bern Netzwerk Arbeitsmarkt</a>; <a href="https://drahtesel.ch/" rel="noopener" target="_blank">Drahtesel</a>) — RAV/IV účastníci u zmluvného poskytovateľa by mohli obsadiť večernú jazdu bez nákladu pre Übrig.</p></section>
+
+<section id="toky"><h2>4 · Príjmové toky a ich realizmus pre jedno mesto</h2>
+<div class="tw"><table><thead><tr><th>Tok</th><th>Kto platí</th><th>Kotva z výskumu</th><th>Realizmus rok 1</th><th>Rok 3</th></tr></thead><tbody>
+<tr><td><b>Granty nadácií a Lotteriefonds</b></td><td>nadácie, kantón</td><td>Tischlein/Tafel žijú z Coop, Göhner, darcov <span class="m sn">snippet</span>; Zug dal CHF 25 000 na 10 chladničiek Madame Frigo <span class="m sn">snippet</span></td><td><b>hlavný tok</b> – po Steuerbefreiung</td><td>hlavný tok</td></tr>
+<tr><td><b>Paušál od kuchýň</b></td><td>reštaurácie</td><td>TGTG berie CHF 59/rok + CHF 2.90/balíček a kuchyňa <i>dostáva</i> peniaze <span class="m sn">snippet</span></td><td>CHF 0 (pilot zdarma; odstraňuje len náklad 6–12 Rp/kg bioodpadu)</td><td>CHF 50–100/rok „Mitglied“ – symbolické, skôr záväzok než príjem <span class="m est">odhad</span></td></tr>
+<tr><td><b>Mesto Bern – Leistungsvertrag / projektový príspevok</b></td><td>Stadt Bern (BSS, Nachhaltigkeit)</td><td>mesto uvoľnilo ≈CHF 400 000 na ľudí bez strechy (2024/25) <span class="m sn">snippet</span>; stratégia Nachhaltige Ernährung má pole „Food Losses“ <span class="m sn">snippet</span></td><td>projektový príspevok možný, Leistungsvertrag nie (Verein &lt; 1 rok)</td><td>reálny, ak prijímajúce organizácie potvrdia závislosť</td></tr>
+<tr><td><b>Korporátny sponzoring</b></td><td>Migros Aare, Coop, BEKB, Mobiliar, Kursaal</td><td>Coop dáva Tischlein CHF 425 000/rok <span class="m sn">snippet</span>; SV Stiftung platí chladničky Madame Frigo <span class="m sn">snippet</span></td><td>in-kind (termoboxy, cargo-bike) skôr než hotovosť</td><td>hotovosť za viditeľnosť na štítku/protokole</td></tr>
+<tr><td><b>Crowdfunding</b></td><td>verejnosť</td><td>wemakeit 6 % + 4 % <span class="m ok">overené</span>; Sleeper a Pluto uspeli na lokalhelden/Crowdify <span class="m sn">snippet</span></td><td>launch kampaň CHF 10–20 tis. <span class="m est">odhad</span></td><td>jednorazovo</td></tr>
+<tr><td><b>Licencie iným mestám (SaaS)</b></td><td>mestá, Städteverband</td><td>412 Food Rescue / MealConnect v USA <span class="m sn">snippet</span>; v CH bez precedensu</td><td>0</td><td>možný, len cez GmbH (model C)</td></tr>
+<tr><td><b>Arbeitsintegration ako pracovná sila</b></td><td>Sozialamt / RAV / IV platia poskytovateľa</td><td>Kompetenzzentrum Arbeit má 350+ partnerov; Drahtesel vedie bicyklovú dielňu <span class="m sn">snippet</span></td><td>jazdci bez nákladu pre Übrig – rokovať s Drahtesel/KA</td><td>štandard</td></tr>
+<tr><td><b>Potvrdenia o dare pre kuchyne</b></td><td>—</td><td>Naturalspenden odpočítateľné od 2007, ale treba Verkehrswert <span class="m sn">snippet</span></td><td>ESG-artefakt, nie peniaze</td><td>—</td></tr>
+<tr><td><b>Reklama, predaj dát</b></td><td>—</td><td>—</td><td colspan="2">nie – ničí dôveru útulkov aj kuchýň</td></tr>
+</tbody></table></div>
+<p>Jednotková ekonomika, ktorú treba mať v hlave pri každom rozhovore: Schweizer Tafel presunie za 1 darovaný frank 1,81 kg tovaru <span class="m sn">snippet</span> (≈ CHF 0.55/kg <span class="m calc">výpočet</span>); marginálny náklad Übrig na jeden presun je blízko nule, lebo príjemca si vyzdvihne a softvér beží na free-tier – viažuci náklad je čas koordinátora. Správna jednotka pre grant je preto „<b>náklad na aktívnu kuchyňu a mesiac</b>“ a „<b>počet dokumentovaných odovzdaní</b>“, nie kilogramy.</p>
+</section>
+
+<section id="zdroje"><h2>5 · Financovanie bez riedenia: sedem overených dverí, z toho žiadne s hotovosťou pre Verein</h2><p>Toto je jediná časť správy, kde existujú <span class="m ok" title="pôvod údaju">overené</span> fakty — sedem nástrojov, ktorých primárne stránky čítal autor repozitára Sautero 9. 8. 2026 — a zároveň časť s najväčším podielom <span class="m no" title="pôvod údaju">neoverené</span>: v tejto relácii nebolo možné otvoriť ani jednu stránku mesta, kantónu, nadácie či platformy a nebolo možné spustiť žiadne vyhľadávanie. Sedem overených dverí je pre Übrig Bern paradoxne takmer bezcenných: <strong>be-advanced</strong> (kantonálna inovačná agentúra) dáva bezplatné poradenstvo a koučov, bez equity, bez podmienok, bez potreby firmy, prvé stretnutie do dvoch týždňov <span class="m ok" title="pôvod údaju">overené</span> (<a href="https://be-advanced.ch/startup" rel="noopener" target="_blank">be-advanced.ch/startup</a> cez <code>visual data/legal-financing.html</code> r. 480–485) — CHF 0 hotovosti, ale jediné kantonálne dvere, ktoré projekt bez právnej formy otvorí tento týždeň. <strong>Fördergutscheine BE</strong> (CHF 4 000–30 000) boli krízový nástroj pre exportné priemyselné firmy s ≥10 zamestnancami a ≥CHF 2 mil. obratu, okno zavreté 30. 11. 2025 <span class="m ok" title="pôvod údaju">overené</span> (tlačová správa Kanton Bern 26. 6. 2025 cez <code>legal-financing.html</code> r. 571–587) — fit žiadny. <strong>Innosuisse</strong> Innovationsscheck CHF 15 000 ide výskumnému partnerovi, žiadosť podáva Umsetzungspartner, vyžaduje UID; vo väčších projektoch firma nesie 40–60 % nákladov, ≥5 % v hotovosti <span class="m ok" title="pôvod údaju">overené</span> (<a href="https://www.innosuisse.admin.ch" rel="noopener" target="_blank">innosuisse.admin.ch FAQ</a> cez r. 591–601) — fit žiadny, kým BFH-HAFL Zollikofen nebude chcieť skúmať logistiku prebytkov. <strong>Venture Kick</strong> (CHF 10 000 / 40 000 / 100 000) vyžaduje aktuálnu alebo ≤6 mesiacov starú akademickú afiliáciu, vedecký základ a ešte nezaloženú firmu <span class="m ok" title="pôvod údaju">overené</span> (<a href="https://www.venturekick.ch" rel="noopener" target="_blank">venturekick.ch</a> cez r. 551–559); repozitár si protirečí, či sú stupne 2–3 grant alebo konvertibilná pôžička (<code>rdata.py</code> r. 620–622 hovorí „convertible loan") — brať ako potenciálne riediace. <strong>Kickfund</strong> (do CHF 850 000) je investičný fond nad Venture Kick <span class="m ok" title="pôvod údaju">overené</span> a <strong>SICTIC</strong> vyžaduje AG, tím na plný úväzok a equity <span class="m ok" title="pôvod údaju">overené</span> (<a href="https://www.sictic.ch/startups/" rel="noopener" target="_blank">sictic.ch/startups/</a> cez r. 535–547) — oba riediace, mimo zadania. <strong>BG Mitte</strong> ručí za úvery do CHF 1 mil. (poplatok 0,5–1 % + 1,25 % p.a.), vyžaduje bonitu firmy aj exponentov a vlastný kapitál <span class="m ok" title="pôvod údaju">overené</span> (r. 605–616) — pôžička, fit žiadny. Jediný overený nástroj s reálnym fitom je <strong>wemakeit</strong>: 6 % poplatok + 4 % transakčný, len pri úspechu, all-or-nothing, bez kategórií, súkromné účely povolené; či prijme projekt bez právnickej osoby, je otvorené od 9. 8. 2026 <span class="m ok" title="pôvod údaju">overené</span> (<a href="https://wemakeit.com" rel="noopener" target="_blank">wemakeit.com</a> cez r. 754–760, 1708).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Nástroj</th>
+<th>Typ</th>
+<th>Suma</th>
+<th>Fit pre Übrig</th>
+<th>Značka</th>
+<th>Kde overiť</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>be-advanced (Kanton Bern)</td>
+<td>koučing, in-kind</td>
+<td>CHF 0</td>
+<td>VYSOKÝ ako prvý krok</td>
+<td><span class="m ok" title="pôvod údaju">overené</span></td>
+<td>be-advanced.ch</td>
+</tr>
+<tr>
+<td>wemakeit</td>
+<td>crowdfunding, 6 % + 4 %</td>
+<td>podľa kampane</td>
+<td>VYSOKÝ na launch</td>
+<td><span class="m ok" title="pôvod údaju">overené</span></td>
+<td>wemakeit.com — právna forma?</td>
+</tr>
+<tr>
+<td>Fördergutscheine BE</td>
+<td>grant, zavreté 30. 11. 2025</td>
+<td>CHF 4–30 tis.</td>
+<td>ŽIADNY</td>
+<td><span class="m ok" title="pôvod údaju">overené</span></td>
+<td>be.ch — nástupca 2026?</td>
+</tr>
+<tr>
+<td>Innosuisse Scheck</td>
+<td>grant partnerovi</td>
+<td>CHF 15 000</td>
+<td>ŽIADNY</td>
+<td><span class="m ok" title="pôvod údaju">overené</span></td>
+<td>innosuisse.admin.ch</td>
+</tr>
+<tr>
+<td>Venture Kick / Kickfund / SICTIC</td>
+<td>grant+konvertibilná / equity</td>
+<td>10–150 tis. / 850 tis.</td>
+<td>ŽIADNY (riediace)</td>
+<td><span class="m ok" title="pôvod údaju">overené</span></td>
+<td>venturekick.ch</td>
+</tr>
+<tr>
+<td>BG Mitte</td>
+<td>ručenie za pôžičku</td>
+<td>do CHF 1 mil.</td>
+<td>ŽIADNY</td>
+<td><span class="m ok" title="pôvod údaju">overené</span></td>
+<td>bgm-ccc.ch</td>
+</tr>
+<tr>
+<td>Lotteriefonds Kanton Bern (Swisslos)</td>
+<td>grant, projektové náklady, spoluúčasť</td>
+<td>nezistené</td>
+<td>VYSOKÝ pre jednorazový projekt</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>be.ch/lotteriefonds</td>
+</tr>
+<tr>
+<td>Burgergemeinde Bern</td>
+<td>grant, sociálne/kultúrne</td>
+<td>nezistené</td>
+<td>VYSOKÝ (bernský darca)</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>bgbern.ch</td>
+</tr>
+<tr>
+<td>Fachstelle Nachhaltige Entwicklung / Klimafonds Stadt Bern</td>
+<td>grant</td>
+<td>nezistené</td>
+<td>VYSOKÝ / STREDNÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>bern.ch</td>
+</tr>
+<tr>
+<td>Quartierkommissionen Stadt Bern</td>
+<td>malý grant</td>
+<td>nezistené</td>
+<td>STREDNÝ (pilot v jednom Stadtteil)</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>bern.ch</td>
+</tr>
+<tr>
+<td>Stanley Thomas Johnson Stiftung, Bürgi-Willert-Stiftung (Bern)</td>
+<td>grant</td>
+<td>nezistené</td>
+<td>VYSOKÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>doména STJ nezistená</td>
+</tr>
+<tr>
+<td>Stiftung Corymbo, Ernst Göhner Stiftung</td>
+<td>grant malým org. / po Steuerbefreiung</td>
+<td>nezistené</td>
+<td>VYSOKÝ / STREDNÝ–VYSOKÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>corymbo.ch, ernst-goehner-stiftung.ch</td>
+</tr>
+<tr>
+<td>Engagement Migros, Stiftung Mercator Schweiz, Coop Fonds für Nachhaltigkeit</td>
+<td>grant</td>
+<td>nezistené</td>
+<td>STREDNÝ dlhodobo / STREDNÝ / NÍZKY</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>vlastné weby</td>
+</tr>
+<tr>
+<td>Impact Hub Bern — Circular Economy Incubator</td>
+<td>in-kind + malý grant</td>
+<td>nezistené</td>
+<td>VYSOKÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>bern.impacthub.ch</td>
+</tr>
+<tr>
+<td>Social Impact Award, seif Awards</td>
+<td>cena</td>
+<td>nezistené</td>
+<td>STREDNÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>vlastné weby</td>
+</tr>
+<tr>
+<td>lokalhelden.ch (Raiffeisen)</td>
+<td>crowdfunding, údajne bez poplatku</td>
+<td>—</td>
+<td>VYSOKÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span>; Sleeper ho použil <span class="m sn" title="pôvod údaju">snippet</span></td>
+<td>lokalhelden.ch</td>
+</tr>
+<tr>
+<td>Kirchgemeinden / Reformierte Kirchen BE-JU-SO / Kath. Kirche Region Bern</td>
+<td>diakonálny grant, Kollekten</td>
+<td>stovky–nízke tisíce</td>
+<td>VYSOKÝ na seed</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span>; CHF 25 000 Landeskirche → Tischlein <span class="m sn" title="pôvod údaju">snippet</span></td>
+<td>Kirchgemeinderat</td>
+</tr>
+<tr>
+<td>BAFU Umwelttechnologieförderung, ARE Förderprogramm Nachhaltige Entwicklung</td>
+<td>federálny grant</td>
+<td>nezistené</td>
+<td>NÍZKY–STREDNÝ</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>bafu.admin.ch, are.admin.ch</td>
+</tr>
+<tr>
+<td>Google for Nonprofits, GitHub for Nonprofits, TechSoup/Stifter-helfen</td>
+<td>in-kind kredity</td>
+<td>nezistené</td>
+<td>VYSOKÝ po Steuerbefreiung</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>google.com/nonprofits</td>
+</tr>
+<tr>
+<td>ABS, Erasmus+/Movetia, EIT Food, LIFE</td>
+<td>pôžička / EÚ</td>
+<td>—</td>
+<td>ŽIADNY–NÍZKY</td>
+<td><span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Z <span class="m sn" title="pôvod údaju">snippet</span>-úrovne pribúda niekoľko bernských dôkazov, že peniaze na túto tému v meste tečú: Stadt Bern uvoľnil takmer <strong>CHF 400 000</strong> na pomoc ľuďom bez strechy (zima 2024/25) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.nau.ch/ort/bern/bern-starkt-obdachlosenhilfe-mit-fast-400000-franken-66983227" rel="noopener" target="_blank">Nau.ch</a>); Coop Regionalrat dal Sleeperu CHF 3 000 a Sleeper aj Pluto úspešne crowdfundovali (Lokalhelden, Crowdify) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.lokalhelden.ch/sleeper-bern" rel="noopener" target="_blank">lokalhelden.ch</a>; <a href="https://www.crowdify.net/de/projekt/jugendnotschlafstelle" rel="noopener" target="_blank">Crowdify Pluto</a>); koordinačná kancelária Foodsave-Bankett (foodwaste.ch, Bern) dáva štartovacie peniaze iným mestám <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://foodwaste.ch/alle-projekte/foodsave-bankett-koordinationsstelle/" rel="noopener" target="_blank">foodwaste.ch</a>). Realistická cesta pre prvý rok, zložená z týchto dielov: (1) <strong>Steuerbefreiung najprv</strong> — je to brána, na ktorej záleží nadáciám aj Lotteriefonds viac než Zewo, a nový Verein môže žiadať hneď <span class="m no" title="pôvod údaju">neoverené — potvrdiť so Steuerverwaltung Kanton Bern</span>; (2) be-advanced ako otvárač dverí k Impact Hub Bern a nadáciám; (3) cirkevné a Quartier-peniaze plus Burgergemeinde na seed (rádovo tisíce CHF); (4) crowdfunding na launch (wemakeit overené, lokalhelden pravdepodobne lacnejšie) — na rozdiel od B2B SaaS má záchrana jedla verejný príbeh a verejnosť JE cieľová podporná základňa; (5) Lotteriefonds na jednorazový projekt (aplikácia, termoboxy, kampaň), nie na mzdy; (6) in-kind: RAV/IV účastníci cez zmluvného poskytovateľa ako jazdci, Google/GitHub kredity, carvelo2go. Leistungsvertrag od Sozialamtu je pre Verein mladší než rok mimo dosahu; stáva sa reálnym za 2–3 roky, ak prijímajúce organizácie formálne potvrdia, že sa na Übrig spoliehajú.</p></section>
+
+<section id="riedenie"><h2>6 · Čo je a čo nie je riedenie</h2>
+<div class="cards">
+<div class="card"><h3>Bez riedenia ✔</h3><ul><li><b>Granty a dary</b> (nadácie, Lotteriefonds, mesto, kantón, cirkvi) – peniaze za výstup, žiadny podiel</li><li><b>Ceny a súťaže</b> (Social Impact Award, seif, Prix) – ak sú výslovne „Preisgeld“</li><li><b>Crowdfunding s odmenami</b> (wemakeit, lokalhelden) – podporovatelia nedostávajú podiel</li><li><b>Sponzoring a in-kind</b> (termoboxy, bicykel, cloud kredity)</li><li><b>Leistungsvertrag</b> s mestom – platba za službu</li><li><b>Členské a paušály</b></li><li><b>Genossenschaft-Anteilscheine</b> – kapitál bez kontroly (jeden člen = jeden hlas), ale s právom na vrátenie <span class="m no">neoverené</span></li></ul></div>
+<div class="card"><h3>Riedenie alebo dlh ✘ / ⚠</h3><ul><li><b>Venture Kick stupne 2–3</b>: repozitár si protirečí, či grant alebo konvertibilná pôžička <span class="m ok">overené</span> – správať sa k nim ako k riediacim, kým sa neoverí</li><li><b>Kickfund, SICTIC, angel investori</b>: equity <span class="m ok">overené</span></li><li><b>BG Mitte, BEKB Förderkredit, ABS</b>: pôžičky/ručenia – nie riedenie, ale dlh, ktorý Verein bez príjmov nemá z čoho splácať</li><li><b>„Impact investing“ s convertible note</b>: riedenie s oneskorením</li><li><b>Fördergutscheine BE</b>: bol grant, ale okno zavreté 30. 11. 2025 a cieľ boli priemyselné firmy <span class="m ok">overené</span></li></ul><p>Pozor: vo Vereine s Steuerbefreiung sa equity ani vydať nedá – riedenie je otázka len pre GmbH v modeli B/C.</p></div>
+</div>
+</section>
+
+<section id="plan"><h2>7 · Plán financovania na 12 mesiacov (bez riedenia)</h2>
+<p>Sumy sú <span class="m est">odhad</span> podľa rádov z výskumu (Zug CHF 25 000 za 10 chladničiek; Landeskirche CHF 25 000 pre Tischlein; Coop Regionalrat CHF 3 000 pre Sleeper). Cieľ roka 1: pokryť koordinátora na 20–40 %, termoboxy, cargo-bike a prvé merania, spolu rádovo <b>CHF 40 000–70 000</b>.</p>
+<div class="tw"><table><thead><tr><th>Mesiac</th><th>Krok</th><th>Zdroj</th><th>Rád (CHF)</th><th>Podmienka</th></tr></thead><tbody>
+<tr><td>1</td><td>Založiť Verein, podať Steuerbefreiung, be-advanced prvé stretnutie</td><td>—</td><td>0</td><td>2 osoby, stanovy s Liquidationsklausel; be-advanced <span class="m ok">overené</span></td></tr>
+<tr><td>1–2</td><td>Telefonát Kantonales Laboratorium; pilot s 5–10 kuchyňami klastra Zeughausgasse, carvelo2go, vlastné merania</td><td>vlastné + carvelo2go</td><td>≈ 250 (CHF 11/večer × 20)</td><td>protokol odovzdania hotový</td></tr>
+<tr><td>2–3</td><td>Seed od cirkví (Kirchgemeinden, Kath. Kirche Region Bern), Quartierkommission, Burgergemeinde</td><td>diakonálne fondy</td><td>3 000–10 000</td><td>Verein existuje; číslo „porcie/večer“ z pilotu</td></tr>
+<tr><td>3–4</td><td>Crowdfunding na launch (termoboxy, bicykel, kampaň)</td><td>lokalhelden / wemakeit</td><td>10 000–20 000</td><td>wemakeit all-or-nothing 6 % + 4 % <span class="m ok">overené</span></td></tr>
+<tr><td>4–6</td><td>Impact Hub Bern (Circular Economy Incubator), Social Impact Award</td><td>akcelerátor / cena</td><td>in-kind + 0–10 000</td><td>termíny <span class="m no">neoverené</span></td></tr>
+<tr><td>5–8</td><td>Lotteriefonds Kanton Bern – jednorazový projekt (softvér, vybavenie, kampaň), nie mzdy</td><td>kantón</td><td>10 000–30 000</td><td>Steuerbefreiung, spoluúčasť <span class="m no">neoverené</span></td></tr>
+<tr><td>6–10</td><td>Nadácie: Stanley Thomas Johnson, Bürgi-Willert, Corymbo, Ernst Göhner; Engagement Migros (dlhšie)</td><td>nadácie</td><td>10 000–30 000</td><td>Steuerbefreiung + prvé výsledky pilotu</td></tr>
+<tr><td>6–12</td><td>Stadt Bern – projektový príspevok (Nachhaltige Ernährung / BSS); Gastro Charta ako rámec pre kuchyne</td><td>mesto</td><td>5 000–20 000</td><td>listy podpory od Passantenheim/Sleeper/PINTO</td></tr>
+<tr><td>9–12</td><td>Jazdci cez Arbeitsintegration (Drahtesel / Kompetenzzentrum Arbeit); Google/GitHub nonprofit kredity</td><td>in-kind</td><td>0</td><td>Verein + Steuerbefreiung</td></tr>
+</tbody></table></div>
+<p>Poradie nie je náhodné: <b>forma → dozor → meranie → seed → verejný príbeh → inštitucionálne granty</b>. Každý ďalší krok používa výstup predošlého (počet odovzdaní, teplotný log, listy podpory) ako dôkaz. Leistungsvertrag so Sozialamtom je téma roka 2–3.</p>
+</section>
+
+<section id="kroky"><h2>8 · Kroky na tento týždeň</h2>
+<ol class="steps">
+<li><b>Stanovy Vereinu</b> (účel: „Verminderung von Lebensmittelverlusten durch Weitergabe an gemeinnützige Organisationen in Bern“, Liquidationsklausel, neplatené predstavenstvo, možnosť plateného Geschäftsführera) – dve osoby, Gründungsversammlung, zápis.</li>
+<li><b>Žiadosť o Steuerbefreiung</b> na Steuerverwaltung Kanton Bern (TaxInfo) – priložiť stanovy, popis činnosti, rozpočet.</li>
+<li><b>Telefonát Kantonales Laboratorium Bern</b> (031 633 11 11): musí sa Verein, ktorý len sprostredkuje a nevozí, registrovať ako Lebensmittelbetrieb? Aké sú požiadavky na protokol?</li>
+<li><b>Telefonáty príjemcom</b>: Passantenheim (031 351 80 27), Sleeper (031 301 64 04), Punkt 6 (031 321 76 38) – prijmú teplé jedlo po 21:30? v akých nádobách? kto podpíše?</li>
+<li><b>be-advanced</b> – bezplatné prvé stretnutie (do 2 týždňov) <span class="m ok">overené</span>; pýtať sa na kontakt do Impact Hub Bern a na Lotteriefonds.</li>
+<li><b>Overiť 8 finančných dverí</b> zo zoznamu nižšie s odblokovanou sieťou alebo v prehliadači – predovšetkým Lotteriefonds, Burgergemeinde, Stanley Thomas Johnson Stiftung, Impact Hub Bern.</li>
+</ol>
+</section>
+
+<section id="doverit"><h2>9 · Čo doveriť pre financovanie</h2><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Čo overiť</th>
+<th>Prečo je to kritické</th>
+<th>Kde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>Kantonales Laboratorium Bern: musí sa Verein, ktorý len prenáša (bez skladovania), registrovať? existuje Merkblatt Lebensmittelspenden?</td>
+<td>dozor, ktorý už kontroluje Sleeper; telefonát pred prvým odovzdaním</td>
+<td>+41 31 633 11 11; https://www.weu.be.ch/de/start/themen/lebensmittelsicherheit.html</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Sleeper (031 301 64 04), Passantenheim (031 351 80 27), Punkt 6 (031 321 76 38): prijmú teplé jedlo po vlastnej večeri? hodina večere v Passantenheime; kapacita 50 vs 60; hodiny Aufenthaltsraum Mattenhofstrasse 32</td>
+<td>rozhoduje o tom, či trasa 21:30–23:00 má vôbec príjemcu</td>
+<td>telefón; https://sleeper.ch/ ; https://heilsarmee.ch/angebot/passantenheim-bern/</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Lotteriefonds Kanton Bern: kritériá, Eigenleistung %, formulár, rozhodovací čas</td>
+<td>pravdepodobne najrelevantnejší kantonálny zdroj hotovosti pre Verein — úplne neoverený</td>
+<td>https://www.be.ch (Lotteriefonds)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Burgergemeinde Bern — Gesuche/Beiträge: kritériá, termíny, sumy</td>
+<td>bernský sociálny darca s vysokým fitom — neoverený</td>
+<td>https://www.bgbern.ch</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Stadt Bern: Fachstelle Nachhaltige Entwicklung projektové príspevky; Klimafonds; či stratégia „Nachhaltige Ernährung"/Gastro-Charta má finančnú linku; zoznam 40+ signatárov Charty</td>
+<td>mestský politický hák + potenciálny grant</td>
+<td>https://www.bern.ch/themen/umwelt-natur-und-energie/nachhaltigkeit/nachhaltige-ernaehrung ; https://www.bern.ch/mediencenter/medienmitteilungen/aktuell_ptk/lancierung-der-gastro-charta-in-der-stadt-bern</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Steuerverwaltung Kanton Bern: postup Steuerbefreiung pre nový Verein, požiadavka na neplatené predstavenstvo, Liquidationsklausel</td>
+<td>brána ku všetkým nadáciám; bernské znenie prísnejšie než iné kantóny</td>
+<td>https://www.taxinfo.sv.fin.be.ch/taxinfo/c3a6ac1c-b808-458d-b980-e53c8ad4b299</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Stanley Thomas Johnson Stiftung (správna doména nezistená), Bürgi-Willert-Stiftung, Stiftung Corymbo, Ernst Göhner Stiftung: oprávnenosť, termíny, sumy</td>
+<td>najsilnejšie nadačné stopy — všetky <span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>vlastné weby; https://www.stiftungschweiz.ch</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Impact Hub Bern — Circular Economy Incubator 2026: termíny, grant pre finalistov</td>
+<td>prirodzený bernský akcelerátor</td>
+<td>https://bern.impacthub.ch</td>
+</tr>
+<tr>
+<td>14</td>
+<td>lokalhelden.ch vs wemakeit: poplatky, all-or-nothing, právna forma žiadateľa</td>
+<td>wemakeit overené (6 %+4 %), lokalhelden údajne bez poplatku</td>
+<td>https://www.lokalhelden.ch ; https://wemakeit.com</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Venture Kick: stupne 2–3 grant alebo konvertibilná pôžička</td>
+<td>protirečenie v repozitári</td>
+<td>https://www.venturekick.ch</td>
+</tr>
+<tr>
+<td>19</td>
+<td>MWSTG Art. 31 Abs. 2 lit. c (CHF 500 Eigenverbrauch) a oceňovací základ pre nepredajný prebytok; DBG Art. 33a/59 pre Naturalspenden</td>
+<td>DPH-riziko pre reštauráciu pri &gt;CHF 500/rok</td>
+<td>https://www.fedlex.admin.ch (SR 641.20); https://gastrosuisse.ch/de/branchenwissen/unternehmensfuehrung/mwst</td>
+</tr>
+</tbody>
+</table></div></section>
+
+<footer>Übrig Bern · výskumný podklad zo 25. 9. 2026 · nie je právne ani daňové poradenstvo · zdrojové poznámky: <a href="notes/">research/notes/</a>, syntéza: <a href="REPORT.md">REPORT.md</a></footer>
+</main>
+</body>
+</html>

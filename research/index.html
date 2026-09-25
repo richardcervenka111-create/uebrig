@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Übrig Bern – prehľad situácie</title>
+<meta name="description" content="Konkurencia, hladní ľudia v Berne, reštaurácie a právny rámec pre presun prebytočného jedla – výskumný prehľad.">
+<style>
+:root{--bg:#fbfaf7;--card:#fff;--ink:#1b1b1b;--ink2:#52514e;--mute:#8d8b84;--line:#e6e3dc;--accent:#0d366b;--accent2:#2a78d6;--ok:#0ca30c;--warn:#eda100;--no:#d03b3b}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#8d8b84;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5}}
+:root[data-theme=dark]{--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#8d8b84;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[hidden]{display:none!important}
+main{max-width:920px;margin:0 auto;padding:24px 16px 64px}
+nav.top{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem;margin-bottom:18px}nav.top a{color:var(--accent)}
+header h1{font-size:clamp(1.6rem,3.5vw,2.3rem);margin:.2em 0 .3em;letter-spacing:-.01em;line-height:1.15}
+.sub{color:var(--ink2)}
+.bluf{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent2);border-radius:10px;padding:16px 18px;margin:18px 0;font-size:1.02rem}
+.bluf p{margin:0}
+.warn{border-left:4px solid var(--warn);background:rgba(237,161,0,.10);padding:10px 14px;border-radius:6px;margin:16px 0}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:18px 0;columns:2;column-gap:28px;font-size:.95rem}.toc a{color:var(--accent);text-decoration:none}.toc li{margin:3px 0}
+@media (max-width:640px){.toc{columns:1}}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.tile b{display:block;font-size:1.6rem;line-height:1.1}.tile small{color:var(--ink2)}
+section{margin-top:44px}h2{font-size:1.4rem;margin:0 0 12px;line-height:1.25}h3{font-size:1.1rem;margin:26px 0 8px}
+p{margin:0 0 14px}li{margin:4px 0}
+a{color:var(--accent)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--ink2);font-weight:600}
+.m{font-size:.74rem;border-radius:4px;padding:1px 6px;white-space:nowrap;vertical-align:1px;font-weight:600}
+.m.ok{background:rgba(12,163,12,.15);color:#0a7a0a}.m.sn{background:rgba(237,161,0,.18);color:#8a5d00}.m.no{background:rgba(208,59,59,.14);color:#a12c2c}.m.calc,.m.est{background:rgba(42,120,214,.14);color:#1c5cab}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .m.ok{color:#5dd35d}:root:not([data-theme=light]) .m.sn{color:#f2c159}:root:not([data-theme=light]) .m.no{color:#f08a8a}:root:not([data-theme=light]) .m.calc,:root:not([data-theme=light]) .m.est{color:#86b6ef}}
+.legend{display:flex;gap:10px 18px;flex-wrap:wrap;font-size:.9rem;color:var(--ink2);margin:10px 0 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.card h3{margin:0 0 8px;font-size:1.05rem}.card p{font-size:.94rem;margin:0 0 8px}.card ul{padding-left:18px;margin:0;font-size:.92rem}
+.flow{width:100%;height:auto;display:block;margin:6px 0 10px}
+.flow rect{fill:var(--card);stroke:var(--line);stroke-width:1.5;rx:8}.flow text{font-size:13px;fill:var(--ink)}.flow .t{font-weight:700}.flow .s{font-size:11px;fill:var(--ink2)}.flow path{fill:none;stroke:var(--accent2);stroke-width:2.2;marker-end:url(#arr)}.fig{margin:14px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}.fig figcaption{font-weight:700;font-size:.95rem;margin-bottom:4px}.flow .money{stroke:#eb6834}.flow .food{stroke:#1baf7a}
+.steps{counter-reset:s;list-style:none;padding:0}.steps li{position:relative;padding-left:44px;margin:10px 0}.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.imp{border-left:4px solid var(--no);background:rgba(208,59,59,.08);padding:10px 14px;border-radius:6px;margin:16px 0}
+footer{margin-top:48px;color:var(--ink2);font-size:.88rem;border-top:1px solid var(--line);padding-top:14px}
+blockquote{margin:0 0 14px;padding:6px 14px;border-left:3px solid var(--line);color:var(--ink2)}
+code{font-size:.9em}
+</style>
+</head>
+<body>
+<main>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="../">Übrig Bern</a></nav>
+
+<header>
+<h1>Übrig Bern – prehľad situácie: konkurencia, hladní ľudia, kuchyne, právo</h1>
+<p class="sub">Deep research k projektu Übrig Bern (kuchyne vypíšu prebytok, schválené organizácie si ho rezervujú a vyzdvihnú). Zostavené 25. 9. 2026 zo šiestich výskumných blokov. Sesterské dokumenty: <a href="mapa.html">mapa a trasa zvozu</a> a <a href="financovanie.html">monetizácia a financovanie</a>.</p>
+</header>
+<div class="bluf"><p><strong>Nikto vo Švajčiarsku dnes systematicky neprenáša čerstvo uvarené zvyšky z reštauračných kuchýň v ten istý večer do sociálnych organizácií — a v Berne táto medzera leží presne medzi tromi existujúcimi vrstvami, ktoré ju neobsadia.</strong> Národní redistribútori Tischlein deck dich (≈9 000 t v roku 2025, 8 Abgabestellen v meste Bern) a Schweizer Tafel (≈8 500 t v roku 2025, ≈45 inštitúcií v regióne Bern) vozia kamiónmi balený tovar z Coop/Migros/Aldi/Lidl v týždennej kadencii; Too Good To Go (≈7 500 partnerov v CH, poplatok CHF 2.90/balíček + CHF 59/rok) a bernský vyzývateľ GoNina (25 % provízia, strop CHF 2.50) predávajú spotrebiteľom, nie darujú; foodsharing/Madame Frigo (35 Fairteiler, 8 chladničiek v meste) sú nestrážené C2C chladničky, ktoré sú podľa miestnej tlače často prázdne alebo plné alkoholu. Na strane dopytu mesto Bern eviduje <strong>56 ľudí bez strechy (2025, z 21 v roku 2021)</strong>, Städteinitiative hlási v meste „deutliche Zunahme" poberateľov Sozialhilfe (2024) a v kantóne žije ≈300 ľudí na Nothilfe <strong>CHF 10/deň</strong>; večer po 20:00 sú s jedlom otvorené prakticky len Passantenheim Heilsarmee (vstup do 23:00), Pluto (7 lôžok) a v zime Punkt 6 (18:00–22:30) — Sleeper podáva večeru 18:00–20:00. Na strane ponuky má mesto ≈760 reštaurácií (2023), z ktorých ≈24 komunikuje explicitný Küchenschluss v troch vlnách — <strong>21:30 (Zeughausgasse/Kornhausplatz), 22:00 (Della Casa, Harmonie, Fédéral, Verdi, Kirchenfeld) a 22:15–23:00 (Bärengraben, Tramdepot, Jack's, tibits)</strong>. Právny rámec existuje: BLV-Spendenleitfaden 2021 povoľuje odovzdať pripravené jedlo pri <strong>≥ +60 °C alebo schladené pod +10 °C do dvoch hodín</strong>, pričom darca aj príjemca sú obaja Lebensmittelbetrieb; žiadny „Good Samaritan" štít vo Švajčiarsku neexistuje. Z porovnateľných organizácií nikto nenechá platiť charitu — platí dodávateľ, štát alebo nadácia — a jediná forma, ktorá otvára nadačné peniaze, je <strong>Verein so Steuerbefreiung</strong>. Kľúčové upozornenie: takmer všetky fakty v tejto správe pochádzajú len z útržkov vyhľadávača (primárne stránky boli sieťovo blokované) a celá mapa financovania, okrem siedmich položiek prečítaných 9. 8. 2026, sú neoverené stopy — preto má správa záverečnú sekciu „Čo treba doveriť".</p></div>
+<div class="tiles">
+<div class="tile"><b>≈760</b><small>reštaurácií v meste Bern (Der Bund, 2023)</small></div>
+<div class="tile"><b>56</b><small>ľudí bez strechy známych mestu (2025; 21 v 2021)</small></div>
+<div class="tile"><b>≈300</b><small>ľudí na Nothilfe CHF 10/deň dlhšie ako rok (kantón)</small></div>
+<div class="tile"><b>0</b><small>švajčiarskych platforiem, ktoré večer prenášajú uvarené jedlo z reštaurácií do útulkov</small></div>
+<div class="tile"><b>≥ 60 °C / &lt; 10 °C</b><small>do 2 h – BLV-Spendenleitfaden 2021 pre odovzdanie pripraveného jedla</small></div>
+<div class="tile"><b>3</b><small>miesta v Berne, kde sa po 20:00 podáva jedlo: Passantenheim, Pluto, Punkt 6 (zima)</small></div>
+</div>
+<div class="warn"><b>Obmedzenie tohto výskumu.</b> Sieťová politika prostredia zablokovala priame načítanie takmer všetkých primárnych stránok (bern.ch, be.ch, fedlex, blv, sleeper.ch, nadácie…) a rozpočet vyhľadávania sa vyčerpal. Väčšina faktov je preto zo <b>snippetov vyhľadávača s URL</b>, nie z prečítaných stránok. Každý údaj nesie značku pôvodu a na konci je zoznam 24 vecí, ktoré treba pred použitím v žiadosti či na letáku doveriť.</div>
+<div class="legend"><span><span class="m ok">overené</span> primárna stránka prečítaná</span><span><span class="m sn">snippet</span> len útržok vyhľadávača, URL existuje</span><span><span class="m no">neoverené</span> stopa bez živého zdroja – úloha na overenie</span><span><span class="m calc">výpočet</span> / <span class="m est">odhad</span> vlastná aritmetika alebo predpoklad</span></div>
+<h2 style="margin-top:28px">Obsah</h2><ol class="toc"><li><a href="#konkurencia-ch">Švajčiarska konkurencia vozí palety kamiónmi, nie rizoto o 21:30</a></li><li><a href="#konkurencia-svet">V zahraničí platí dodávateľ alebo štát, nikdy charita</a></li><li><a href="#dopyt">Dopyt: 56 ľudí bez strechy, ≈300 na CHF 10 denne, mesto, kde Sozialhilfe rastie</a></li><li><a href="#ponuka">Ponuka: 760 reštaurácií zatvára kuchyne v troch vlnách</a></li><li><a href="#pravo">Právo: ≥ 60 °C alebo pod 10 °C do dvoch hodín, obe strany sú prevádzkovateľmi, štít neexistuje</a></li><li><a href="#logistika">Logistika: jedno e-cargo, ≈40 kg na jazdu, CHF 11 za večer</a></li><li><a href="#zaver">Záver</a></li><li><a href="#doverit">Čo treba doveriť (24 položiek)</a></li></ol>
+<section id="znacky"><h2>Ako čítať značky v tejto správe</h2><p>Podklady vznikli pod tvrdým obmedzením: každý pokus otvoriť primárnu stránku (fedlex, blv, bern.ch, be.ch, sleeper.ch, toogoodtogo.com, nadácie…) bol blokovaný proxy (<code>EGRESS_BLOCKED</code> / 403) a rozpočet vyhľadávania sa vyčerpal (200/200). Preto tri značky: <strong><span class="m ok" title="pôvod údaju">overené</span></strong> = primárna stránka bola skutočne prečítaná (platí len pre sedem finančných nástrojov, ktoré autor repozitára Sautero čítal priamo 9. 8. 2026 a zapísal do <code>visual data/legal-financing.html</code> a <code>scripts/reports/rdata.py</code>); <strong><span class="m sn" title="pôvod údaju">snippet</span></strong> = k faktu existuje URL, ale prečítal sa len útržok výsledku vyhľadávania — pred tlačou treba jeden klik na overenie; <strong><span class="m no" title="pôvod údaju">neoverené</span></strong> = stopa z pamäte modelu (cutoff jún 2026) bez akéhokoľvek živého zdroja — nie fakt, ale úloha na overenie. Vlastné výpočty zo snippetových čísel označujem <strong><span class="m calc" title="pôvod údaju">výpočet</span></strong> a plánovacie predpoklady <strong><span class="m est" title="pôvod údaju">odhad</span></strong>. Roky sú uvedené pri každom čísle tak, ako ich niesol útržok; „rok neuvedený" znamená, že ho útržok neobsahoval.</p></section><section id="konkurencia-ch"><h2>1 · Švajčiarska konkurencia vozí palety kamiónmi, nie rizoto o 21:30</h2><p>Švajčiarsky trh záchrany potravín má štyri vrstvy a žiadna z nich nie je postavená na večernom presune teplého jedla z reštaurácie do útulku. Prvá vrstva je B2C predaj prebytkov spotrebiteľom: <strong>Too Good To Go Schweiz</strong> hlási vyše 14 mil. „Überraschungspäckli", 2,6 mil. registrovaných používateľov a ≈7 500 partnerov (2025) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.toogoodtogo.com/de-ch/press/skiferien-2025" rel="noopener" target="_blank">TGTG press Skiferien 2025</a>); ešte v januári 2023 to bolo 5 700 partnerov a ≈2,5 mil. zachránených jedál za rok 2022 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.moneycab.com/klima-umwelt/too-good-to-go-rund-7-millionen-gerettete-mahlzeiten/" rel="noopener" target="_blank">Moneycab</a>). Cenník pre podnik: <strong>CHF 2.90 z každého balíčka ide TGTG plus administratívny poplatok CHF 59/rok</strong> (útržok bez dátumu) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://cafetier.ch/too-good-to-go/" rel="noopener" target="_blank">CafetierSuisse</a>). V Berne mala aplikácia okolo roku 2020 ≈135 podnikov v meste a 85 000 jedál, ≈400 podnikov v kantóne <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.presseportal.ch/de/pm/100076742/100850800" rel="noopener" target="_blank">Presseportal</a>); namenovaní bernskí partneri sú však takmer výlučne pekárne a obedové take-away (HITZBERGER, Bakery Bakery, Pfisternbeck, Zopf &amp; Zöpfli, Leo's Stadtbeck, Yooji's, Migros Take Away, Energy Kitchen, Contact take a way, Royal Punjab, Way to India) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://tgtg-alerts.com/en/discover/Switzerland/Bern" rel="noopener" target="_blank">tgtg-alerts Bern</a>; <a href="https://www.baerner-meitschi.ch/foodwaste/" rel="noopener" target="_blank">Bärner Meitschi</a>) — večerná reštauračná vlna 21:30–23:00 je v sieti TGTG prakticky neobsadená. Švajčiarska pobočka TGTG sa operatívne stenčuje: rola Country-Managera a Key-Account-Management sa presunuli do Viedne (2022–2024) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.watson.ch/schweiz/wirtschaft/900381812-too-good-to-go-schrumpft-schweiz-buero-und-erhaelt-lokale-konkurrenz" rel="noopener" target="_blank">watson</a>), a produkt sa tlačí smerom k retailovému softvéru „Too Good To Go Platform" s piatimi modulmi vrátane <strong>Donations</strong> — zatiaľ len pre obchod, nie gastro <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.konsider.ch/nun-setzt-auch-too-good-to-go-auf-das-b2b-geschaeft-20240123" rel="noopener" target="_blank">konsider.ch, jan 2024</a>). Domáci vyzývateľ <strong>GoNina</strong> (Zürich, app od februára 2024) má vyše 100 podnikov v 7 kantónoch s explicitným zameraním na Zürich, Bern a Basel (január 2025), bez fixného poplatku, <strong>25 % provízia so stropom CHF 2.50</strong>, AI-predikcia dopytu zdarma 3 mesiace a potom CHF 20–200/mesiac <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.foodaktuell.ch/2025/01/16/mit-ki-gegen-foodwaste" rel="noopener" target="_blank">foodaktuell</a>; <a href="https://www.moneycab.com/klima-umwelt/gonina-die-neue-schweizer-plattform-bekaempft-foodwaste-mit-ki/" rel="noopener" target="_blank">Moneycab</a>). Obaja súperia s Übrig len o pozornosť kuchyne a jej prebytok, nie o NGO-protistranu.</p>
+<p>Druhá vrstva sú dva národné B2NGO redistribútori, ktorých jednotkou je tona a dodávateľom veľkoobchod. <strong>Tischlein deck dich</strong> (Verein, Winterthur) zachránil v roku 2025 ≈9 000 t (≈34 t/deň) v hodnote CHF 58,5 mil. cez 168 Abgabestellen s vyše 4 600 dobrovoľníkmi <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.srf.ch/news/schweiz/gegen-foodwaste-tischlein-deck-dich-rettet-2025-tausende-tonnen-lebensmittel" rel="noopener" target="_blank">SRF, jan 2026</a>); v roku 2024 to bolo 8 530 t (+20 %) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.lebensmittelindustrie.com/wirtschaft/tischlein-deck-dich-verteilt-mehr-lebensmittel-an-armutsbetroffene-menschen" rel="noopener" target="_blank">lebensmittelindustrie.com</a>). V meste Bern má <strong>8 Abgabestellen</strong> (Paulus 20 rokov, Gäbelbach, Bürenpark, Bern West každý druhý pondelok) plus Liebefeld, Ostermundigen, Münsingen, Worb, Kehrsatz, Grosshöchstetten; každá otvára <strong>raz týždenne na jednu hodinu</strong>, príjemca platí symbolický CHF 1 a potrebuje Bezugskarte od sociálnej služby <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bernerzeitung.ch/tischlein-deck-dich-expandiert-in-berns-westen-558325925132" rel="noopener" target="_blank">Berner Zeitung</a>; <a href="https://www.tischlein.ch/lebensmittel-beziehen/" rel="noopener" target="_blank">tischlein.ch</a>); „vyše 1 500 ľudí v regióne Bern" (rok neuvedený) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.kathbern.ch/regionbern/news-artikel/tischlein-deck-dich-fuer-ueber-1500-menschen-der-region-bern" rel="noopener" target="_blank">kathbern.ch</a>). Prijíma „neporušené, ešte jedlé potraviny", čo sa legálne nedá odovzdať, ide do bioplynu — teda balený tovar, nie uvarené jedlá <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://sustainableswitzerland.ch/artikel/lidl-schweiz/tischlein-deck-dich-ist-ein-tolles-maerchen-aber-ein-solches-schlaraffenland-bieten-wir-nicht-id.1134" rel="noopener" target="_blank">sustainableswitzerland.ch</a>). <strong>Stiftung Schweizer Tafel</strong> rozdelila v roku 2025 ≈8 500 t (+11 %), 1,7 mil. 5-kg tašiek v hodnote ≈CHF 61,8 mil. <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.srf.ch/news/wirtschaft/food-save-gegen-armut-schweizer-tafel-verteilt-11-prozent-mehr-lebensmittel" rel="noopener" target="_blank">SRF</a>), v roku 2024 7 655 t pre 511 inštitúcií <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://diakonie.ch/schweizer-tafel-hat-2024-ueber-8000-tonnen-ueberschuessige-lebensmittel-verteilt/" rel="noopener" target="_blank">Diakonie Schweiz</a>); v regióne Bern zásobuje <strong>≈45 sociálnych inštitúcií zdarma</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.schweizertafel.ch/de/ueber-uns/institutionen-die-wir-beliefern/bern.html" rel="noopener" target="_blank">schweizertafel.ch Bern</a>) — dodáva suroviny inštitúciám, ktoré varia, nie hotové jedlá. Obe organizácie žijú z Coop/Migros „Foodbridge" (zmluvy 2024–2027) a Coop dáva ≈7 200 t + <strong>CHF 425 000/rok</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.taten-statt-worte.ch/de/unsere-taten/tat-nr-105.html" rel="noopener" target="_blank">Coop Taten statt Worte</a>).</p>
+<p>Tretia vrstva sú dobrovoľnícke chladničky: foodsharing eviduje <strong>35 Fairteiler v okrese Bern</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://foodsharing.de/fairteiler?bid=377" rel="noopener" target="_blank">foodsharing Bern</a>), z nich mnohé sú chladničky <strong>Madame Frigo</strong> (Verein so sídlom v Berne, &gt;190 chladničiek CH, 8 v meste Bern) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.pfarrblattbern.ch/artikel/die-kuehle-heldin-gegen-food-waste" rel="noopener" target="_blank">Pfarrblatt Bern</a>); miestna tlač hlási, že sú často prázdne alebo obsahujú alkohol — „Madame braucht Nachschub" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.derbund.ch/madame-braucht-nachschub-im-frigo-493601765769" rel="noopener" target="_blank">Der Bund</a>; <a href="https://www.watson.ch/bern/baerntoday/670286034-alkohol-oder-leere-das-steckt-in-den-oeffentlichen-kuehlschraenken-in-bern" rel="noopener" target="_blank">watson/BärnToday</a>). Štvrtá vrstva sú komerční upcykleri a osveta: <strong>Äss-Bar</strong> (GmbH, 2 predajne v Berne, &gt;600 t/rok) predáva včerajšie pečivo a v Länggasse aj teplé obedy <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.schweizerbauer.ch/politik-wirtschaft/agrarwirtschaft/zweite-aess-bar-in-bern/" rel="noopener" target="_blank">Schweizer Bauer</a>); <strong>Foodsave-Bankett Bern</strong> (od 2016, foodwaste.ch + HEKS + OGG + Offene Kirche) uvaril v roku 2024 ≈1 000 jedál so ≈40 organizáciami — raz ročne <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bernerzeitung.ch/bern-11-foodsave-bankett-auf-dem-bahnhofplatz-570694524573" rel="noopener" target="_blank">Berner Zeitung</a>); <strong>United Against Waste</strong> (&gt;180 členov, Kursaal Bern −446 kg/mesiac od 2022) meria a predchádza, neredistribuuje <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://united-against-waste.ch/kooperation-statt-kompromiss-im-grossbetrieb/" rel="noopener" target="_blank">UAW</a>); Kitro a Prognolite (CHF 1,25 mil. kolo) sú analytika, nie logistika <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bodensee-startups.com/restaurant-tech-startup-prognolite-schliesst-finanzierungsrunde-von-chf-1-25-millionen-ab/" rel="noopener" target="_blank">Bodensee Startups</a>).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Hráč</th>
+<th>Forma</th>
+<th>Protistrana</th>
+<th>Jednotka</th>
+<th>Bern</th>
+<th>Čo NErobí</th>
+<th>Značka</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Too Good To Go</td>
+<td>ApS (DK)</td>
+<td>spotrebiteľ</td>
+<td>balíček, CHF 2.90 + 59/rok</td>
+<td>≈135 podnikov v meste (≈2020)</td>
+<td>nedaruje; Donations-modul len retail</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span></td>
+</tr>
+<tr>
+<td>GoNina</td>
+<td>startup ZH</td>
+<td>spotrebiteľ</td>
+<td>25 %, max CHF 2.50</td>
+<td>fokus ZH/BE/BS (2025)</td>
+<td>nedaruje</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span></td>
+</tr>
+<tr>
+<td>Tischlein deck dich</td>
+<td>Verein</td>
+<td>chudobní s kartou</td>
+<td>tona, týždenne 1 h</td>
+<td>8 Abgabestellen</td>
+<td>nevarené, nie večer</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span></td>
+</tr>
+<tr>
+<td>Schweizer Tafel</td>
+<td>Stiftung</td>
+<td>inštitúcie, ktoré varia</td>
+<td>5-kg tašky, denne z retailu</td>
+<td>≈45 inštitúcií</td>
+<td>nie hotové jedlá</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span></td>
+</tr>
+<tr>
+<td>foodsharing / Madame Frigo</td>
+<td>Verein</td>
+<td>ktokoľvek</td>
+<td>chladnička 24/7</td>
+<td>35 Fairteiler / 8 chladničiek</td>
+<td>žiadna brána, teplé jedlo nie</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span></td>
+</tr>
+<tr>
+<td>Foodsave-Bankett</td>
+<td>projekt</td>
+<td>verejnosť</td>
+<td>1 000 jedál/rok</td>
+<td>Bahnhofplatz</td>
+<td>raz ročne</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span></td>
+</tr>
+<tr>
+<td>Kursaal ↔ Tafel</td>
+<td>B2B</td>
+<td>Kursaal kupuje ovocie od Tafel</td>
+<td>≈3,2 t (2024)</td>
+<td>Kursaal</td>
+<td>opačný smer (Tafel → kuchyňa)</td>
+<td><span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://kursaal-bern.ch/ueber-uns/stories/32-tonnen-lebensmittel-gerettet" rel="noopener" target="_blank">kursaal-bern.ch</a>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Z toho plynie nález, ktorý je pre Übrig najdôležitejší: v bernskej tlači 2022–2026 sa nenašiel <strong>ani jeden dokumentovaný prípad reštaurácie, ktorá by menovite darovala teplé zvyšky Sleeperu, Passantenheimu alebo Gassenküche</strong> — Gassenküche uvádza len „Naturalspenden von Firmen" bez mien <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://restaurantbern.ch/restaurants/bern-oberstadt-innenstadt/gassenkueche/" rel="noopener" target="_blank">restaurantbern.ch</a>). Übrig by bol lokálne prvý svojho druhu. Riziko prekrytia je dvojité: ak TGTG rozšíri Donations-modul na švajčiarske gastro alebo GoNina pridá tlačidlo „darovať", absorbujú medzeru cez existujúce vzťahy s podnikmi; obranou Übrig nie je softvér, ale sieť schválených organizácií, protokol odovzdania a lokálna dôvera.</p></section><section id="konkurencia-svet"><h2>2 · V zahraničí platí dodávateľ alebo štát, nikdy charita</h2><p>Medzinárodne sú viditeľné tri archetypy a každý nesie lekciu. Prvý sú <strong>B2C trhoviská s platenými balíčkami</strong> (TGTG, Karma, ResQ, GoNina) — venture-financované, tenké marže, viac skoro-smrtí. Karma (Švédsko) zdvihla USD 12 mil. Series A (2018), v pandémii padla <strong>zo 100 na 18 zamestnancov</strong> so stratou 60 % príjmov, prestavala platformu na AI a ziskovosť dosiahla až v Q3 2025 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://impactloop.com/artikel/how-food-waste-startup-karma-rebuilt-itself-with-ai-its-clones-now-hold-meetings-on-their-own" rel="noopener" target="_blank">Impact Loop</a>; <a href="https://www.upsales.com/revenue-journal/articles/2023/how-hyper-growing-karma-transformed-a-60-revenue-loss-into-a-remarkable-comeback/" rel="noopener" target="_blank">Upsales 2023</a>). ResQ Club (Fínsko) má príjmy EUR 3,8 mil. (2024), 28 zamestnancov, berie 25 % províziu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.asiakastieto.fi/yritykset/fi/resq-club-oy/27254203/yleiskuva" rel="noopener" target="_blank">Asiakastieto</a>; <a href="https://www.resq-club.com/restaurants/" rel="noopener" target="_blank">ResQ restaurants</a>). Samotné TGTG malo skupinové príjmy DKK 725 mil. a čistý zisk DKK 9,6 mil. (2024) podľa dánskeho výpisu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://regnskaber.cvrapi.dk/40316573/amNsb3VkczovLzAzL2M0L2EyLzY5LzY5LzRkMTgtNDg5OS1hMzliLTQ1NzRiMmIzMmUwNw.pdf" rel="noopener" target="_blank">CVR výročná správa 2024</a>) — po rokoch „tiefrote Zahlen" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.blick.ch/wirtschaft/gute-tat-und-image-politur-mette-lykkes-erfolgs-app-scheidet-die-geister-id17039301.html" rel="noopener" target="_blank">Blick</a>); iný útržok tvrdí €610 mil., čo je pravdepodobne GMV alebo chyba <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://tracxn.com/d/companies/too-good-to-go/__-qKipQ_7Ug6NixoY5rvQyrtG4K-4Z-p947-7Y9xrPBs" rel="noopener" target="_blank">Tracxn</a>). Online supermarket prebytkov <strong>Sirplus</strong> (Berlín) skončil v insolvencii — poznámky sa nezhodujú, či v januári 2023 alebo 2024 — s tímom zrezaným z ≈90 na &lt;30 a vlastným skladom zavretým; zakladateľ priznal „vysoké fixné náklady, nízke marže" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.handelsblatt.com/unternehmen/handel-konsumgueter/insolvenz-lebensmittelretter-sirplus-benoetigt-eigene-rettung/100006045.html" rel="noopener" target="_blank">Handelsblatt</a>; <a href="https://www.tagesspiegel.de/berlin/berliner-wirtschaft/neustart-nach-insolvenzantrag-wie-der-lebensmittelretter-sirplus-sich-selbst-rettete-11659181.html" rel="noopener" target="_blank">Tagesspiegel</a>).</p>
+<p>Druhý archetyp sú <strong>redistribučné platformy platené retailom alebo štátom</strong>. Olio (UK) účtuje ≈3 000 podnikom poplatok za každý dobrovoľnícky odber, lacnejší než odvoz odpadu; tieto poplatky kryjú <strong>len ≈30 % mesačných prevádzkových nákladov</strong>, príjmy sú £2,86 mil. (FY do 29. 2. 2024) proti USD 51,2 mil. získaného kapitálu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://sifted.eu/articles/olio-raises-43m" rel="noopener" target="_blank">Sifted</a>; <a href="https://tracxn.com/d/companies/olio/__OXaEDl13LIugvK0A_cN9M-S_ADcFuwDa7_yQ2-13kJ4" rel="noopener" target="_blank">Tracxn Olio</a>). FoodCloud (Írsko, charita) redistribuovala 79 mil. jedál v 6 krajinách (2025) s Tescom, Aldi, Lidl a grantom Enterprise Ireland; poplatok na predajňu sa nenašiel <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://cdn.prod.website-files.com/69b6b861380348cf76ada549/6a4652403739ad9740a26af8_FoodCloud%202025%20Annual%20Report%20Final.pdf" rel="noopener" target="_blank">FoodCloud 2025 Annual Report</a>). FareShare (UK) presunul 56 000–57 000 t/rok cez &gt;8 000 charít, opakovane loboval za pokračovanie štátneho fondu a získal £15 mil. vládny fond (február 2024) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://fareshare.org.uk/news-media/press-releases/fareshare-calls-on-government-to-extend-ground-breaking-funding-to-ensure-surplus-food-goes-to-charities/" rel="noopener" target="_blank">FareShare</a>). Phenix (Francúzsko) zdvihol EUR 15 mil. (2022), EUR 40 mil. celkom, a monetizuje compliance s Loi Garot <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://presse.bpifrance.fr/phenix-leve-15-millions-deuros-pour-mettre-fin-au-gaspillage-alimentaire" rel="noopener" target="_blank">Bpifrance</a>). Tafel Deutschland má 974 Tafeln (začiatok 2025), 265 000 t (2025) a rekordný federálny grant EUR 30 mil. (2023) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.tafel.de/presse/zahlen-fakten/" rel="noopener" target="_blank">tafel.de</a>). Ani jeden z týchto hráčov nie je samofinancovaný z operácie.</p>
+<p>Tretí archetyp — jediný, ktorý rutinne prenáša <strong>pripravené jedlo</strong> z reštaurácií a cateringu do útulkov v ten istý deň — je americký <strong>fee-for-service + daňový odpočet</strong>. Copia (Public Benefit Corp, San Francisco) účtuje objemový poplatok „ako odvozu odpadu" a generuje potvrdenia pre zvýšený odpočet podľa PATH Act <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://gocopia.com/help" rel="noopener" target="_blank">Copia help</a>); Goodr (Atlanta) účtuje podľa objemu a frekvencie, USD 9,4 mil. financovania, 6,34 mil. lb darovaných do mája 2025 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://goodr.co/goodr-closes-series-a/" rel="noopener" target="_blank">Goodr</a>; <a href="https://thespoon.tech/qa-goodrs-jasmine-crowe-talks-about-her-plan-to-build-a-100-million-company-addressing-food-waste-food-insecurity/" rel="noopener" target="_blank">The Spoon</a>); Rescuing Leftover Cuisine (NYC, nonprofit) nosí dobrovoľníkmi zvyšky z reštaurácií do útulkov v 16 mestách, &gt;24 mil. lb od 2013, a <strong>účtuje darcom servisný poplatok</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.rescuingleftovercuisine.org/about" rel="noopener" target="_blank">RLC</a>; <a href="https://www.webwire.com/ViewPressRel.asp?aId=355179" rel="noopener" target="_blank">WebWire</a>). Dve premisy z pôvodného zadania sa nepotvrdili: nenašla sa žiadna akvizícia ResQ a „prepúšťanie Copia" (2023) patrí kenskému e-commerce Copia Global, nie americkej Copia <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://techtrendske.co.ke/2023/07/27/copia-confirms-its-laying-off-350-employees/" rel="noopener" target="_blank">TechTrendsKE</a>).</p>
+<p>Prevádzkovo najbližší analóg Übrig sú dobrovoľnícki vodiči RLC, Food Rescue US (53 lokalít) a 412 Food Rescue (Pittsburgh, app Food Rescue Hero) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://foodrescue.us/" rel="noopener" target="_blank">foodrescue.us</a>; <a href="https://en.wikipedia.org/wiki/412_Food_Rescue" rel="noopener" target="_blank">Wikipedia 412</a>) — ale tí vlastnia logistiku; dizajn Übrig (NGO si vyzdvihne) je bližšie k FareShare Go / Foodiverse „back-of-store, self-collect". Daňová páka, ktorá robí americký model životaschopným, vo Švajčiarsku pre reštauráciu darujúcu 10 porcií neexistuje; jej náhradou je len úspora likvidačných nákladov (viď nižšie: 6–12 Rp/kg) a reputácia/Gastro-Charta — obe slabšie. Tri režimy zlyhania, ktorých sa treba vyhnúť: výplaty pred príjmami (Karma, Sirplus, TGTG CH), vlastné sklady a logistika (Sirplus), závislosť od jedného retailera (Olio–Tesco).</p></section><section id="dopyt"><h2>3 · Dopyt: 56 ľudí bez strechy, ≈300 na CHF 10 denne, mesto, kde Sozialhilfe rastie</h2><p>Kantón Bern mal v roku 2024 <strong>38 790 poberateľov Sozialhilfe</strong> (kvóta 3,66 %, z 3,84 % v 2023; čisté náklady CHF 398 mil.) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.be.ch/de/start/dienstleistungen/medien/medienmitteilungen.html?newsID=6f511198-61bf-4f4d-91f6-f56b413a70d6" rel="noopener" target="_blank">be.ch Medienmitteilung 10. 12. 2025</a>), ale kantonálny pokles skrýva opačný trend v meste: Städteinitiative Sozialpolitik v porovnaní 14 miest (2024, publikované 28. 10. 2025) konštatuje, že <strong>„In Bern ist eine deutliche Zunahme der Sozialhilfebeziehenden festzustellen"</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://staedteinitiative.ch/cmsfiles/web_stso-10325_kennzahlenbericht_2024_de.pdf" rel="noopener" target="_blank">Städteinitiative PDF</a>). Chudoba je územne koncentrovaná: štvrť <strong>Weidmatt (Bümpliz-Oberbottigen) má kvótu 21,3 % (2024)</strong>, najvyššiu zo štvrtí s ≥100 obyvateľmi, a väčšina štvrtí s vysokou kvótou leží v Bümpliz-Oberbottigen a na hranici Länggasse-Felsenau/Mattenhof-Weissenbühl <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bern.ch/themen/stadt-recht-und-politik/bern-in-zahlen/publikationen/sozialraummonitoring2024" rel="noopener" target="_blank">bern.ch Sozialraummonitoring 2024</a>). Počet ľudí bez strechy známych mestu vzrástol <strong>z 21 (2021) na 48 (2024) a 56 (2025)</strong>, mesto predpokladá Dunkelziffer a číslo už od konca 2021 v zime neklesá <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.20min.ch/story/stadt-bern-zahl-der-obdachlosen-verdoppelt-treffpunkt-trotzdem-vor-aus-103331594" rel="noopener" target="_blank">20 Minuten</a>; <a href="https://www.bern.ch/mediencenter/medienmitteilungen/aktuell_ptk/stadt-plant-mehr-notschlafplaetze-fuer-obdachlose-menschen" rel="noopener" target="_blank">bern.ch MM</a>); v zime 2024/25 bolo 20 provizórnych lôžok v bývalom Tiefenauspital v novembri–decembri pravidelne plných (priemer 17–18/noc) a mesto uvoľnilo takmer CHF 400 000 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bernerzeitung.ch/bern-mehr-obdachlose-standort-fuer-notschlafstelle-gesucht-196745210328" rel="noopener" target="_blank">Berner Zeitung</a>; <a href="https://www.nau.ch/ort/bern/bern-starkt-obdachlosenhilfe-mit-fast-400000-franken-66983227" rel="noopener" target="_blank">Nau.ch</a>). Najostrejšia štrukturálna medzera v jedle je u odmietnutých žiadateľov o azyl: v kantóne žije <strong>takmer 300 ľudí na Nothilfe dlhšie ako rok, ≈100 z nich vyše päť rokov, &gt;100 detí</strong>, v šiestich Rückkehrzentren vrátane podzemného v <strong>Bern-Brünnen</strong>, so sadzbou <strong>CHF 10/osoba/deň</strong> (zvýšené z CHF 8, rok v útržku ≈2022) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.hauptstadt.be/a/kinder-in-der-nothilfe-kanton-bern" rel="noopener" target="_blank">Hauptstadt.be</a>; <a href="https://www.derbund.ch/kanton-bern-will-hoehere-nothilfe-fuer-abgewiesene-asylsuchende-206691285904" rel="noopener" target="_blank">Der Bund</a>). Národný kontext: BFS 2024 uvádza 8,4 % príjmovo chudobných (≈743 000 ľudí) a 6,0 % v materiálnej a sociálnej deprivácii <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bfs.admin.ch/bfs/de/home/statistiken/wirtschaftliche-soziale-situation-bevoelkerung/soziale-situation-wohlbefinden-und-armut/armut-deprivation/armut.html" rel="noopener" target="_blank">BFS Armut</a>); Caritas-Märkte zaznamenali tretí rekord za sebou (&gt;1,1 mil. nákupov, 2024) a bernský Caritas-Markt (Könizstrasse 19a) rástol v roku 2022 o +30 % obratu a +25 % zákazníkov <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.caritas.ch/de/caritas-maerkte-sind-gefragt-wie-nie-zuvor/" rel="noopener" target="_blank">Caritas</a>; <a href="https://www.hauptstadt.be/a/caritas-markt-bern" rel="noopener" target="_blank">Hauptstadt</a>). Mestská kvóta Sozialhilfe a počet poberateľov EL sa z útržkov získať nedali.</p>
+<p>Kto tých ľudí kŕmi a kedy — to je pre trasu Übrig rozhodujúce, pretože <strong>teplé jedlo večer podávajú v meste len tri miesta</strong>. Všetky riadky sú <span class="m sn" title="pôvod údaju">snippet</span> a treba ich pred tlačou potvrdiť telefonátom.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Inštitúcia</th>
+<th>Adresa</th>
+<th>Večerný režim</th>
+<th>Kapacita</th>
+<th>Jedlo</th>
+<th>Zdroj</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sleeper — Notschlafstelle &amp; Gassenküche (Verein Pro Sleeper)</td>
+<td>Neubrückstrasse 19, 3012</td>
+<td><strong>večera denne 18:00–20:00</strong>, CHF 5; spánok 22:00–10:00</td>
+<td>20 lôžok (14 M, 6 Ž)</td>
+<td>varí z dodávok Schweizer Tafel a regionálneho retailu; pod Lebensmittelkontrolle Bern</td>
+<td><a href="https://www.lokalhelden.ch/sleeper-bern" rel="noopener" target="_blank">lokalhelden.ch</a>; <a href="https://sleeper.ch/" rel="noopener" target="_blank">sleeper.ch</a>; <a href="https://suchtindex.infodrog.ch/angebote/527-sleeper-notschlafstelle-bern" rel="noopener" target="_blank">suchtindex</a></td>
+</tr>
+<tr>
+<td>Passantenheim Bern (Stiftung Heilsarmee)</td>
+<td>Muristrasse 6, 3006</td>
+<td>príchod do 20:00, <strong>posledný vstup 23:00</strong>, otvorené 19:00–09:00</td>
+<td>50 (mesto financuje) / 60 lôžok — útržky sa nezhodujú</td>
+<td>Halbpension (večera), CHF 15/noc; hodina večere neuvedená</td>
+<td><a href="https://heilsarmee.ch/angebot/passantenheim-bern/" rel="noopener" target="_blank">heilsarmee.ch</a>; <a href="https://la-tuile.ch/wp-content/uploads/2025/02/25-02-24_ListeSleepIN.pdf" rel="noopener" target="_blank">La Tuile Liste 24. 2. 2025</a></td>
+</tr>
+<tr>
+<td>Pluto — Jugend-Notschlafstelle (14–23 r.)</td>
+<td>Studerstrasse 44, 3004</td>
+<td>365 dní, <strong>18:00–09:00</strong></td>
+<td>7 lôžok</td>
+<td>teplá večera každý večer, zdarma</td>
+<td><a href="https://pluto-bern.ch/angebot/" rel="noopener" target="_blank">pluto-bern.ch</a></td>
+</tr>
+<tr>
+<td>Punkt 6 — Aufenthaltsraum PINTO (Stadt Bern)</td>
+<td>Nägeligasse 3a, 3011</td>
+<td>zima 1. 11. 2026–31. 3. 2027: <strong>06:00–10:00 a 18:00–22:30</strong> (MM: do 23:00)</td>
+<td>drop-in</td>
+<td>len káva a sendviče zdarma</td>
+<td><a href="https://www.bern.ch/politik-und-verwaltung/stadtverwaltung/bss/familieundquartier/pinto-pravention-intervention-toleranz/punkt-6" rel="noopener" target="_blank">bern.ch Punkt 6</a></td>
+</tr>
+<tr>
+<td>CONTACT Anlaufstelle</td>
+<td>Hodlerstrasse 22, 3011</td>
+<td>Ut–So 12:30–20:00; Po ženy 17:30–20:45; Ne 16–20</td>
+<td>—</td>
+<td>či podáva jedlo, útržok neuvádza</td>
+<td><a href="https://www.contact-suchthilfe.ch/angebotsdetails/anlaufstelle/" rel="noopener" target="_blank">contact-suchthilfe.ch</a></td>
+</tr>
+<tr>
+<td>Kirchliche Passantenhilfe — Aufenthaltsraum (Heilsarmee)</td>
+<td><strong>od 19. 1. 2026 Mattenhofstrasse 32, 3007</strong> (Postgasse 35 zavretá 19. 12. 2025)</td>
+<td>hodiny na novej adrese neuvedené</td>
+<td>—</td>
+<td>—</td>
+<td><a href="https://passantenhilfe-bern.heilsarmee.ch/aufenthaltsraum-postgasse-35/" rel="noopener" target="_blank">passantenhilfe-bern.heilsarmee.ch</a></td>
+</tr>
+<tr>
+<td>La Prairie — Das Offene Haus</td>
+<td>Sulgeneckstrasse 7, 3007</td>
+<td>Ut–Pi 10–15, Ne 10–14; <strong>utorkový večer zrušený „mangels Nachfrage"</strong></td>
+<td>—</td>
+<td>obed CHF 5; zásobuje Schweizer Tafel</td>
+<td><a href="https://www.laprairiebern.ch/" rel="noopener" target="_blank">laprairiebern.ch</a>; <a href="https://schweizertafel.ch/das-offene-haus-la-prairie/" rel="noopener" target="_blank">schweizertafel.ch</a></td>
+</tr>
+<tr>
+<td>Ökumenischer Mittagstisch St. Marien (Solidaritätsnetz)</td>
+<td>Wylerstrasse 24, 3014</td>
+<td>každý štvrtok od 11:30 (jeden útržok: Po/St/Št a č. 26 — konflikt)</td>
+<td>—</td>
+<td>obed pre Nothilfe/Sans-Papiers; Schweizer Tafel</td>
+<td><a href="https://schweizertafel.ch/kirche_st-marien/" rel="noopener" target="_blank">schweizertafel.ch St. Marien</a>; <a href="https://www.kathbern.ch/mittagstisch" rel="noopener" target="_blank">kathbern.ch</a></td>
+</tr>
+<tr>
+<td>Heiliggeistkirche / offene kirche bern</td>
+<td>Bahnhofplatz</td>
+<td>Ut–Pi 11:00–18:30, Ne 13–17</td>
+<td>—</td>
+<td>bezplatná kaviareň; program „Foodsave" (obsah nezistený)</td>
+<td><a href="https://www.offene-kirche.ch/ueber-uns/heiliggeistkirche/ein-kirchenraum-zwei-institutionen" rel="noopener" target="_blank">offene-kirche.ch</a></td>
+</tr>
+<tr>
+<td>Kirchliche Gassenarbeit Bern (KGB)</td>
+<td>Sennweg 6, 3012</td>
+<td>kancelárie do 16:00</td>
+<td>—</td>
+<td>rozdáva „Überlebenshilfen (Essen, Hygieneartikel)"</td>
+<td><a href="https://suchtindex.infodrog.ch/angebote/416-kirchliche-gassenarbeit-bern-kgb" rel="noopener" target="_blank">suchtindex</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>Časová geometria je jednoznačná: reštaurácia zatvárajúca kuchyňu o 21:30–22:00 <strong>minie Sleeperovo okno večere (končí 20:00)</strong>, pokiaľ Sleeper nesúhlasí prijať jedlo na nasledujúci večer (schladené, označené) alebo pre kohortu, ktorá prichádza spať o 22:00; prirodzený neskorý príjemca je <strong>Passantenheim (vstup do 23:00)</strong> a od novembra do marca <strong>Punkt 6 (do 22:30/23:00)</strong>, ktorý dnes podáva len sendviče a bol by kandidátom na upgrade na teplé jedlo — no jeho licencia na manipuláciu s jedlom je otvorená otázka. Trasa Innenstadt → Nägeligasse 3a → Muristrasse 6 má ≈2 km a zmestí sa do 21:00–22:45 <span class="m est" title="pôvod údaju">odhad</span>. La Prairie, ktorá zrušila utorkový večer pre nedostatok dopytu, je varovaním: večerný dopyt v dennom centre bez lôžok nie je zaručený — koncentruje sa tam, kde ľudia spia. Tlačové vyhlásenia inštitúcií 2023–2026 sa netýkajú jedla, ale peňazí a priestoru: Sleeper hlási prevádzkové náklady <strong>≥ CHF 15 000/mesiac</strong> a „30 rokov bez štátnej podpory" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.lokalhelden.ch/sleeper-bern" rel="noopener" target="_blank">lokalhelden.ch</a>), Passantenhilfe stratila Postgasse, mesto priznalo plné útulky. Pre žiadosť o grant z toho plynie: rámcovať reštauračný prebytok ako <strong>odľahčenie rozpočtu na potraviny a dobrovoľníckeho času kuchýň</strong>, nie ako „chýba jedlo" — a operatívnu špecifikáciu (bez bravčoviny/halal, podiel vegetariánskych porcií, alergénový štítok, schladenie do 2 h) musí dodať Übrig sám, lebo žiadna inštitúcia ju nezverejnila. Kľúčový dokument, ktorý sa nedal otvoriť, je leták PINTO <strong>„uf dr Gass" (verzia 09/25)</strong> so zoznamom „Aufenthalt und Essen" (<a href="https://www.bern.ch/politik-und-verwaltung/stadtverwaltung/bss/familieundquartier/pinto-pravention-intervention-toleranz/downloads/downloads-2/uf%20dr%20Gass%20Vs%2009_25.pdf/@@download/file/uf%20dr%20Gass%20Vs%2009_25.pdf" rel="noopener" target="_blank">PDF</a>).</p></section><section id="ponuka"><h2>4 · Ponuka: 760 reštaurácií zatvára kuchyne v troch vlnách</h2><p>Mesto Bern má <strong>760 reštaurácií</strong> (článok 2023), z ktorých 69 vedie len 15 gastro-skupín <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.derbund.ch/das-sind-die-gastro-koenige-der-stadt-226224229662" rel="noopener" target="_blank">Der Bund</a>); staršia interaktívna analýza uvádza 728 reštaurácií s licenciou na alkohol (2020) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://interaktiv.bernerzeitung.ch/2020/gastro-riesen-bern/" rel="noopener" target="_blank">Berner Zeitung interaktiv 2020</a>) a mesto samo vlastní 16 „Städtische Restaurants" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bern.ch/themen/freizeit-und-sport/staedtische-restaurants" rel="noopener" target="_blank">bern.ch</a>). Koncentrácia na skupiny znamená, že zmluva s <strong>Bindella (Kornhauskeller, Verdi), Kursaal, YB Gastro, ZFV alebo Migros Aare</strong> otvorí viac prevádzok naraz. Mesto v roku 2025 spustilo <strong>Gastro Charta für die Zukunft</strong>, ktorú podpísalo vyše 40 podnikov (zoznam mien nedostupný) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://punkt4.info/nachrichten/detail/news/ueber-40-berner-gastrobetriebe-unterzeichnen-gastro-charta-fuer-die-zukunft/" rel="noopener" target="_blank">punkt4</a>), a jeho stratégia „Nachhaltige Ernährung" má 14 opatrení v 6 poliach vrátane „Food Losses and Disposal" a „Social Justice" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bern.ch/themen/umwelt-natur-und-energie/nachhaltigkeit/nachhaltige-ernaehrung" rel="noopener" target="_blank">bern.ch</a>) — to je politický hák pre každú mestskú žiadosť.</p>
+<p>Z ≈62 zmapovaných prevádzok komunikuje ≈24 explicitný večerný Küchenschluss; <strong>ani jeden nebol overený na primárnej stránke</strong> (všetky domény blokované) a adresy, ktoré útržok neniesol, sú označené ako chýbajúce — nedopĺňali sa z pamäte. Rozdelenie do vĺn (typický pracovný večer Ut–Št), všetko <span class="m sn" title="pôvod údaju">snippet</span>:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Vlna</th>
+<th>Podnik</th>
+<th>Adresa</th>
+<th>Küchenschluss</th>
+<th>Zdroj</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>21:00</strong></td>
+<td>Goldener Schlüssel</td>
+<td>Rathausgasse 72</td>
+<td>kuchyňa Ut–So 11:30–21:00</td>
+<td><a href="https://www.goldener-schluessel-bern.ch/essen/" rel="noopener" target="_blank">goldener-schluessel-bern.ch</a></td>
+</tr>
+<tr>
+<td><strong>21:30</strong></td>
+<td>Le Lötschberg</td>
+<td>Zeughausgasse 16</td>
+<td>teplá kuchyňa denne 11:45–21:30</td>
+<td><a href="https://loetschbergbern.ch/en/" rel="noopener" target="_blank">loetschbergbern.ch</a></td>
+</tr>
+<tr>
+<td>21:30</td>
+<td>Bärenhöfli (Hotel Kreuz)</td>
+<td>Zeughausgasse 41</td>
+<td>Po–So do 21:30 (iný zdroj: 22:00 — konflikt)</td>
+<td><a href="https://baerenhoefli.ch/en/" rel="noopener" target="_blank">baerenhoefli.ch</a></td>
+</tr>
+<tr>
+<td>21:30</td>
+<td>Ringgenberg</td>
+<td>Kornhausplatz 19</td>
+<td>Po–Pi 18:00–21:30</td>
+<td><a href="https://www.restaurant-ringgenberg.ch/kontakt/" rel="noopener" target="_blank">restaurant-ringgenberg.ch</a></td>
+</tr>
+<tr>
+<td>21:30</td>
+<td>Lokal Bern</td>
+<td>adresa chýba</td>
+<td>Ut–So 17:30–21:30</td>
+<td><a href="https://www.lokal-bern.ch/angebot/" rel="noopener" target="_blank">lokal-bern.ch</a></td>
+</tr>
+<tr>
+<td>21:30</td>
+<td>Brasserie VUE (Bellevue Palace)</td>
+<td>adresa chýba</td>
+<td>večer 18:00–21:30</td>
+<td><a href="https://www.bellevue-palace.ch/en/restaurants-bars/brasserie-vue-bern/" rel="noopener" target="_blank">bellevue-palace.ch</a></td>
+</tr>
+<tr>
+<td>21:45</td>
+<td>Volkshaus 1914 (Hotel Bern)</td>
+<td>Zeughausgasse 9</td>
+<td>veľká karta do 21:45</td>
+<td><a href="https://www.volkshausbern.ch/en/restaurant/" rel="noopener" target="_blank">volkshausbern.ch</a></td>
+</tr>
+<tr>
+<td><strong>22:00</strong></td>
+<td>Harmonie</td>
+<td>Hotelgasse 3</td>
+<td>kuchyňa do 22:00</td>
+<td><a href="https://www.harmoniebern.ch/" rel="noopener" target="_blank">harmoniebern.ch</a></td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Della Casa</td>
+<td>Schauplatzgasse 16</td>
+<td>18:00–22:00</td>
+<td><a href="https://www.della-casa.ch/" rel="noopener" target="_blank">della-casa.ch</a></td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Entrecôte Café Fédéral</td>
+<td>Bärenplatz 31</td>
+<td>teplá kuchyňa 11:00–22:00</td>
+<td><a href="https://entrecote.ch/contact-en/" rel="noopener" target="_blank">entrecote.ch</a></td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Kirchenfeld</td>
+<td>Thunstrasse 5</td>
+<td>Ut–So 17:30–22:00</td>
+<td><a href="https://www.kirchenfeld.ch/kontakt/" rel="noopener" target="_blank">kirchenfeld.ch</a></td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Verdi (Bindella)</td>
+<td>Gerechtigkeitsgasse 7</td>
+<td>Po–Št 18:00–22:00</td>
+<td><a href="https://www.bindella.ch/en/restaurants/verdi" rel="noopener" target="_blank">bindella.ch</a></td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Domino (libanonská)</td>
+<td>adresa chýba</td>
+<td>18:00–22:00</td>
+<td><a href="https://domino-bern.ch/" rel="noopener" target="_blank">domino-bern.ch</a></td>
+</tr>
+<tr>
+<td><strong>22:15–23:00</strong></td>
+<td>Brasserie Bärengraben</td>
+<td>adresa chýba</td>
+<td>priebežne 11:30–22:15</td>
+<td><a href="https://brasseriebaerengraben.ch/" rel="noopener" target="_blank">brasseriebaerengraben.ch</a></td>
+</tr>
+<tr>
+<td>22:30</td>
+<td>Bay</td>
+<td>adresa chýba</td>
+<td>18:00–22:30</td>
+<td><a href="https://www.restaurantbay.ch/" rel="noopener" target="_blank">restaurantbay.ch</a></td>
+</tr>
+<tr>
+<td>22:30</td>
+<td>Café Kairo (Lorraine)</td>
+<td>adresa chýba</td>
+<td>večera 18:30–22:30; 65 miest</td>
+<td><a href="https://www.cafe-kairo.ch/kueche" rel="noopener" target="_blank">cafe-kairo.ch</a></td>
+</tr>
+<tr>
+<td>22:30</td>
+<td>tibits Bern Bahnhof (bufet)</td>
+<td>Bahnhofplatz 10</td>
+<td>Po–Pi 06:30–22:30</td>
+<td><a href="https://www.sbb.ch/de/reiseinformationen/bahnhoefe/bahnhof-finden/bahnhof-bern/geschaefte/shop-detail.html/geo-tibits-restaurant-85ff" rel="noopener" target="_blank">sbb.ch tibits</a></td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Jack's Brasserie (Schweizerhof)</td>
+<td>Bahnhofplatz 11</td>
+<td>Po–Pi 18:00–23:00</td>
+<td><a href="https://schweizerhofbern.com/en/dining/jack-s-brasserie" rel="noopener" target="_blank">schweizerhofbern.com</a></td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Altes Tramdepot</td>
+<td>Grosser Muristalden 6</td>
+<td>kuchyňa 11:00–23:00</td>
+<td><a href="https://altestramdepot.ch/de/Info/Restaurant" rel="noopener" target="_blank">altestramdepot.ch</a></td>
+</tr>
+<tr>
+<td>23:30</td>
+<td>Dampfzentrale</td>
+<td>Marzilistrasse 47</td>
+<td>Po–So priebežne do 23:30</td>
+<td><a href="https://www.restaurant-dampfzentrale.ch/kontakt/" rel="noopener" target="_blank">restaurant-dampfzentrale.ch</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>Prvá vlna o 21:30 leží celá v okruhu ≈400 m okolo Zeughausgasse/Kornhausplatz — to je najhustejší štartovací klaster pre jednu cargo-jazdu. Podniky s fixným Küchenschluss poznajú svoj prebytok ≈30–60 min po ňom; podniky s „durchgehend warme Küche" (Bärengraben, Tramdepot, Dampfzentrale, Beaulieu) majú skôr zvyšky z bufetu/à la carte až pri zatvorení <span class="m est" title="pôvod údaju">odhad</span>. Gourmanderie Moléson (Aarbergergasse 24) je definitívne zavretá od 27. 3. 2025 — do trasy nepatrí <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.moleson-bern.ch/" rel="noopener" target="_blank">moleson-bern.ch</a>). Veľkokuchyne sú objemovo najväčšie, ale sú <strong>denné zdroje</strong>: Kursaal Bern má 68 kuchárov a &gt;20 000 jedál/mesiac <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://united-against-waste.ch/kooperation-statt-kompromiss-im-grossbetrieb/" rel="noopener" target="_blank">UAW</a>), Manora zatvára Po–Pi o 17:00 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.swipein.restaurant/de/restaurant/manora-restaurant-bern-bern-bern" rel="noopener" target="_blank">swipein</a>), Migros-Restaurant Marktgasse Po–St o 19:00, Št 21:00, Pi 20:00 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://filialen.migros.ch/de/migros-restaurant-bern-marktgasse/" rel="noopener" target="_blank">filialen.migros.ch</a>), Mensa vonRoll (ZFV) 09:30–14:00 <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.mensa.unibe.ch/standorte/mensa_und_cafeteria_vonroll/" rel="noopener" target="_blank">mensa.unibe.ch</a>); Inselspital (7 reštaurácií, 365 dní), BFH-mensy, SV Group (Wankdorfallee 4) a Eldora majú časy nedostupné. Tieto zdroje potrebujú samostatnú popoludňajšiu trasu 14:00–19:00 a — keďže Migros/Coop/Manor sú cez Foodbridge už napojené na Tischlein deck dich na koncernovej úrovni — treba zistiť, či bernské filiálky odovzdávajú aj reštauračné zvyšky, nie len tovar z regálov.</p>
+<p>Koľko jedla večer typicky zostane, <strong>nikto vo Švajčiarsku nezmeral</strong> — to je najväčšia dátová diera celej analýzy. Dostupné sú len nepriame orientačné hodnoty: United Against Waste odhaduje <strong>100–250 g odpadu na hosťa a návštevu</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.srf.ch/radio-srf-1/food-waste-in-der-gastronomie-wenn-pures-geld-im-abfall-landet" rel="noopener" target="_blank">SRF 1</a>), s cieľom 50 g/hosť a priemerným znížením o 35 % po meraní (jeden hotel 129 → 44 g) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://united-against-waste.ch/entscheidungen-die-den-unterschied-machen/" rel="noopener" target="_blank">UAW</a>) — pri 60 hosťoch to je 6–15 kg <span class="m calc" title="pôvod údaju">výpočet</span>, ale väčšina je Tellerreste a Rüstabfälle, ktoré sa redistribuovať nedajú; redistribuovateľná je len nadprodukcia, ktorá nikdy nebola na tanieri a držala sa teplá alebo bola rýchlo schladená. Národne tvorí gastronómia 7 % z ≈2,8 mil. t potravinových strát ročne (Beretta &amp; Hellweg, ETH 2019) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bafu.admin.ch/de/foodwaste" rel="noopener" target="_blank">BAFU foodwaste</a>) — ≈196 000 t/rok <span class="m calc" title="pôvod údaju">výpočet</span>; BAFU už pracuje aj so ZHAW-Zwischenbericht (Beretta et al. 2025), ktorého čísla sa nezískali. Priepustnosť TGTG Schweiz — ≈2,5 mil. jedál v 2022 pri 5 700 partneroch — dáva rádovo <strong>1 až 2 balíčky na partnera a deň</strong> <span class="m calc" title="pôvod údaju">výpočet</span> (<a href="https://www.moneycab.com/klima-umwelt/too-good-to-go-rund-7-millionen-gerettete-mahlzeiten/" rel="noopener" target="_blank">Moneycab</a>). Pre Übrig z toho plynie, že prebytok na reštauráciu bude malý a nepravidelný (rádovo jednotky až nízke desiatky porcií), a že <strong>pilot musí sám merať porcie/večer/podnik</strong> — číslo, ktoré potom bude jediné svojho druhu vo Švajčiarsku a samo osebe grantovým argumentom.</p></section><section id="pravo"><h2>5 · Právo: ≥ 60 °C alebo pod 10 °C do dvoch hodín, obe strany sú prevádzkovateľmi, štít neexistuje</h2><p>Švajčiarske potravinové právo sa na bezodplatné odovzdanie vzťahuje rovnako ako na predaj — dôkazom je, že Bundesrat musel HyV meniť, aby darovanie uľahčil: v balíku „Stretto 3" doplnil <strong>HyV Art. 29 Abs. 3</strong> tak, že obchod smie mäso a mäsové výrobky zamraziť na ďalší predaj alebo odovzdanie darovacím organizáciám, a v „Stretto 4" zjednodušil deklaráciu alergénov pre pečivo odovzdávané darovacím organizáciám <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.parlament.ch/centers/eparl/curia/2022/20223882/Bericht%20BR%20D.pdf" rel="noopener" target="_blank">Bericht BR Postulat 22.3882</a>). Operatívny federálny dokument je <strong>BLV-Spendenleitfaden „Leitfaden zur Reduktion von Lebensmittelverlusten bei der Weitergabe"</strong> (Beretta et al. 2021, revízia príručky z 2015), ktorý podľa útržkov výslovne pokrýva čerstvo pripravené jedlá a stanovuje: odovzdať <strong>teplé pri ≥ +60 °C alebo schladené pod +10 °C, pričom +10 °C sa musí dosiahnuť do dvoch hodín</strong>; darca <strong>aj</strong> prijímajúca organizácia sú Lebensmittelbetrieb a každý sa musí sám presvedčiť o požívateľnosti <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bafu.admin.ch/dam/de/sd-web/9HPcMiRiuAf0/2021_Beretta-etal_BLV-Spendenleitfaden.pdf" rel="noopener" target="_blank">BAFU PDF</a>; <a href="https://www.fial.ch/dokumente/2021-blv-spendenleitfaden.pdf" rel="noopener" target="_blank">fial.ch kópia</a>). Schweizer Tafel túto príručku hostí na vlastnom webe, teda podľa nej operuje <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://schweizertafel.ch/wp-content/uploads/2021_blv_spendenleitfaden.pdf" rel="noopener" target="_blank">schweizertafel.ch PDF</a>). Pozor na nesúlad: samotná HyV formuluje Warmhalten len všeobecne („teploty, ktoré zabránia množeniu patogénov") a číselné prahy 65 °C / 5 °C, s ktorými pracujú kuchyne cez „Gute Verfahrenspraxis im Gastgewerbe (GVG)", <strong>sa v tomto behu nedali overiť na fedlex</strong> — ani čísla článkov LMG Art. 4/11/26/28 a LIV. Právna analýza ZHAW „Rechtliche Aspekte und Lebensmittelsicherheit" (projektové dáta 1. 11. 2024) je druhý kľúčový text, ktorý treba prečítať <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.zhaw.ch/forschungsdaten/projectdata/20241101124315_6724bed31b015.pdf" rel="noopener" target="_blank">ZHAW PDF</a>). Dozorný orgán je <strong>Kantonales Laboratorium Bern, Muesmattstrasse 19, 3012 Bern, +41 31 633 11 11</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.weu.be.ch/de/start/ueber-uns/die-organisation/kantonales-laboratorium.html" rel="noopener" target="_blank">WEU Kanton Bern</a>), ktorého kontrolná vlna 2025 viedla k 5–7 zatvoreniam gastro-prevádzok a ≈230 Anzeigen v kantóne <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bernerzeitung.ch/lebensmittelkontrolle-bern-7-schliessungen-und-230-anzeigen-880255672471" rel="noopener" target="_blank">Berner Zeitung</a>) — a ktoré už dnes kontroluje Sleeperovu Gassenküche <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://sleeper.ch/" rel="noopener" target="_blank">sleeper.ch</a>). Prvý hovor pred prvým odovzdaním patrí tam.</p>
+<p>Zodpovednosť: Švajčiarsko <strong>nemá</strong> zákon typu Bill Emerson Good Samaritan Act (USA), Loi Garot (FR) či Legge Gadda (IT) — žiadny sa nenašiel. Federálna línia od <strong>Aktionsplan gegen die Lebensmittelverschwendung (6. 4. 2022, 14 opatrení, v odpovedi na Postulat Chevalley 18.3829)</strong> je uľahčovať darovanie cielenými zmenami nariadení a príručkou, nie štítom; medzi opatreniami je „zlepšiť rámcové podmienky pre darovanie potravín (vykonanie Motion Munz 19.3112)" <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.newsd.admin.ch/newsd/message/attachments/70975.pdf" rel="noopener" target="_blank">Aktionsplan PDF</a>); ďalší dokument Bundesratu z <strong>30. 10. 2024</strong> (23 strán) k darovaniu potravín existuje, obsah sa nezískal (<a href="https://www.newsd.admin.ch/newsd/message/attachments/90242.pdf" rel="noopener" target="_blank">newsd.admin.ch 90242.pdf</a>). Zodpovednosť teda beží podľa všeobecného práva (OR, PrHG); nemecká príručka BMEL pre porovnanie uvádza, že darca bezodplatného jedla zodpovedá obdarovanému len za úmysel a hrubú nedbanlivosť <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bmleh.de/SharedDocs/Downloads/DE/Broschueren/lebensmittel-spenden.pdf?__blob=publicationFile&amp;v=3" rel="noopener" target="_blank">BMLEH Leitfaden</a>) — či to isté platí vo švajčiarskom Schenkungsrecht (OR Art. 248) a či bezodplatné odovzdanie je „in Verkehr gebracht" v zmysle PrHG, je presne otázka pre ZHAW/Bundesrat texty; <strong>je to inferencia, nie nález</strong>. Praktický dôsledok: jediný nástroj zodpovednosti, ktorý dnes existuje, je <strong>písomný protokol odovzdania</strong> (čas uvarenia, teplota pri odovzdaní, čas schladenia, alergény, „spotrebovať do", podpisy oboch strán) — a keďže príjemca je spoluprevádzkovateľ, brána „schválené organizácie" v Übrig nie je len governance, ale potravinovoprávna nutnosť.</p>
+<p>Alergény: pri „offen angebotene Lebensmittel" LIV pripúšťa písomnú informáciu alebo ústnu od kompetentného personálu, ale ústna sama stačí len s viditeľným písomným upozornením a písomnou dokumentáciou dostupnou personálu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.blv.admin.ch/blv/de/home/lebensmittel-und-ernaehrung/lebensmittelsicherheit/naehrwertinformationen-und-kennzeichnung/offenverkauf.html" rel="noopener" target="_blank">BLV Offenverkauf</a>; <a href="https://www.aha.ch/aktuelles/offenverkauf-allergene-besser-deklarieren" rel="noopener" target="_blank">aha! Allergiezentrum</a>). Darovaná nádoba, ktorú útulok znovu podáva, je „offen abgegeben" dvakrát a ústna informácia s ňou necestuje — preto štítok Übrig musí niesť zaškrtávací zoznam 14 alergénov spolu s názvom jedla, časom výroby a časom likvidácie. DPH: pri Naturalspende bez reklamnej protihodnoty musí darca korigovať odpočet vstupnej dane alebo zdaniť Eigenverbrauch, ak vecné plnenie presiahne <strong>CHF 500</strong> <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://gastrosuisse.ch/de/branchenwissen/unternehmensfuehrung/mwst" rel="noopener" target="_blank">GastroSuisse MWST</a> — priradenie útržku k URL nie je 100 % isté); rozhodujúca a nevyriešená otázka je oceňovací základ (predajná cena vs. takmer nulová trhová hodnota nepredajného prebytku). Podniky si môžu odpočítať dobrovoľné príspevky steuerbefreiten organizáciám do 20 % čistého zisku a Naturalspenden sú odpočítateľné od zmeny zákona v novembri 2007, ale darca potrebuje doklad o Verkehrswert <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.beobachter.ch/geld/steuern/geld-spenden-und-vom-steuerabzug-profitieren-das-gilt-555580" rel="noopener" target="_blank">Beobachter</a>) — pre večerný prebytok je odpočet zanedbateľný; potvrdenie o dare je ESG-artefakt, nie peniaze.</p></section><section id="logistika"><h2>6 · Logistika: jedno e-cargo, ≈40 kg na jazdu, CHF 11 za večer</h2><p>Nosnosť nie je obmedzením: Urban Arrow Family nesie <strong>125 kg nákladu + jazdec</strong>, Bullitt 180 kg celkom, Riese &amp; Müller Load 200 kg celkom vrátane jazdca <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://cargobikemag.com/cargo-space-the-overview/" rel="noopener" target="_blank">Cargobike Magazine</a>); švajčiarski Velokurieri naložia až 100 kg <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://de.wikipedia.org/wiki/Fahrradkurier" rel="noopener" target="_blank">Wikipedia Fahrradkurier</a>). Obmedzením je objem: EPP termobox <strong>Thermo Future Box GN 1/1</strong> má vonkajšie rozmery 600 × 400 × 230 mm (útržky uvádzajú 21 L aj 30 L — konflikt), dá sa predhriať platňami alebo chladiť vložkami a stojí <strong>EUR 51–77 netto</strong> podľa variantu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://thermo-future-box.com/THERMOBOX-GN-1-1-DELUXE_1" rel="noopener" target="_blank">thermo-future-box.com</a>; <a href="https://www.boxbar.de/kueche-catering/aufbewahren-transportieren/thermotransportbehaelter/thermoboxen/5670/gn-thermobox-thermo-future-box-premium-gn-1/1-t-230-mm" rel="noopener" target="_blank">boxbar</a>); oficiálna krivka udržania teploty sa nezískala a recenzentské „70 °C po 20 hodinách" nie je dizajnová hodnota. Jeden box GN 1/1 H230 ≈ 20–25 porcií à 350 g ≈ 8–10 kg; tri boxy v prednej korbe ≈ 60–75 porcií ≈ 25–30 kg <span class="m est" title="pôvod údaju">odhad</span>. Berlínsky <strong>RESTLOS Rad</strong> (RESTLOS GLÜCKLICH e.V., od augusta 2020) prináša na jednu jazdu <strong>≈40 kg zachráneného jedla</strong> z 3–4 záchran týždenne <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.essen-und-trinken.de/news/rettet-das-essen-unterwegs-mit-dem-verein-restlos-gluecklich-12181886.html" rel="noopener" target="_blank">Essen &amp; Trinken</a>) — nezávislé potvrdenie, že 25–40 kg/jazda je to, čo praktici na bicykli reálne vozia. Najlacnejšia flotila pre pilot je <strong>carvelo2go</strong>: CHF 5 za rezerváciu + CHF 2/h, <strong>medzi 22:00 a 08:00 bez hodinovej sadzby</strong>, ročné predplatné CHF 90 dáva 50 % zľavu <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.tcs.ch/de/der-tcs/sektionen/bern/untersektionen/bern-mittelland/content/carvelo2go.php" rel="noopener" target="_blank">TCS Bern-Mittelland</a>) — trojhodinová večerná jazda stojí <strong>≈CHF 11</strong> (CHF 5.50 s predplatným) <span class="m calc" title="pôvod údaju">výpočet</span>; mesto Bern má navyše podporu cargo-bicyklov v rámci „Velohauptstadt" (sumy v útržku chýbajú) <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.bern.ch/velohauptstadt/foerdermassnahmen/cargovelos" rel="noopener" target="_blank">bern.ch Cargovelos</a>). Rýchlosť v Berne nikto nepublikoval; kuriérske sľuby sú 30 min centrum / 45 min mesto / 60 min aglomerácia <span class="m sn" title="pôvod údaju">snippet</span> (<a href="https://www.kurierzentrale.ch/" rel="noopener" target="_blank">KurierZentrale</a>). Plánovací predpoklad <span class="m est" title="pôvod údaju">odhad</span>: naložený e-cargo 12–15 km/h od dverí k dverám, <strong>8–12 min na zastávku</strong> (zaparkovať, podpísať protokol, naložiť box, zapísať teplotu) → 4–5 zastávok/hodinu → dvojhodinová jazda 21:30–23:30 obslúži ≈8–10 kuchýň a 1–2 útulky. Pilot musí tieto hodnoty logovať — spolu s teplotou na oboch koncoch a cieľom „pick-up → delivery ≤ 2 h".</p></section><section id="zaver"><h2>7 · Záver</h2><p>Porovnávacia analýza mení otázku, ktorú si má Richard položiť. Nie „ako zarobiť na presune jedla" — každý, kto to skúšal (Karma, Sirplus, Olio, TGTG CH), zistil, že samotný pohyb jedla peniaze neprináša — ale „kto platí za dôkaz, že sa prebytok bezpečne dostal k správnemu človeku". Švajčiarska medzera nie je v listingu prebytkov (to robia TGTG a GoNina), ale v <strong>zázname o odovzdaní</strong>: BLV robí obe strany prevádzkovateľmi a žiadny bernský nástroj dnes negeneruje teplotu/čas/„spotrebovať do"/alergény, ktoré chránia kuchyňu aj útulok. Ten štítok a jeho log sú diferenciátor a zároveň jediný právny nástroj, ktorý pri absencii Good-Samaritan zákona existuje — a sú tým, čo Kantonales Laboratorium ocení, čo Gastro-Charta podniku dá čím komunikovať a čo grantová žiadosť môže ukázať ako merateľný výstup. Druhý posun: číslo, ktoré nikto vo Švajčiarsku nemá — koľko porcií za večer skutočne zostane v bernskej reštaurácii a koľko z toho je redistribuovateľné — je pre Übrig aktívum, nie diera; pilot s desiatimi kuchyňami z 21:30-klastra okolo Zeughausgasse, jedným carvelo2go bicyklom za CHF 11/večer a Passantenheimom ako neskorým príjemcom by ho vyprodukoval za mesiac a stal by sa citovateľným zdrojom pre BAFU/ZHAW aj pre každú nadáciu.</p>
+<p>Tretí dôsledok sa týka poradia krokov: forma pred peniazmi, dozor pred prvým odovzdaním, meranie pred škálovaním. Verein so Steuerbefreiung otvára nadácie, ale zatvára exit; ak Richard chce raz predať softvér, musí hybrid (Verein + GmbH) postaviť od začiatku, nie ho dodatočne rozpletať. A pretože táto správa stojí takmer celá na útržkoch, jej najcennejšia časť je tá posledná — zoznam, čo treba overiť skôr, než sa čokoľvek z nej vytlačí na fact sheet alebo vloží do žiadosti.</p></section>
+<section id="doverit"><h2>8 · Čo treba doveriť</h2><p class="sub">Zoradené podľa hodnoty pre rozhodnutie; každá položka je jeden klik alebo jeden telefonát s odblokovanou sieťou.</p><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Čo overiť</th>
+<th>Prečo je to kritické</th>
+<th>Kde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Plný text BLV-Spendenleitfaden 2021 (Beretta et al.): teplotné prahy, lehoty, označovanie, doprava, zodpovednosť oboch strán</td>
+<td>jadro protokolu odovzdania a štítku; dnes len útržok „≥60 °C / &lt;10 °C do 2 h"</td>
+<td>https://www.bafu.admin.ch/dam/de/sd-web/9HPcMiRiuAf0/2021_Beretta-etal_BLV-Spendenleitfaden.pdf</td>
+</tr>
+<tr>
+<td>2</td>
+<td>HyV SR 817.024.1 — články k Warmhalten, Kühltemperatur, Abkühlen, Aufwärmen, Beförderung; Art. 29 Abs. 3</td>
+<td>číselné prahy (65/5 °C?) a čísla článkov sa nedali overiť</td>
+<td>https://www.fedlex.admin.ch/eli/cc/2017/183/de</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ZHAW „Rechtliche Aspekte und Lebensmittelsicherheit" (1. 11. 2024) + Bericht BR Postulat 22.3882 + dokument BR 30. 10. 2024</td>
+<td>jediné švajčiarske texty k zodpovednosti darcu, DPH-prekážkam a PrHG</td>
+<td>https://www.zhaw.ch/forschungsdaten/projectdata/20241101124315_6724bed31b015.pdf ; https://www.parlament.ch/centers/eparl/curia/2022/20223882/Bericht%20BR%20D.pdf ; https://www.newsd.admin.ch/newsd/message/attachments/90242.pdf</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kantonales Laboratorium Bern: musí sa Verein, ktorý len prenáša (bez skladovania), registrovať? existuje Merkblatt Lebensmittelspenden?</td>
+<td>dozor, ktorý už kontroluje Sleeper; telefonát pred prvým odovzdaním</td>
+<td>+41 31 633 11 11; https://www.weu.be.ch/de/start/themen/lebensmittelsicherheit.html</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Leták PINTO „uf dr Gass" (verzia 09/25) — kompletný zoznam „Aufenthalt und Essen"</td>
+<td>autoritatívna mapa príjemcov, ktorú sa nepodarilo otvoriť</td>
+<td>https://www.bern.ch/politik-und-verwaltung/stadtverwaltung/bss/familieundquartier/pinto-pravention-intervention-toleranz/downloads/downloads-2/uf%20dr%20Gass%20Vs%2009_25.pdf/@@download/file/uf%20dr%20Gass%20Vs%2009_25.pdf</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Sleeper (031 301 64 04), Passantenheim (031 351 80 27), Punkt 6 (031 321 76 38): prijmú teplé jedlo po vlastnej večeri? hodina večere v Passantenheime; kapacita 50 vs 60; hodiny Aufenthaltsraum Mattenhofstrasse 32</td>
+<td>rozhoduje o tom, či trasa 21:30–23:00 má vôbec príjemcu</td>
+<td>telefón; https://sleeper.ch/ ; https://heilsarmee.ch/angebot/passantenheim-bern/</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Küchenschluss všetkých ≈24 podnikov z tabuľky + chýbajúce adresy (Lokal, Sua, Bärengraben, Domino, Bay, Kairo, VUE, National, Savoy, Kursaal)</td>
+<td>0 z 24 overených na primárnej stránke</td>
+<td>weby podnikov / telefón</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Lotteriefonds Kanton Bern: kritériá, Eigenleistung %, formulár, rozhodovací čas</td>
+<td>pravdepodobne najrelevantnejší kantonálny zdroj hotovosti pre Verein — úplne neoverený</td>
+<td>https://www.be.ch (Lotteriefonds)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Burgergemeinde Bern — Gesuche/Beiträge: kritériá, termíny, sumy</td>
+<td>bernský sociálny darca s vysokým fitom — neoverený</td>
+<td>https://www.bgbern.ch</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Stadt Bern: Fachstelle Nachhaltige Entwicklung projektové príspevky; Klimafonds; či stratégia „Nachhaltige Ernährung"/Gastro-Charta má finančnú linku; zoznam 40+ signatárov Charty</td>
+<td>mestský politický hák + potenciálny grant</td>
+<td>https://www.bern.ch/themen/umwelt-natur-und-energie/nachhaltigkeit/nachhaltige-ernaehrung ; https://www.bern.ch/mediencenter/medienmitteilungen/aktuell_ptk/lancierung-der-gastro-charta-in-der-stadt-bern</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Steuerverwaltung Kanton Bern: postup Steuerbefreiung pre nový Verein, požiadavka na neplatené predstavenstvo, Liquidationsklausel</td>
+<td>brána ku všetkým nadáciám; bernské znenie prísnejšie než iné kantóny</td>
+<td>https://www.taxinfo.sv.fin.be.ch/taxinfo/c3a6ac1c-b808-458d-b980-e53c8ad4b299</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Stanley Thomas Johnson Stiftung (správna doména nezistená), Bürgi-Willert-Stiftung, Stiftung Corymbo, Ernst Göhner Stiftung: oprávnenosť, termíny, sumy</td>
+<td>najsilnejšie nadačné stopy — všetky <span class="m no" title="pôvod údaju">neoverené</span></td>
+<td>vlastné weby; https://www.stiftungschweiz.ch</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Impact Hub Bern — Circular Economy Incubator 2026: termíny, grant pre finalistov</td>
+<td>prirodzený bernský akcelerátor</td>
+<td>https://bern.impacthub.ch</td>
+</tr>
+<tr>
+<td>14</td>
+<td>lokalhelden.ch vs wemakeit: poplatky, all-or-nothing, právna forma žiadateľa</td>
+<td>wemakeit overené (6 %+4 %), lokalhelden údajne bez poplatku</td>
+<td>https://www.lokalhelden.ch ; https://wemakeit.com</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Venture Kick: stupne 2–3 grant alebo konvertibilná pôžička</td>
+<td>protirečenie v repozitári</td>
+<td>https://www.venturekick.ch</td>
+</tr>
+<tr>
+<td>16</td>
+<td>TGTG CH: platí ešte CHF 2.90 + CHF 59 v roku 2026? aktuálne čísla Kanton Bern („Kanton-Ranking")</td>
+<td>cenová kotva pre poplatok Übrig</td>
+<td>https://www.toogoodtogo.com/de-ch/press/kanton-ranking-idaflw ; https://cafetier.ch/too-good-to-go/</td>
+</tr>
+<tr>
+<td>17</td>
+<td>GoNina: financovanie, právna forma, počet podnikov 2026, plány na „darovať"</td>
+<td>najbližší konkurent s bernským fokusom</td>
+<td>https://www.gonina.ch</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Tischlein deck dich / Schweizer Tafel: prijímajú niekedy uvarený cateringový prebytok? tonáž región Bern; depot a hodiny v Berne</td>
+<td>hranica komplementarity vs. prekrytia</td>
+<td>https://www.tischlein.ch ; https://www.schweizertafel.ch/de/ueber-uns/institutionen-die-wir-beliefern/bern.html</td>
+</tr>
+<tr>
+<td>19</td>
+<td>MWSTG Art. 31 Abs. 2 lit. c (CHF 500 Eigenverbrauch) a oceňovací základ pre nepredajný prebytok; DBG Art. 33a/59 pre Naturalspenden</td>
+<td>DPH-riziko pre reštauráciu pri &gt;CHF 500/rok</td>
+<td>https://www.fedlex.admin.ch (SR 641.20); https://gastrosuisse.ch/de/branchenwissen/unternehmensfuehrung/mwst</td>
+</tr>
+<tr>
+<td>20</td>
+<td>ZHAW-Zwischenbericht Beretta et al. 2025 (BAFU) — aktuálne čísla strát v gastronómii, podiel vyhnuteľných</td>
+<td>najnovšie federálne číslo pre žiadosti</td>
+<td>https://www.bafu.admin.ch/de/foodwaste</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Termoboxy: oficiálna krivka udržania teploty (Thermo Future Box / Cambro), objem 21 vs 30 L, prázdna hmotnosť; dataloggery (Testo 184)</td>
+<td>dizajn ≤ 2 h jazdy stojí na neoverenom údaji</td>
+<td>https://thermo-future-box.com ; https://cargobikemag.com/cargo-space-the-overview/</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Stadt Bern Velohauptstadt — príspevok na cargo-bicykle (suma); počet carvelo2go bicyklov/hostov v Berne</td>
+<td>flotila pilotu</td>
+<td>https://www.bern.ch/velohauptstadt/foerdermassnahmen/cargovelos ; https://www.carvelo.ch/de/</td>
+</tr>
+<tr>
+<td>23</td>
+<td>BFS STATENT NOGA 5610 pre Gemeinde Bern (2023) — presný počet reštauračných prevádzok</td>
+<td>nahradí „760 (Der Bund 2023)" oficiálnym číslom</td>
+<td>https://www.pxweb.bfs.admin.ch/pxweb/de/px-x-0602010000_102/</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Sirplus: dátum insolvencie (jan 2023 vs jan 2024 — poznámky sa nezhodujú); Partage: kantonálna subvencia „CHF 5 000" (2025)</td>
+<td>dve vnútorné protirečenia v podkladoch</td>
+<td>https://www.handelsblatt.com/unternehmen/handel-konsumgueter/insolvenz-lebensmittelretter-sirplus-benoetigt-eigene-rettung/100006045.html ; https://zewo.ch/wp-content/uploads/charity-documents/fondation-partage_annual_review_document_de.pdf</td>
+</tr>
+</tbody>
+</table></div></section>
+
+<footer>Übrig Bern · výskumný podklad zo 25. 9. 2026 · nie je právne ani daňové poradenstvo · zdrojové poznámky: <a href="notes/">research/notes/</a>, syntéza: <a href="REPORT.md">REPORT.md</a></footer>
+</main>
+</body>
+</html>
