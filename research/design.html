@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Übrig – dizajnový manuál</title>
+<meta name="description" content="Pravidlá vizuálu Übrig: značka „Lístok a pečiať“, farby, písmo, komponenty, pohyb (zatrasenie, záblesk, spúšťacia animácia), prístupnosť, jazyk, tlač, zákazy a tokeny.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,360;1,9..144,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#7A746C;
+  --shadow:3px;--radius:4px;--row:62px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--paper:#1A1814;--sheet:#23201B;--ink:#F3EEE6;--ink-2:#E6DFD3;--rule:#3A352E;--mute:#A79F93;--stamp:#B5483A}}
+:root[data-theme=dark]{--paper:#1A1814;--sheet:#23201B;--ink:#F3EEE6;--ink-2:#E6DFD3;--rule:#3A352E;--mute:#A79F93;--stamp:#B5483A}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:"Fraunces",Georgia,serif;font-weight:500;font-style:italic;letter-spacing:-.01em}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+main{max-width:960px;margin:0 auto;padding:24px 16px 72px}
+nav.top{display:flex;gap:14px;flex-wrap:wrap;font-size:.9rem;margin-bottom:22px}nav.top a{color:var(--stamp)}
+a{color:var(--stamp)}
+.k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp)}
+header h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1;margin:.1em 0 .25em}
+header .lead{font-size:1.15rem;max-width:62ch;color:var(--ink-2)}
+h2{font-size:1.9rem;margin:64px 0 12px;line-height:1.1}
+h3{font-size:1.25rem;margin:30px 0 8px}
+h2 .k,h3 .k{display:block;font-style:normal;margin-bottom:6px}
+p{margin:0 0 14px;max-width:70ch}
+.rule{border:0;border-top:1px solid var(--rule);margin:36px 0}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;margin:14px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid3{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.sw{border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--sheet)}
+.sw i{display:block;height:64px}.sw div{padding:8px 10px}.sw b{display:block}.sw small{color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:8px 8px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}th{font-weight:700;color:var(--mute);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
+.tw{overflow-x:auto}
+.verdict{border-left:3px solid var(--stamp);padding:6px 16px;margin:18px 0;font-size:1.05rem}
+.no{border-left:3px solid var(--ink);padding:6px 16px;margin:14px 0}
+ul{padding-left:20px}li{margin:5px 0}
+code,pre{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em}
+pre{background:var(--ink);color:var(--paper);padding:14px 16px;border-radius:8px;overflow:auto;line-height:1.45}
+/* component demos */
+.press{position:relative;display:inline-block;border:0;background:transparent;padding:0;min-width:200px;cursor:pointer}
+.press .shade{position:absolute;inset:var(--shadow) calc(-1*var(--shadow)) calc(-1*var(--shadow)) var(--shadow);background:var(--stamp);border-radius:var(--radius)}
+.press .face{position:relative;display:block;border:1.1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:var(--radius);padding:15px 16px;font-weight:700;transition:transform 80ms ease}
+.press:active .face{transform:translate(3px,3px)}
+.press.quiet .shade{background:var(--rule)}.press.quiet .face{background:var(--rule);color:var(--mute);border-color:var(--rule)}
+.press.stamp .face{background:var(--stamp);color:var(--paper)}
+.press.ghost .shade{display:none}.press.ghost .face{background:var(--sheet);color:var(--ink)}
+.demo{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;margin:12px 0}
+.check{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:center;width:100%;max-width:360px;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px 14px 14px 12px;min-height:var(--row);color:var(--mute)}
+.check.on{border-color:var(--stamp);color:var(--ink)}
+.ring{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center}.check.on .ring{border-color:var(--stamp)}
+.dot{width:10px;height:10px;border-radius:50%}.check.on .dot{background:var(--stamp)}
+.field{display:block;max-width:360px}.field .lab{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.field input{width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px;font:inherit;color:inherit;outline:none}.field input:focus{border-color:var(--ink)}
+.ticket{background:var(--sheet);border:1.25px solid var(--ink);border-radius:4px;padding:22px 20px 24px;box-shadow:6px 6px 0 var(--rule);max-width:360px}
+.ticket .head{display:flex;justify-content:space-between;align-items:flex-start}.ticket h4{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:30px;margin:0}
+.perf{display:flex;justify-content:space-between;margin:14px -6px 16px}.perf i{width:7px;height:7px;border-radius:50%;background:var(--rule);display:block}
+.ticket h5{margin:0 0 4px;font-size:19px}.ticket .meta{color:var(--mute);font-size:13px;margin-bottom:14px}.ticket p{margin:0 0 6px;font-size:14px}
+.ok{color:var(--stamp);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em}
+/* motion demos */
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+.shake .face{animation:shake 240ms cubic-bezier(.36,.07,.19,.97)}
+@keyframes glint{0%{background-position:-160% 0}100%{background-position:260% 0}}
+.glint{position:relative;overflow:hidden}
+.glint::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(196,163,106,.45) 50%,transparent 60%);background-size:200% 100%;animation:glint 600ms ease-out 1}
+@media (prefers-reduced-motion: reduce){.shake .face,.glint::after{animation:none}}
+.timeline{display:grid;grid-template-columns:70px 1fr;gap:6px 14px;font-size:.95rem}.timeline .t{font-family:"IBM Plex Mono",monospace;color:var(--stamp)}
+.mark{width:96px;height:96px}
+.logo-row{display:flex;gap:28px;flex-wrap:wrap;align-items:center}
+.wordmark{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:72px;line-height:1;letter-spacing:-.02em}
+.tag{font-family:"IBM Plex Mono",monospace;letter-spacing:.32em;font-size:13px;color:var(--ink-2)}
+.onink{background:#1A1814;color:#F3EEE6;padding:18px 22px;border-radius:8px}
+.decision li{margin:8px 0}
+footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Financovanie</a><a href="architektura.html">Architektúra</a><a href="doverit.html">Čo doveriť</a><a href="design/prototyp.html">Prototyp</a><a href="../">Übrig Bern</a></nav>
+
+<header>
+<span class="k">Dizajnový manuál · verzia 1.0 · 25. 9. 2026</span>
+<h1>übrig</h1>
+<p class="tag" style="margin:-6px 0 22px">nach dem service</p>
+<p class="lead">Kuchár nepotrebuje dashboard. Potrebuje lístok, ktorý smie ísť von. Tento dokument je jediný zdroj pravdy pre to, ako Übrig vyzerá, hovorí a hýbe sa. Všetko, čo tu nie je, sa nerobí; všetko, čo tu je, sa robí presne tak.</p>
+</header>
+
+<div class="verdict"><b>Verdikt dizajnového tímu.</b> Richardov výber – board „Lístok a pečiať“ z Figmy – berieme ako základ v plnom rozsahu: papier, atrament, pečiať, Fraunces, Atkinson, Plex Mono, lis namiesto tlačidla, kruh namiesto checkboxu, lístok s perforáciou. Sprísňujeme štyri veci: (1) jedno znamenie, nie dve – tanier so zmiznutým klinom je primárne, samotný červený kruh z návrhu „nach dem service“ je len redukovaná pečiať pre ikonu aplikácie a favicon; (2) pohyb dostáva pravidlá – zatrasenie a záblesk sú navigácia, nie dekorácia, a smú sa stať raz; (3) spúšťacia animácia má presný scenár do 1,4 s a musí sa dať preskočiť; (4) prístupnosť sa nemeria dojmom, ale kontrastom a veľkosťou cieľa – čísla sú nižšie. Nič sa zatiaľ nestavia; tento manuál a prototyp sú podklad na schválenie.</div>
+
+<!-- 1 -->
+<h2 id="idea"><span class="k">01 · Myšlienka</span>Lístok a pečiať</h2>
+<p>Übrig je posledných pätnásť minút smeny. Ruky sú mokré, svetlo je ostré, hlava je unavená. Rozhranie preto nie je aplikácia, ale <b>lístok</b> – kus papiera, na ktorom je napísané, čo odchádza, kedy a pre koho – a <b>pečiať</b>, ktorá povie, že to smie ísť. Všetko ostatné (rezervácie, prehľady, štatistiky) je za lístkom, nie pred ním.</p>
+<div class="grid3">
+<div class="sheet"><span class="k">Princíp 1</span><h3 style="margin-top:4px">Jedna otázka na obrazovku</h3><p>Smie to ísť von? Koľko? Kedy? Nikdy dve otázky naraz, nikdy dashboard.</p></div>
+<div class="sheet"><span class="k">Princíp 2</span><h3 style="margin-top:4px">Červená je povolenie, nie alarm</h3><p>Pečiať sa objaví až po siedmich „áno“. Predtým je obrazovka tichý papier.</p></div>
+<div class="sheet"><span class="k">Princíp 3</span><h3 style="margin-top:4px">Lis, nie ripple</h3><p>Tlačidlo sa stlačí ako pečiatka: sadne o 3 px, 80 ms, žiadna vlna, žiadny glow.</p></div>
+<div class="sheet"><span class="k">Princíp 4</span><h3 style="margin-top:4px">Jeden palec, 62 px</h3><p>Každý riadok, na ktorý sa dotýka, má aspoň 62 px. Ovláda sa jednou rukou v dolnej tretine.</p></div>
+<div class="sheet"><span class="k">Princíp 5</span><h3 style="margin-top:4px">Správa vyzerá ako to, čo odovzdáš</h3><p>WhatsApp text, etiketa na nádobe a záznam v protokole majú rovnakú hierarchiu: jedlo, porcie, čas, alergény, adresa.</p></div>
+<div class="sheet"><span class="k">Princíp 6</span><h3 style="margin-top:4px">Nie Sautero</h3><p>Žiadny tyrkys, žiadny hrniec, žiadny donut. Übrig je vlastná značka pre zvyšok smeny.</p></div>
+</div>
+
+<!-- 2 -->
+<h2 id="znamenie"><span class="k">02 · Značka</span>Tanier so zmiznutým klinom</h2>
+<div class="sheet">
+<div class="logo-row">
+<svg class="mark" viewBox="0 0 72 72" aria-label="Znamenie Übrig"><circle cx="36" cy="36" r="33" fill="none" stroke="#9C3B2E" stroke-width="2.2"/><circle cx="36" cy="36" r="27" fill="none" stroke="#9C3B2E" stroke-width="1.5"/><path d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2" fill="none" stroke="#9C3B2E" stroke-width="2.4" stroke-linecap="round"/><circle cx="36" cy="36" r="3.2" fill="#9C3B2E"/></svg>
+<div><div class="wordmark">übrig</div><div class="tag">nach dem service</div></div>
+<div class="onink"><div class="wordmark" style="font-size:44px">übrig</div><div class="tag" style="color:#C4A36A">na atramente</div></div>
+<svg viewBox="0 0 72 72" width="64" height="64" aria-label="Redukovaná pečiať (ikona)"><rect width="72" height="72" rx="16" fill="#F3EEE6"/><circle cx="36" cy="36" r="17" fill="#9C3B2E"/></svg>
+</div>
+</div>
+<div class="tw"><table><thead><tr><th>Prvok</th><th>Význam</th><th>Pravidlo</th></tr></thead><tbody>
+<tr><td><b>Dvojitý kruh</b></td><td>Pečiať HACCP, nie logo kuchyne</td><td>Vždy dve linky (2,2 px a 1,5 px pri 72 px). Nikdy vyplnený, nikdy s tieňom.</td></tr>
+<tr><td><b>Klin</b></td><td>Medzera v tanieri je jedlo, ktoré odchádza</td><td>Oblúk 270°, otvorený vľavo dole. Otvor sa nikdy nezatvára – ani v animácii nie úplne.</td></tr>
+<tr><td><b>Bod</b></td><td>Porcia, ktorá zostala</td><td>r = 3,2 px pri 72 px; v pečiati FREIGEGEBEN je bod jediný vyplnený prvok.</td></tr>
+<tr><td><b>Umlaut</b></td><td>Dve bodky nad u sú dve porcie</td><td>Wordmark vždy s malým ü, vždy Fraunces italic 500. Nikdy verzálky, nikdy „Uebrig“ v grafike (len v URL/kóde).</td></tr>
+<tr><td><b>Tagline</b> „nach dem service“</td><td>Kedy: po službe, nie počas nej</td><td>Plex Mono, rozpal 0,32 em, malé písmená. Používa sa len na úvodnej obrazovke, letáku a v pätičke – nikdy vo flow.</td></tr>
+<tr><td><b>Redukovaná pečiať</b></td><td>Ikona aplikácie, favicon, maska</td><td>Plný kruh Pečiať na Papieri, r = 17/72. Bez klinu – pri 16 px by sa klin stratil. Nikdy nie vo vnútri rozhrania.</td></tr>
+</tbody></table></div>
+<ul>
+<li><b>Ochranná zóna:</b> okolo znamenia a wordmarku minimálne výška písmena „b“ zo slova übrig.</li>
+<li><b>Minimálna veľkosť:</b> znamenie 24 px (mobil), 8 mm (tlač). Pod tým redukovaná pečiať.</li>
+<li><b>Farby značky:</b> znamenie len v Pečiati (na papieri) alebo v Papieri (na atramente). Nikdy okrová, nikdy čierna.</li>
+<li><b>Zákaz:</b> Sauterov hrniec, tyrkysový prstenec, gradient, 3D, tieň, obrys textu, otočený wordmark.</li>
+</ul>
+
+<!-- 3 -->
+<h2 id="farby"><span class="k">03 · Farby</span>Papier, atrament, pečiať – a nič štvrté</h2>
+<div class="grid">
+<div class="sw"><i style="background:#F3EEE6;border-bottom:1px solid #D8D0C4"></i><div><b>Papier</b><small class="mono">#F3EEE6 · pozadie obrazovky</small></div></div>
+<div class="sw"><i style="background:#FFFBF4;border-bottom:1px solid #D8D0C4"></i><div><b>Hárok</b><small class="mono">#FFFBF4 · karta, pole, lístok</small></div></div>
+<div class="sw"><i style="background:#1A1814"></i><div><b>Atrament</b><small class="mono">#1A1814 · text, lis, obrys lístka</small></div></div>
+<div class="sw"><i style="background:#9C3B2E"></i><div><b>Pečiať</b><small class="mono">#9C3B2E · povolenie, kruh „áno“, kváder lisu</small></div></div>
+<div class="sw"><i style="background:#6E2A21"></i><div><b>Pečiať tmavá</b><small class="mono">#6E2A21 · stlačený lis, odkaz :active</small></div></div>
+<div class="sw"><i style="background:#C4A36A"></i><div><b>Okrová</b><small class="mono">#C4A36A · záblesk, jediný akcent na atramente</small></div></div>
+<div class="sw"><i style="background:#D8D0C4"></i><div><b>Linka</b><small class="mono">#D8D0C4 · obrysy, perforácia, tichý lis</small></div></div>
+<div class="sw"><i style="background:#7A746C"></i><div><b>Tlmená</b><small class="mono">#7A746C · popisky, sekundárny text</small></div></div>
+</div>
+<h3>Sémantika</h3>
+<div class="tw"><table><thead><tr><th>Stav</th><th>Farba</th><th>Kedy</th></tr></thead><tbody>
+<tr><td>Ešte nie</td><td>Linka + Tlmená</td><td>Prázdny kruh, tichý lis „Noch 3 von 7“, nevyplnené pole.</td></tr>
+<tr><td>Áno / povolené</td><td>Pečiať</td><td>Plný kruh, dock po 7/7, pečiať FREIGEGEBEN na lístku. <b>Predtým sa Pečiať nikde neobjaví</b> – okrem znamenia v hlavičke.</td></tr>
+<tr><td>Aktívne / fokus</td><td>Atrament</td><td>Obrys poľa vo fokuse 1 px Atrament; klávesnicový fokus 2 px Atrament s odsadením 2 px.</td></tr>
+<tr><td>Chyba</td><td><b>žiadna nová farba</b></td><td>Chybu nesie pohyb (zatrasenie) a text pod poľom v Tlmenej. Nie červený text – červená je povolenie.</td></tr>
+<tr><td>Navigácia</td><td>Okrová (záblesk)</td><td>Jediný raz prejde po poli, ktoré treba vyplniť. Nikdy statická.</td></tr>
+</tbody></table></div>
+<h3>Kontrast (WCAG 2.2, vypočítané)</h3>
+<div class="tw"><table><thead><tr><th>Text</th><th>Na</th><th>Pomer</th><th>Verdikt</th></tr></thead><tbody>
+<tr><td>Atrament</td><td>Papier</td><td class="mono">15,35 : 1</td><td>AAA</td></tr>
+<tr><td>Atrament</td><td>Hárok</td><td class="mono">17,18 : 1</td><td>AAA</td></tr>
+<tr><td>Pečiať</td><td>Papier</td><td class="mono">5,91 : 1</td><td>AA text, AAA veľký text</td></tr>
+<tr><td>Papier (text lisu)</td><td>Pečiať</td><td class="mono">5,91 : 1</td><td>AA – tučné 16 px je v poriadku</td></tr>
+<tr><td>Tlmená</td><td>Papier</td><td class="mono">4,00 : 1</td><td>tesne pod AA (4,5) – <b>len 13 px+ popisky a Plex Mono 11 px verzálky s rozpalom; nikdy pre vety</b></td></tr>
+<tr><td>Tlmená</td><td>Hárok</td><td class="mono">4,48 : 1</td><td>prakticky AA</td></tr>
+<tr><td>Okrová</td><td>Papier</td><td class="mono">2,07 : 1</td><td><b>nikdy ako text na papieri</b> – len záblesk a dekor</td></tr>
+<tr><td>Okrová</td><td>Atrament</td><td class="mono">7,42 : 1</td><td>AAA – jediný povolený akcentový text na tmavom</td></tr>
+<tr><td>Linka</td><td>Papier</td><td class="mono">1,32 : 1</td><td>len obrysy, nikdy text</td></tr>
+</tbody></table></div>
+<p><b>Nočný variant</b> (odberatelia stoja večer pred kuchyňou): Papier ↔ Atrament sa vymenia, Hárok stmavne na <span class="mono">#23201B</span>, Pečiať sa zosvetlí na <span class="mono">#B5483A</span>, Tlmená na <span class="mono">#A79F93</span>. Variant sa zapína podľa systému (prefers-color-scheme) a ide až po pilote – kuchyňa je vždy svetlá.</p>
+
+<!-- 4 -->
+<h2 id="pismo"><span class="k">04 · Písmo</span>Tri hlasy: meno, veta, fakt</h2>
+<div class="tw"><table><thead><tr><th>Hlas</th><th>Písmo</th><th>Kde</th><th>Nikde inde</th></tr></thead><tbody>
+<tr><td class="serif" style="font-size:1.4rem">Meno</td><td>Fraunces, italic, 500, optická veľkosť „soft“</td><td>Wordmark, názov jedla na lístku, nadpisy obrazoviek (1 na obrazovku)</td><td>Nie na tlačidlách, nie v poliach, nie v odstavcoch</td></tr>
+<tr><td><b>Veta</b></td><td>Atkinson Hyperlegible 400/700</td><td>Otázky, odsek, tlačidlá, polia, chipy</td><td>Nie pod 14 px</td></tr>
+<tr><td class="mono">FAKT</td><td>IBM Plex Mono 400/500</td><td>Časy, počty, popisky polí (verzálky 11 px, rozpal 0,06–0,12 em), FREIGEGEBEN, krok „1 PRÜFEN“</td><td>Nie vety dlhšie než šesť slov</td></tr>
+</tbody></table></div>
+<h3>Stupnica</h3>
+<div class="tw"><table><thead><tr><th>Rola</th><th>Veľkosť / riadok</th><th>Písmo</th></tr></thead><tbody>
+<tr><td>Wordmark v hlavičke</td><td class="mono">34 / 1.0</td><td>Fraunces it 500, −0,02 em</td></tr>
+<tr><td>Wordmark na lístku</td><td class="mono">32 / 1.0</td><td>Fraunces it 500</td></tr>
+<tr><td>Názov jedla</td><td class="mono">20 / 1.25</td><td>Atkinson 700</td></tr>
+<tr><td>Text, otázka, tlačidlo</td><td class="mono">16 / 1.45</td><td>Atkinson 400 / 700</td></tr>
+<tr><td>Riadky lístka, chip</td><td class="mono">14 / 1.4 · 13</td><td>Atkinson 400</td></tr>
+<tr><td>Meta (porcie · čas)</td><td class="mono">13 / 1.3</td><td>Plex Mono 400, tabulárne číslice</td></tr>
+<tr><td>Popisok poľa, krok, FREIGEGEBEN</td><td class="mono">11 / 1.2 · verzálky</td><td>Plex Mono 400, rozpal 0,06 / 0,12 em</td></tr>
+</tbody></table></div>
+<ul>
+<li>Číslice v Plex Mono sú tabulárne – časy „21:30–22:15“ sa nikdy nehýbu pri prepise.</li>
+<li>Pomlčka v rozsahu je en dash (–), oddeľovač je stredná bodka ( · ). Žiadne lomky.</li>
+<li>Písma sa v produkcii <b>self-hostujú</b> (OFL licencie, offline PWA); fallback: Georgia · system-ui · ui-monospace. Prototyp ich ťahá z Google Fonts len na ukážku.</li>
+</ul>
+
+<!-- 5 -->
+<h2 id="layout"><span class="k">05 · Rozloženie</span>Jeden stĺpec, jeden palec, jeden dock</h2>
+<ul>
+<li><b>Šírka:</b> 430 px maximum, centrované; na desktope ten istý stĺpec na papierovom pozadí – Übrig je telefón, desktop je len náhľad.</li>
+<li><b>Okraje:</b> 20 px; vertikálny rytmus 8 px; medzera medzi kartami 8 px, medzi blokmi 24 px.</li>
+<li><b>Riadok dotyku:</b> min. 62 px (kruh, chip-rad, pole s popiskom). Cieľ dotyku min. 44 × 44 px vždy.</li>
+<li><b>Hlavička:</b> krok vľavo (<span class="mono">1 PRÜFEN</span>, Pečiať), počítadlo vpravo (<span class="mono">4 / 7</span>, Tlmená); pod tým znamenie 36 px + wordmark 34 px.</li>
+<li><b>Dock:</b> jedno tlačidlo pripnuté dole, gradient Papier → priehľadný 70 %, rešpektuje safe-area. Nikdy dve tlačidlá v docku.</li>
+<li><b>Kroky:</b> Prüfen → Meldung → Etikett → Protokoll ako podčiarknuté záložky (Pečiať 2 px), nie ako wizard s číslami v kruhoch.</li>
+<li><b>Prázdny stav:</b> jedna veta v Tlmenej („Noch kein Eintrag. Lokal im Browser.“), žiadna ilustrácia.</li>
+</ul>
+
+<!-- 6 -->
+<h2 id="komponenty"><span class="k">06 · Komponenty</span>Lis, kruh, pole, chip, lístok</h2>
+<h3>Lis (tlačidlo)</h3>
+<div class="demo">
+<button class="press" type="button"><span class="shade"></span><span class="face">Weiter zur Meldung</span></button>
+<button class="press quiet" type="button"><span class="shade"></span><span class="face">Noch 3 von 7</span></button>
+<button class="press stamp" type="button"><span class="shade"></span><span class="face">Freigeben</span></button>
+<button class="press ghost" type="button"><span class="shade"></span><span class="face">Neue Freigabe</span></button>
+</div>
+<div class="tw"><table><thead><tr><th>Stav</th><th>Vzhľad</th><th>Správanie</th></tr></thead><tbody>
+<tr><td>Idle</td><td>Atramentový blok, Pečiaťový kváder 3 px vpravo dole, obrys 1,1 px Atrament, rádius 4 px</td><td>—</td></tr>
+<tr><td>Press</td><td>Blok sadne na kváder: translate(3px, 3px)</td><td>80 ms ease; haptika 10 ms, ak zariadenie vie</td></tr>
+<tr><td>Quiet (ešte nie)</td><td>Linka + Tlmená, kváder Linka</td><td>Nie je disabled: klepnutie spustí <b>zatrasenie</b> a <b>záblesk</b> na prvom nesplnenom riadku</td></tr>
+<tr><td>Ready / Stamp</td><td>Pečiať blok, Papier text</td><td>Až po 7/7; prefarbenie 120 ms</td></tr>
+<tr><td>Ghost</td><td>Hárok blok, Atrament text, bez kvádra</td><td>Sekundárna akcia (Neue Freigabe, Etikett)</td></tr>
+</tbody></table></div>
+<p class="no"><b>Zákaz:</b> Material ripple, hover glow, gradient, blur tieň, ikonka v tlačidle, veľké písmená, výkričník v texte tlačidla.</p>
+
+<h3>Kruh (otázka Freigabe)</h3>
+<div class="demo">
+<div class="check"><i class="ring"><i class="dot"></i></i><span>Nicht im Gästebereich</span></div>
+<div class="check on"><i class="ring"><i class="dot"></i></i><span>Heiss ≥ 65 °C oder ≤ 5 °C</span></div>
+</div>
+<ul><li>Dva stavy: prázdny (Linka obrys, Tlmená text) a plný (Pečiať bod, Atrament text, Pečiať obrys karty). Žiadny tretí, žiadna fajka.</li><li>Sémantika: <span class="mono">role="checkbox" aria-checked</span>, celý riadok je cieľ (62 px).</li><li>Sedem otázok je fixný zoznam; poradie sa nemení, aby si ho kuchár zapamätal telom.</li></ul>
+
+<h3>Pole a chip</h3>
+<div class="demo">
+<label class="field"><span class="lab">Gericht</span><input type="text" value="Gemüserisotto, Salat separat"></label>
+<label class="field glint"><span class="lab">Portionen</span><input type="text" placeholder="Anzahl" aria-describedby="h1"></label>
+</div>
+<ul><li>Popisok vždy nad poľom, Plex Mono verzálky. Placeholder je príklad, nie popisok.</li><li>Pole vo fokuse: obrys Atrament. Pole s chybou: obrys ostáva Linka, pod poľom veta v Tlmenej, a jeden záblesk.</li><li>Chipy (14 alergénov): kapsula, Linka obrys; vybraný = Pečiať obrys + Atrament text. Nikdy vyplnená kapsula.</li></ul>
+
+<h3>Lístok (etiketa a správa)</h3>
+<div class="demo">
+<article class="ticket"><div class="head"><h4>übrig</h4><div style="text-align:right"><div class="ok">FREIGEGEBEN</div><svg width="40" height="40" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="33" fill="none" stroke="#9C3B2E" stroke-width="2.2"/><circle cx="36" cy="36" r="27" fill="none" stroke="#9C3B2E" stroke-width="1.5"/><path d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2" fill="none" stroke="#9C3B2E" stroke-width="2.4" stroke-linecap="round"/><circle cx="36" cy="36" r="3.2" fill="#9C3B2E"/></svg></div></div>
+<div class="perf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<h5>Gemüserisotto, Salat separat</h5><div class="meta mono">18 Portionen · gekühlt</div>
+<p>Restaurant Sonne · Marco 079 555 11 22</p><p>Allergene: Milch, Sellerie</p><p>Zubereitet 25.09. 18:40</p><p>Konsumieren bis 26.09. 12:00</p><p>Abholen 21:30–22:15</p><p>Länggassstrasse 42, Hintereingang</p><p>Vor dem Servieren durcherhitzen.</p></article>
+</div>
+<ul><li>Hárok, obrys 1,25 px Atrament, rádius 4 px, tvrdý tieň 6 px Linka (papier na papieri). Perforácia = 18–22 bodiek Linka.</li><li>Hierarchia je zákon: jedlo → porcie · stav → kontakt → alergény → zubereitet → konsumieren bis → abholen → adresa → „Vor dem Servieren durcherhitzen.“ Rovnaké poradie vo WhatsApp texte aj v tlači.</li><li>Pečiať FREIGEGEBEN + znamenie vpravo hore – <b>až po siedmich áno</b>. Návrh bez pečiate je „Entwurf“ a nemá červenú.</li></ul>
+
+<!-- 7 -->
+<h2 id="pohyb"><span class="k">07 · Pohyb</span>Lis, zatrasenie, záblesk, pečiať, otvorenie</h2>
+<p>Pohyb v Übrig má jednu úlohu: povedať, čo urobiť ďalej. Nikdy nezabáva, nikdy sa neopakuje v slučke, nikdy nebeží dva naraz. Trvania sú tri: <span class="mono">80 ms</span> (dotyk), <span class="mono">240 ms</span> (odpoveď), <span class="mono">600 ms</span> (upozornenie). Krivka: <span class="mono">cubic-bezier(.36,.07,.19,.97)</span> pre odpoveď, <span class="mono">ease-out</span> pre záblesk.</p>
+<div class="tw"><table><thead><tr><th>Podnet</th><th>Reakcia</th><th>Parametre</th><th>Frekvencia</th></tr></thead><tbody>
+<tr><td><b>Lis</b> – klepnutie na aktívne tlačidlo</td><td>blok sadne na kváder</td><td>translate 3 px, 80 ms, haptika 10 ms</td><td>pri každom klepnutí</td></tr>
+<tr><td><b>Zatrasenie</b> – klepnutie na tichý lis (menej než 7/7, prázdne povinné pole)</td><td>tlačidlo sa horizontálne zatrasie</td><td>±3 px → ±2 px, 240 ms, 2 kmity, bez zvuku</td><td><b>raz na pokus</b>; ďalšie klepnutie do 2 s nič nerobí</td></tr>
+<tr><td><b>Záblesk</b> – hneď po zatrasení</td><td>okrový lesk prejde cez <b>prvý</b> nesplnený riadok/pole; stránka sa naň plynulo posunie</td><td>105°, 200 % šírka, 600 ms ease-out, 1×; scrollIntoView smooth</td><td>len na jednom prvku naraz; nikdy na vyplnenom</td></tr>
+<tr><td><b>Kruh</b> – klepnutie na otázku</td><td>bod sa objaví zo stredu, obrys karty prefarbí</td><td>scale 0 → 1, 120 ms</td><td>vždy</td></tr>
+<tr><td><b>Pečiať</b> – siedme áno</td><td>dock prefarbí na Pečiať a „sadne“ ako po stlačení</td><td>120 ms farba + 80 ms sadnutie; haptika 10 ms</td><td>raz pri dosiahnutí 7/7</td></tr>
+<tr><td><b>Lístok</b> – prechod na Etikett</td><td>lístok sa vysunie zdola o 12 px a pečiať FREIGEGEBEN sa „opečiatkuje“</td><td>240 ms; pečiať scale 1,15 → 1 za 160 ms s 80 ms oneskorením</td><td>pri každom zobrazení lístka</td></tr>
+<tr><td><b>Prechod krokov</b></td><td>obsah sa vymení bez posunu; podčiarknutie záložky sa presunie</td><td>160 ms</td><td>vždy</td></tr>
+</tbody></table></div>
+<h3>Spúšťacia animácia (cold start)</h3>
+<p>Scenár do 1,4 s, jediný raz pri studenom štarte (nie pri prepínaní krokov, nie pri návrate z pozadia do 10 minút). Klepnutie kdekoľvek ju preskočí. Pri <span class="mono">prefers-reduced-motion</span> sa zobrazí statický záber 300 ms a prejde sa ďalej.</p>
+<div class="sheet"><div class="timeline">
+<span class="t">0 ms</span><span>Papier. Nič iné. (Papier je vždy prvý – aplikácia nikdy nezačína bielou ani čiernou.)</span>
+<span class="t">120 ms</span><span>Wordmark „übrig“ vystúpi zdola o 8 px a z 0 na 100 % krytia, 360 ms, Fraunces italic. Umlaut príde o 80 ms neskôr – dve porcie dopadnú.</span>
+<span class="t">420 ms</span><span>Vonkajší kruh znamenia sa vykreslí (stroke-dashoffset), 400 ms; vnútorný kruh 80 ms za ním.</span>
+<span class="t">700 ms</span><span>Klin sa vykreslí zľava dole a zastaví sa pred uzavretím – medzera ostane.</span>
+<span class="t">900 ms</span><span>Bod „sadne“ do stredu ako lis: scale 1,3 → 1, 120 ms; haptika 10 ms.</span>
+<span class="t">1 000 ms</span><span>Tagline „nach dem service“ sa rozpáli z rozpalu 0,6 em na 0,32 em a z 0 na 100 % krytia, 300 ms.</span>
+<span class="t">1 300 ms</span><span>Celá scéna zmizne na 0 % za 160 ms, pod ňou je už hotová obrazovka „1 Prüfen“ – žiadny spinner, žiadny skeleton.</span>
+</div></div>
+<div class="no"><b>Zákazy pohybu:</b> nekonečné slučky, pulzovanie, bounce s viac než jedným prekmitom, parallax, konfety, zvuk, animované ikony, skeleton loadery, spinner dlhší než 600 ms (radšej text „Lädt …“ v Tlmenej).</div>
+
+<!-- 8 -->
+<h2 id="pristupnost"><span class="k">08 · Prístupnosť</span>Meria sa, nehodnotí sa</h2>
+<ul>
+<li>Kontrast textu ≥ 4,5 : 1 (tabuľka vyššie); jediná výnimka Tlmená na Papieri 4,0 : 1 len pre popisky ≥ 13 px alebo Plex Mono verzálky – pre vety sa používa Atrament.</li>
+<li>Cieľ dotyku ≥ 44 × 44 px; riadky 62 px; medzera medzi cieľmi ≥ 8 px.</li>
+<li>Farba nikdy sama: kruh má bod aj zmenu textu; lis má text; pečiať má slovo FREIGEGEBEN.</li>
+<li>Fokus viditeľný: 2 px Atrament obrys s odsadením 2 px; poradie tabulátora = poradie čítania.</li>
+<li>Pohyb: všetko okrem lisu (80 ms) sa vypne pri <span class="mono">prefers-reduced-motion: reduce</span>; zatrasenie sa nahradí textom pod tlačidlom.</li>
+<li>Písmo sa škáluje so systémom (rem), rozloženie funguje do 200 % zväčšenia bez horizontálneho posunu.</li>
+<li>Jazyk jednoduchý: krátke vety, žiadne skratky okrem °C a Port.; nemčina na ploche, lebo kuchyňa hovorí nemecky.</li>
+<li>Semantika: <span class="mono">role="checkbox"</span> na kruhu, <span class="mono">aria-live="polite"</span> na počítadle 4 / 7, <span class="mono">aria-describedby</span> pre vetu pod poľom.</li>
+</ul>
+
+<!-- 9 -->
+<h2 id="jazyk"><span class="k">09 · Jazyk</span>Krátko, nemecky, bez výkričníkov</h2>
+<ul>
+<li>Primárny jazyk de-CH („ss“, nikdy „ß“): Grüsse, Strasse, heiss. FR / IT / EN ako preklady, nikdy ako zdroj.</li>
+<li>Tón: pokojný kolega po smene. Rozkazovací spôsob v tlačidlách („Freigeben“, „Etikett zeigen“), oznamovací v texte („Sieben Fragen. Alle Ja.“).</li>
+<li>Žiadne výkričníky, žiadne emoji, žiadne „Super!“, žiadne „Oops“. Chyba znie: „Noch 3 von 7.“</li>
+<li>Formáty: čas 21:30–22:15 (en dash, bez medzier), dátum 25.09. 18:40, porcie „18 Port.“ v meta, „18 Portionen“ na lístku.</li>
+<li>Termíny sa neprekladajú: Freigabe, Etikett, Protokoll, FREIGEGEBEN – sú súčasťou značky vo všetkých jazykoch.</li>
+</ul>
+
+<!-- 10 -->
+<h2 id="tlac"><span class="k">10 · Tlač</span>Etiketa, ktorá prežije chladničku</h2>
+<ul>
+<li>Formát: A6 na výšku alebo termopáska 80 mm; čierna tlač, pečiať ako obrys (červená sa v termotlači stráca).</li>
+<li>Perforácia sa tlačí ako bodky; wordmark Fraunces vľavo hore, znamenie vpravo hore 12 mm.</li>
+<li>Poradie riadkov = poradie lístka na obrazovke. Nič navyše (QR len ak nesie odkaz na protokol v app).</li>
+<li>Písmo na etikete min. 10 pt; alergény tučne; „Konsumieren bis“ ako najväčší údaj po názve jedla.</li>
+</ul>
+
+<!-- 11 -->
+<h2 id="zakazy"><span class="k">11 · Zákazy</span>Čo Übrig nikdy neurobí</h2>
+<div class="grid3">
+<div class="sheet"><b>Farba</b><ul><li>Tyrkys Sautera (#34F7D7), navy (#0A1A2F)</li><li>Štvrtý stav (žltá, oranžová, zelená)</li><li>Červená pred 7/7</li><li>Gradienty vo farbe</li></ul></div>
+<div class="sheet"><b>Tvar</b><ul><li>Hrniec, donut, koláčové grafy</li><li>Ikonky v tlačidlách</li><li>Zaoblenie nad 10 px (okrem chipov)</li><li>Rozmazané tiene</li></ul></div>
+<div class="sheet"><b>Správanie</b><ul><li>Dashboard, KPI, food cost (patrí Sauterovi cez deň)</li><li>Material ripple, hover glow</li><li>Toast/snackbar – potvrdením je lístok</li><li>Slučkové animácie, zvuk</li></ul></div>
+</div>
+
+<!-- 12 -->
+<h2 id="tokeny"><span class="k">12 · Tokeny</span>Jediné miesto, kde sú čísla</h2>
+<pre>:root{
+  /* farba */
+  --paper:#F3EEE6;  --sheet:#FFFBF4;  --ink:#1A1814;  --ink-2:#2A2622;
+  --stamp:#9C3B2E;  --stamp-dk:#6E2A21;  --brass:#C4A36A;  --rule:#D8D0C4;  --mute:#7A746C;
+  /* tvar */
+  --radius:4px;  --radius-card:10px;  --radius-chip:999px;  --shadow:3px;  --row:62px;  --gutter:20px;  --col:430px;
+  /* písmo */
+  --f-name:"Fraunces",Georgia,serif;  --f-text:"Atkinson Hyperlegible",system-ui,sans-serif;  --f-fact:"IBM Plex Mono",ui-monospace,monospace;
+  --fs-word:34px; --fs-dish:20px; --fs-text:16px; --fs-line:14px; --fs-meta:13px; --fs-label:11px;
+  /* pohyb */
+  --t-touch:80ms;  --t-answer:240ms;  --t-cue:600ms;  --e-answer:cubic-bezier(.36,.07,.19,.97);
+}
+@media (prefers-color-scheme: dark){:root{--paper:#1A1814;--sheet:#23201B;--ink:#F3EEE6;--ink-2:#E6DFD3;--rule:#3A352E;--mute:#A79F93;--stamp:#B5483A}}
+@media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms}}</pre>
+<p>Tokeny sa neprepisujú v komponentoch. Kto potrebuje nové číslo, mení tento blok a manuál – v tom istom commite.</p>
+
+<!-- 13 -->
+<h2 id="rozhodnutia"><span class="k">13 · Rozhodnutia tímu</span>Čo sme zvážili a prečo</h2>
+<ol class="decision">
+<li><b>Dve znamenia → jedno.</b> Návrh „nach dem service“ (plný červený kruh) a board (dvojitý kruh s klinom) sa prekrývali. Klin nesie myšlienku (jedlo, ktoré odchádza), plný kruh ju stráca. Plný kruh ostáva len tam, kde klin nie je čitateľný: ikona, favicon.</li>
+<li><b>Chyba bez červenej.</b> Bežné systémy hlásia chybu červenou; tu je červená povolenie. Chybu preto nesie pohyb (zatrasenie) a text. Kompromis: text chyby je Tlmená, nie Atrament, aby sa nemýlil s obsahom.</li>
+<li><b>Tichý lis nie je disabled.</b> Disabled tlačidlo nič nepovie. Tichý lis po klepnutí navedie: zatrasenie + záblesk na prvý nesplnený riadok. Toto je Richardova požiadavka „tlačidlá sa zatrasú, polia zablisnú“ – s limitom raz na pokus, aby sa z navigácie nestal hluk.</li>
+<li><b>Záblesk okrovou, nie červenou.</b> Okrová je jediný teplý akcent bez významu „povolené“. Používa sa len v pohybe (kontrast 2,07 : 1 ju vylučuje z textu).</li>
+<li><b>Spúšťacia animácia 1,3 s, preskočiteľná.</b> Kuchár otvára Übrig raz za smenu – jedna vkusná sekunda znamenie zafixuje. Pri návrate z pozadia sa nehrá. Reduced motion = statický záber.</li>
+<li><b>Nočný variant až po pilote.</b> Kuchyňa je vždy svetlá; odberatelia vonku by tmavý variant ocenili. Tokeny sú pripravené, zapnutie je rozhodnutie po prvých týždňoch.</li>
+<li><b>Fraunces len pre mená.</b> Pokušenie dať italic všade sme odmietli: pri 14 px v kuchyni klesá čitateľnosť. Atkinson Hyperlegible je navrhnutý pre slabý zrak – to je hlas viet.</li>
+<li><b>Žiadny toast.</b> Potvrdením akcie je lístok alebo záznam v protokole. Toast by bol štvrtý prvok, ktorý súperí o pozornosť.</li>
+<li><b>Tlačidlo bez ikony.</b> Slovo v nemčine je jednoznačnejšie než ikona a lis má vyzerať ako pečiatka, nie ako app-bar.</li>
+<li><b>Nestaviame.</b> Tento manuál + prototyp sú podklad na Richardovo schválenie; do <span class="mono">index.html</span> a <span class="mono">app/</span> ide až po „beriem lístok“ – najprv tokeny, potom komponenty, potom pohyb.</li>
+</ol>
+
+<!-- 14 -->
+<h2 id="dalej"><span class="k">14 · Ďalší krok</span>Kontrolný zoznam pred nasadením</h2>
+<ul>
+<li>☐ Richard schváli manuál („beriem lístok“) alebo pošle zmeny.</li>
+<li>☐ Tokeny do <span class="mono">app/tokens.css</span>; písma self-hostované (OFL) vo <span class="mono">app/fonts/</span>.</li>
+<li>☐ Statická stránka (Freigabe-Check, Meldung, Etikett, Protokoll) prevlečená na lístok a pečiať – bez zmeny logiky.</li>
+<li>☐ Plattform-App (prihlásenie, ponuky, rezervácie, admin) na tie isté tokeny; zoznam ponúk = lístky, rezervácia = pečiať.</li>
+<li>☐ Pohyb podľa kapitoly 07, kontrola s <span class="mono">prefers-reduced-motion</span>.</li>
+<li>☐ Kontrast a ciele dotyku premerané na reálnom telefóne v kuchyni pri ostrom svetle.</li>
+<li>☐ Ikona aplikácie a favicon z redukovanej pečiate; manifest PWA.</li>
+</ul>
+<p>Lokálny návrh, ako to bude vyzerať: <a href="design/prototyp.html"><b>design/prototyp.html</b></a> – celý tok Prüfen → Meldung → Etikett → Protokoll v novom vizuáli, so spúšťacou animáciou, zatrasením a zábleskom.</p>
+
+<footer>Übrig · dizajnový manuál v1.0 · 25. 9. 2026 · zdroje: board „Uebrig — Lístok a pečiať“ (Figma), PDF „Prvý návrh, dotiahnutý“, návrh „nach dem service“, referenčná implementácia uebrig.html · písma: Fraunces (OFL), Atkinson Hyperlegible (OFL), IBM Plex Mono (OFL)</footer>
+</main>
+</body>
+</html>

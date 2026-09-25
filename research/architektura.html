@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Übrig – architektúra pre expanziu</title>
+<meta name="description" content="Ako postaviť Übrig tak, aby začal v Berne a rozšíril sa do ďalších miest a krajín bez prerábania: model nájomcov, pravidlá podľa jurisdikcie, protokol ako záznam udalostí, PWA, Supabase platforma, plán vo fázach.">
+<style>
+:root{--bg:#fbfaf7;--card:#fff;--ink:#1b1b1b;--ink2:#52514e;--mute:#8d8b84;--line:#e6e3dc;--accent:#0d366b;--accent2:#2a78d6;--ok:#0ca30c;--warn:#eda100;--no:#d03b3b}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#8d8b84;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5}}
+:root[data-theme=dark]{--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#8d8b84;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[hidden]{display:none!important}
+main{max-width:920px;margin:0 auto;padding:24px 16px 64px}
+nav.top{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem;margin-bottom:18px}nav.top a{color:var(--accent)}
+header h1{font-size:clamp(1.6rem,3.5vw,2.3rem);margin:.2em 0 .3em;letter-spacing:-.01em;line-height:1.15}
+.sub{color:var(--ink2)}
+.bluf{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent2);border-radius:10px;padding:16px 18px;margin:18px 0;font-size:1.02rem}
+.bluf p{margin:0}
+.warn{border-left:4px solid var(--warn);background:rgba(237,161,0,.10);padding:10px 14px;border-radius:6px;margin:16px 0}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:18px 0;columns:2;column-gap:28px;font-size:.95rem}.toc a{color:var(--accent);text-decoration:none}.toc li{margin:3px 0}
+@media (max-width:640px){.toc{columns:1}}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.tile b{display:block;font-size:1.6rem;line-height:1.1}.tile small{color:var(--ink2)}
+section{margin-top:44px}h2{font-size:1.4rem;margin:0 0 12px;line-height:1.25}h3{font-size:1.1rem;margin:26px 0 8px}
+p{margin:0 0 14px}li{margin:4px 0}
+a{color:var(--accent)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--ink2);font-weight:600}
+.m{font-size:.74rem;border-radius:4px;padding:1px 6px;white-space:nowrap;vertical-align:1px;font-weight:600}
+.m.ok{background:rgba(12,163,12,.15);color:#0a7a0a}.m.sn{background:rgba(237,161,0,.18);color:#8a5d00}.m.no{background:rgba(208,59,59,.14);color:#a12c2c}.m.calc,.m.est{background:rgba(42,120,214,.14);color:#1c5cab}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .m.ok{color:#5dd35d}:root:not([data-theme=light]) .m.sn{color:#f2c159}:root:not([data-theme=light]) .m.no{color:#f08a8a}:root:not([data-theme=light]) .m.calc,:root:not([data-theme=light]) .m.est{color:#86b6ef}}
+.legend{display:flex;gap:10px 18px;flex-wrap:wrap;font-size:.9rem;color:var(--ink2);margin:10px 0 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.card h3{margin:0 0 8px;font-size:1.05rem}.card p{font-size:.94rem;margin:0 0 8px}.card ul{padding-left:18px;margin:0;font-size:.92rem}
+.flow{width:100%;height:auto;display:block;margin:6px 0 10px}
+.flow rect{fill:var(--card);stroke:var(--line);stroke-width:1.5;rx:8}.flow text{font-size:13px;fill:var(--ink)}.flow .t{font-weight:700}.flow .s{font-size:11px;fill:var(--ink2)}.flow path{fill:none;stroke:var(--accent2);stroke-width:2.2;marker-end:url(#arr)}.fig{margin:14px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}.fig figcaption{font-weight:700;font-size:.95rem;margin-bottom:4px}.flow .money{stroke:#eb6834}.flow .food{stroke:#1baf7a}
+.steps{counter-reset:s;list-style:none;padding:0}.steps li{position:relative;padding-left:44px;margin:10px 0}.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.imp{border-left:4px solid var(--no);background:rgba(208,59,59,.08);padding:10px 14px;border-radius:6px;margin:16px 0}
+footer{margin-top:48px;color:var(--ink2);font-size:.88rem;border-top:1px solid var(--line);padding-top:14px}
+blockquote{margin:0 0 14px;padding:6px 14px;border-left:3px solid var(--line);color:var(--ink2)}
+code{font-size:.9em}
+
+pre{background:#1e2026;color:#f2f1ec;padding:12px 14px;border-radius:8px;overflow:auto;font-size:.82rem;line-height:1.45}
+code{font-size:.9em;background:rgba(0,0,0,.05);padding:1px 4px;border-radius:3px}pre code{background:none;padding:0}
+.annex h2{font-size:1.25rem;margin-top:44px}.annex h3{font-size:1.02rem}
+.annex{border-top:2px solid var(--line);margin-top:56px;padding-top:12px}
+.hier{width:100%;height:auto;display:block;margin:8px 0 6px}.hier rect{fill:var(--card);stroke:var(--line);stroke-width:1.5;rx:8}.hier text{font-size:13px;fill:var(--ink)}.hier .t{font-weight:700}.hier .s{font-size:11px;fill:var(--ink2)}.hier line,.hier path{stroke:var(--accent2);stroke-width:2;fill:none}
+.phase{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:14px 0}.phase .card{position:relative}.phase .card .n{position:absolute;top:-12px;left:14px;background:var(--accent);color:#fff;border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700}
+</style></head><body><main>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Financovanie</a><a href="doverit.html">Čo doveriť</a><a href="design.html">Dizajn</a><a href="../">Übrig Bern</a></nav>
+
+<header>
+<h1>Architektúra Übrig: začať v Berne, rozšíriť bez prerábania</h1>
+<p class="sub">Výskum a plán, 25. 9. 2026. Podložené aktuálnou schémou (<code>db/001_schema.sql</code>), aplikáciou (<code>app/index.html</code>) a 55 stránkami dokumentácie Supabase, ktoré boli v tejto session čitateľné cez nástroj vyhľadávania v dokumentácii. Všetko ostatné je označené <span class="m no">experience, verify</span> a zoradené v <a href="doverit.html#arch">zozname na doverenie</a>.</p>
+</header>
+
+<div class="bluf"><p><b>Odporúčanie v jednej vete:</b> jeden Supabase projekt pre Švajčiarsko, jedna zdieľaná schéma, a na každom riadku dva stĺpce – <code>org_id</code> (bezpečnostná hranica) a <code>city_id</code> (prevádzková hranica) – s hierarchiou <b>mesto → organizácia → miesto → členstvo</b>; pravidlá (teploty, alergény, lehoty) v tabuľke <b>rulesets</b> verzovanej podľa krajiny a mesta, nie v kóde; protokol odovzdania ako <b>nemenný záznam udalostí</b> s hash-reťazou; frontend ostáva bez build kroku, ale prejde na ES moduly, PWA a push notifikácie; druhé mesto sa pridá <b>riadkom v tabuľke</b>, druhá krajina <b>riadkom v rulesets</b> a rozhodnutím o regióne – nikdy prepisom.</p></div>
+
+<div class="imp"><b>🟥 Dôležité – tri diery v dnešnej živej schéme, nájdené pri čítaní (nie domnienky):</b> (1) politika <code>offers_update_kitchen</code> pripína len <code>reserved_by</code>, takže kuchyňa môže priamym UPDATE nastaviť <code>status='picked'</code> alebo <code>'expired'</code> a obísť RPC; (2) <code>profiles_select_counterpart</code> volá vnorený <code>EXISTS</code> na tabuľku s vlastným RLS – vzor, ktorý dokumentácia Supabase odporúča nahradiť SECURITY DEFINER helperom; (3) helpery <code>my_role()</code> / <code>i_am_approved()</code> nie sú v politikách obalené <code>(select …)</code>, čo Advisor lint 0003 označí a pri raste dát stojí výkon. Oprava je migrácia <code>002_hardening.sql</code> vo Fáze 0 (aditívna, bez zmeny aplikácie). Nespúšťam ju, kým nepovieš – dnes sa nič nestavia.</div>
+
+<h2 style="margin-top:28px">Obsah</h2>
+<ol class="toc"><li><a href="#rozhodnutia">Desať rozhodnutí</a></li><li><a href="#hierarchia">Model nájomcov</a></li><li><a href="#pravidla">Pravidlá podľa jurisdikcie</a></li><li><a href="#protokol">Protokol ako záznam udalostí</a></li><li><a href="#frontend">Frontend, PWA, notifikácie</a></li><li><a href="#platforma">Platforma, región, plán</a></li><li><a href="#naklady">Náklady</a></li><li><a href="#plan">Plán vo fázach</a></li><li><a href="#doplnit">Čo doplniť s odblokovanou sieťou</a></li><li><a href="#priloha">Technická príloha (EN, úplné poznámky)</a></li></ol>
+
+<section id="rozhodnutia"><h2>1 · Desať rozhodnutí</h2>
+<div class="tw"><table><thead><tr><th>#</th><th>Rozhodnutie</th><th>Prečo</th><th>Čo zamietame</th></tr></thead><tbody>
+<tr><td>1</td><td><b>Jeden projekt, zdieľaná schéma, tenant stĺpce</b></td><td>Jediný vzor, ktorý dokumentácia Supabase podporuje a benchmarkuje; používateľ aktívny v dvoch mestách je jeden účet.</td><td>Schéma na mesto, projekt na mesto (násobí fixné náklady, láme krížové štatistiky).</td></tr>
+<tr><td>2</td><td><b>Hierarchia mesto → organizácia → miesto → členstvo</b></td><td>Reštauračná skupina má viac kuchýň, NGO viac výdajní; dnes je používateľ = profil = kuchyňa, čo neškáluje.</td><td>„Osobný“ režim – každý koná za organizáciu (jednotlivec = org druhu <code>individual</code>).</td></tr>
+<tr><td>3</td><td><b>Pravidlá v tabuľke <code>rulesets</code></b>, verzované, s platnosťou od–do, riešené mesto → krajina → global</td><td>CH 65 °C vs. UK 63 °C vs. US 60 °C; EU-14 = CH-14, US má 9 alergénov. Snapshot <code>ruleset_id</code> na každej udalosti povie v roku 2027, čo platilo.</td><td>Prahy a zoznam alergénov v kóde (dnes <code>allergens &lt;@ 1..14</code>, <code>lang in (…)</code>).</td></tr>
+<tr><td>4</td><td><b>Protokol odovzdania = append-only <code>handover_events</code></b> s hash-reťazou a JSON-schema validáciou</td><td>Obe strany sú Lebensmittelbetrieb; stav ponuky sa odvodzuje z udalostí, záznam sa nedá tichým UPDATE zmeniť.</td><td>Stav ako jediná pravda v <code>offers.status</code>.</td></tr>
+<tr><td>5</td><td><b>RLS cez dva helpery v schéme <code>private</code></b> obalené <code>(select …)</code>, index na každom tenant stĺpci</td><td>Dokumentácia meria 2–24 ms na 1 mil. riadkov s indexom oproti timeoutom bez obalenia.</td><td>Vnorené RLS podotázky v politikách (dnes <code>profiles_select_counterpart</code>).</td></tr>
+<tr><td>6</td><td><b>Frontend bez build kroku, ES moduly + import map, JSDoc + <code>tsc --noEmit</code></b> na generovaných typoch</td><td>Jeden vývojár, ~10 pohľadov; typová kontrola názvov stĺpcov zadarmo (pravidlo 9: nikdy nepísať názov, ktorý si nečítal).</td><td>React/Tailwind/bundler; framework až pri &gt; 15 previazaných reaktívnych stavoch.</td></tr>
+<tr><td>7</td><td><b>Realtime cez Broadcast z DB na privátnych kanáloch <code>city:&lt;id&gt;</code></b>, Web Push cez Edge Function pre zavretú stránku</td><td><code>postgres_changes</code> robí jednu RLS kontrolu na odberateľa a zmenu a je jednovláknový – dokumentácia ho pri škále neodporúča.</td><td>Nefiltrované <code>postgres_changes</code> (dnes).</td></tr>
+<tr><td>8</td><td><b>Fronta <code>pgmq</code> + <code>pg_cron</code> + Edge Function <code>dispatch</code></b> pre e-mail, push, SMS, WhatsApp</td><td>Odosielanie oddelené od transakcie, opakovanie a dead-letter zadarmo v Postgrese.</td><td>Vystavenie <code>pgmq_public</code> prehliadaču (tabuľky front nemajú RLS).</td></tr>
+<tr><td>9</td><td><b>Pro plán v deň, keď má prvý cudzí používateľ dostať magic link</b>; región rozhodnúť pred prvým skutočným protokolom (Zürich <code>eu-central-2</code> odporúčaný pre live, Paríž ostáva staging)</td><td>Predvolený SMTP doručuje len členom tímu; Free pauzuje po 7 dňoch; región sa nedá zmeniť na mieste.</td><td>PITR, log drains, read replicas pre pilot (až pri &gt; 4 GB alebo požiadavke regulátora).</td></tr>
+<tr><td>10</td><td><b>Druhé mesto = riadok v <code>cities</code> (téma, moderátori, manifest), druhá krajina = riadok v <code>rulesets</code> + rozhodnutie o projekte podľa právneho regiónu</b></td><td>Test architektúry: onboarding mesta cez UI s nulou commitov.</td><td>Fork kódu na mesto/krajinu.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="hierarchia"><h2>2 · Model nájomcov</h2>
+<svg class="hier" viewBox="0 0 880 250" role="img" aria-label="Hierarchia nájomcov: mesto, organizácia, miesto, členstvo">
+<rect x="20" y="20" width="200" height="56"/><text class="t" x="120" y="44" text-anchor="middle">cities (Standort)</text><text class="s" x="120" y="62" text-anchor="middle">Bern → Zürich → Wien · config, pravidlá, téma</text>
+<rect x="340" y="20" width="200" height="56"/><text class="t" x="440" y="44" text-anchor="middle">organisations</text><text class="s" x="440" y="62" text-anchor="middle">reštaurácia, skupina, NGO · status schválenia</text>
+<rect x="660" y="20" width="200" height="56"/><text class="t" x="760" y="44" text-anchor="middle">sites</text><text class="s" x="760" y="62" text-anchor="middle">kuchyňa / výdajné miesto · PostGIS bod</text>
+<rect x="340" y="120" width="200" height="56"/><text class="t" x="440" y="144" text-anchor="middle">memberships</text><text class="s" x="440" y="162" text-anchor="middle">používateľ × org × rola (owner, staff)</text>
+<rect x="660" y="120" width="200" height="56"/><text class="t" x="760" y="144" text-anchor="middle">offers · handover_events</text><text class="s" x="760" y="162" text-anchor="middle">každý riadok nesie org_id + city_id</text>
+<rect x="20" y="120" width="200" height="56"/><text class="t" x="120" y="144" text-anchor="middle">rulesets · allergen_lists</text><text class="s" x="120" y="162" text-anchor="middle">global → krajina → mesto, verzované</text>
+<line x1="220" y1="48" x2="340" y2="48"/><line x1="540" y1="48" x2="660" y2="48"/><line x1="440" y1="76" x2="440" y2="120"/><line x1="760" y1="76" x2="760" y2="120"/><line x1="120" y1="76" x2="120" y2="120"/>
+<text class="s" x="280" y="40" text-anchor="middle">1 : n</text><text class="s" x="600" y="40" text-anchor="middle">1 : n</text>
+<text class="s" x="440" y="220" text-anchor="middle">RLS: org_id = any(array(select private.my_org_ids())) · moderátori mesta cez city_roles · nikdy schéma alebo projekt na mesto</text>
+</svg>
+<p><b>Migrácia z dnešného stavu bez výpadku</b> (dual-write): 1) aditívna migrácia vytvorí <code>cities</code> (seed <code>bern</code>), <code>organisations</code>, <code>sites</code>, <code>memberships</code>, <code>city_roles</code> a pridá nullable <code>org_id/site_id/city_id</code> na <code>offers</code>; 2) backfill v tej istej transakcii – jedna org na existujúci profil, jedno členstvo owner, jedno miesto na kuchyňu, admini → <code>city_roles(bern, moderator)</code>; 3) trigger <code>offers_fill_tenant</code> doplní tenant stĺpce, keď starý klient vloží len <code>kitchen_id</code> – stará aplikácia beží ďalej; 4) nové politiky žijú popri starých (permisívne politiky sa spájajú OR), pgTAP dokáže, že oba tvary vidia to isté, potom sa staré zahodia; 5) feature flag <code>cities.features->>'orgs_ui'</code> zapne nové UI; 6) až nakoniec DESTRUKTÍVNE <code>set not null</code> a zahodenie <code>profiles.org/address</code> – s tvojím výslovným áno.</p>
+</section>
+
+<section id="pravidla"><h2>3 · Pravidlá podľa jurisdikcie</h2>
+<p>Tabuľka <code>rulesets(scope, country, city_id, version, effective_from, effective_to, rules jsonb, source)</code> + <code>allergen_lists(code, version, items)</code>. Resolver <code>private.active_ruleset(city, at)</code> zlúči global ← krajina ← mesto. Klient si pri štarte zavolá <code>app_bootstrap(city_slug)</code> (anon, bez PII) a dostane <code>{city, ruleset, allergens, locales, theme, features}</code> – sedem otázok Freigabe-Checku sa renderuje z pravidiel. Príklad pre CH:</p>
+<pre>{ "hot_min_c": 65, "cold_max_c": 5, "cool_down_max_minutes": 120, "reheat_core_min_c": 72,
+  "allergen_list": "EU14", "max_hours_after_made": 24, "require_temp_at_handover": true,
+  "require_receiver_signature": true, "label_fields": ["dish","made_at","use_by","allergens","kitchen"] }</pre>
+<p class="sub">Pozor: výskum právneho rámca našiel dve sady prahov – BLV-Spendenleitfaden 2021 (≥ 60 °C, &lt; 10 °C do 2 h) a GVG/HyV prax (65 °C / 5 °C). Ktorá platí pre odovzdanie, rozhodne telefonát s Kantonales Laboratorium (zoznam na doverenie, položka A1) – a zapíše sa do <code>rulesets.source</code>, nie do kódu.</p>
+</section>
+
+<section id="protokol"><h2>4 · Protokol ako záznam udalostí</h2>
+<p><code>handover_events(offer_id, org_id, city_id, event_type, actor_id, actor_org_id, occurred_at, payload jsonb, ruleset_id, prev_hash, hash)</code>; typy <code>published, reserved, released, handed_over, received, temp_checked, cancelled, expired, disputed, note</code>. UPDATE/DELETE odobraté rolám a blokované triggerom; <code>payload</code> validovaný <code>pg_jsonschema</code> podľa <code>(event_type, version)</code>. Podpisy a fotky v privátnom Storage buckete <code>protocols</code> s RLS cez <code>storage.foldername</code>. Odovzdanie je „úplné“, až keď kuchyňa zapíše <code>handed_over</code> a odberateľ <code>received</code> – obe strany si vedia dokázať, čo prešlo. Export CSV/PDF pre inšpektora, mesto a fundraising.</p>
+<p>Audit v troch vrstvách: obchodný (<code>handover_events</code>), správcovský (<code>audit_log</code> trigger na org/členstvá/pravidlá) a <code>pgaudit</code> object-mode na dvoch citlivých tabuľkách. Log drains až na žiadosť regulátora.</p>
+</section>
+
+<section id="frontend"><h2>5 · Frontend, PWA, notifikácie</h2>
+<ul>
+<li><b>Moduly bez bundlera:</b> <code>js/main.js</code>, <code>sb.js</code>, <code>i18n.js</code>, <code>views/*</code>; supabase-js pripnutý (SRI) alebo vendorovaný do <code>app/vendor/</code> pre offline.</li>
+<li><b>i18n:</b> zdroj de-CH, JSON na jazyk, ~40 riadkov vlastného <code>t()</code> s <code>Intl.PluralRules</code>; časové pásmo vždy z <code>cities.timezone</code>; RTL pripravenosť cez logické CSS vlastnosti; coverage meter v pre-commite.</li>
+<li><b>PWA:</b> manifest na mesto (Edge Function), service worker: precache shell + slovník, network-first pre bootstrap, <b>nikdy</b> cache autentifikovaných dát; offline zápis len pre protokol (IndexedDB fronta, idempotentné <code>client_event_id</code>).</li>
+<li><b>Live zoznam:</b> trigger na <code>offers</code> → <code>realtime.broadcast_changes('city:'||city_id)</code>, privátny kanál, jedna politika na <code>realtime.messages</code>; replay 3 dni.</li>
+<li><b>Zavretá stránka:</b> Web Push (VAPID) z Edge Function spustenej Database Webhookom; na iOS len pre PWA pridanú na plochu – overiť aktuálny stav.</li>
+<li><b>Testy:</b> pgTAP na každú politiku (pozitívny + negatívny), Playwright proti lokálnemu stacku, kontraktový test „Freigabe-Check má N otázok z rulesetu“.</li>
+</ul>
+</section>
+
+<section id="platforma"><h2>6 · Platforma, región, plán</h2>
+<div class="tw"><table><thead><tr><th>Otázka</th><th>Odpoveď</th><th>Zdroj / status</th></tr></thead><tbody>
+<tr><td>Kedy Pro?</td><td>V deň, keď má prvý ne-tímový používateľ dostať magic link (default SMTP doručuje len tímu; Free pauzuje po 7 dňoch; bez záloh na stiahnutie).</td><td>docs Custom SMTP, Production checklist</td></tr>
+<tr><td>Región</td><td>Paríž (EU) je pre CH pilot právne OK (adekvátnosť); Zürich <code>eu-central-2</code> existuje a pre mestá je „Daten in der Schweiz“ predajný argument. Odporúčanie: Pro projekt v Zürichu pri go-live, Paríž ako staging. Edge Functions nemajú Zürich región (beh najbližšie k používateľovi).</td><td>docs GDPR, PrivateLink, Regional invocations · <span class="m no">verify</span> zmena regiónu na mieste</td></tr>
+<tr><td>Prihlásenie</td><td>Prejsť z magic linku na <b>e-mail OTP kód</b> (link z mailu otvára iný prehliadač než nainštalovaná PWA); <code>shouldCreateUser:false</code> + pozvánky.</td><td>docs Passwordless</td></tr>
+<tr><td>Plánované úlohy</td><td><code>pg_cron</code> každých 5 min expiruje ponuky a emituje udalosť; nočne retencia a štatistiky; Edge Functions cez <code>pg_net</code> + Vault.</td><td>docs Cron, Schedule functions</td></tr>
+<tr><td>Správy</td><td><code>pgmq</code> fronta, dispatcher každú minútu; e-mail + push pri štarte, SMS len pre zrušenie tesne pred vyzdvihnutím, WhatsApp len ak ho odberatelia už používajú (Business API – overiť ceny a schvaľovanie šablón).</td><td>docs PGMQ · <span class="m no">verify</span> WhatsApp</td></tr>
+<tr><td>Identita</td><td>Roly v tabuľkách (okamžité odobratie), nie v JWT; výnimka: <code>platform_admin</code> claim cez Access Token Hook pre UI. Pozvánky s jednorazovým tokenom. Overenie UID cez Zefix. MFA povinné pre moderátorov mesta. SSO pre mestá až na žiadosť (Pro+).</td><td>docs RBAC, Hooks, MFA, SSO</td></tr>
+<tr><td>Bezpečnosť</td><td>13-bodový RLS checklist (v prílohe §10) s pgTAP testom, ktorý prejde <code>pg_policies</code> a padne na neobalenom <code>auth.uid()</code>. Telefón kuchyne viditeľný len protistrane <b>rezervovanej</b> ponuky (dnes každému schválenému odberateľovi).</td><td>docs RLS</td></tr>
+<tr><td>Ochrana údajov</td><td>revDSG: Datenschutzerklärung pri prvom prihlásení, jednostranový register spracovaní, DPA so Supabase; retencia: ponuky 30 d → anonymizácia, 24 mes. → zmazanie; udalosti bez PII navždy (hash-reťaz). <b>Nikdy</b> alergie ľudí – len alergény jedla.</td><td>docs GDPR · <span class="m no">verify</span> lehota Selbstkontrolle</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="naklady"><h2>7 · Náklady (odhad; USD podľa dokumentácie, CHF ≈ 0,85 × USD)</h2>
+<div class="tw"><table><thead><tr><th>Etapa</th><th>Plán a doplnky</th><th>USD/mes.</th><th>≈ CHF/mes.</th></tr></thead><tbody>
+<tr><td>Bern pilot</td><td>Free, Nano, SMTP len pre tím</td><td>0</td><td>0</td></tr>
+<tr><td>Bern live</td><td>Pro 25 + Micro 10 − 10 kredit + vlastná doména 10 + Resend free</td><td>≈ 35</td><td>≈ 30</td></tr>
+<tr><td>5 miest (~300 org, ~2 000 MAU)</td><td>Pro + Small 15 + doména + Resend ~20 (+ PITR 7 d 100 voliteľne)</td><td>≈ 60 (160 s PITR)</td><td>≈ 50–135</td></tr>
+<tr><td>50 miest, 2 krajiny (~3 000 org, ~20 000 MAU, 2 projekty)</td><td>Pro/Team + Medium 60 + staging + 2 domény + PITR 14 d 200 + log drain 60 + egress + SMS/WhatsApp</td><td>≈ 350–600 + správy</td><td>≈ 300–500 + správy</td></tr>
+</tbody></table></div>
+<p class="sub">Kvóty z dokumentácie: MAU 50 k Free / 100 k Pro; egress 5 GB / 250 GB; DB 500 MB / 8 GB; Realtime 2 mil. správ a 200 spojení / 5 mil. a 500; Edge 500 k / 2 mil. volaní. Ceny sa menia – <a href="doverit.html#arch">overiť na pricing stránke</a>.</p>
+</section>
+
+<section id="plan"><h2>8 · Plán vo fázach</h2>
+<p>Konvencie pre každú fázu: číslované migrácie v <code>db/</code> zrkadlené do <code>supabase/migrations/</code>; ku každej pgTAP test; rollback napísaný <b>pred</b> nasadením; „hotové“ = videné na skutočnom telefóne proti živému projektu. Nič z toho sa nestavia dnes – je to plán na tvoje schválenie.</p>
+<div class="phase">
+<div class="card"><span class="n">Fáza 0</span><h3>Bern pilot – nič, čo rozbije</h3><ul><li><code>002_hardening.sql</code>: obaliť helpery <code>(select …)</code>, pripnúť <code>status</code> v update politike, nahradiť vnorený EXISTS helperom, tabuľka <code>cities</code> s riadkom bern, <code>offers.city_id</code>, <code>profiles</code> von z realtime publikácie</li><li>pgTAP: odberateľ nenastaví picked; anon nič nevidí</li><li>Ops: rozhodnúť Zürich vs. Paríž; Pro + Resend ak sa hlási cudzí používateľ</li><li><b>Exit:</b> Advisor čistý, pgTAP zelený, jedna kuchyňa + jeden odberateľ dokončili rezerváciu na telefónoch</li></ul></div>
+<div class="card"><span class="n">Fáza 1</span><h3>Organizácie, mestá, pravidlá</h3><ul><li><code>003_orgs.sql</code> (tabuľky, backfill, trigger, nové politiky popri starých), <code>004_rulesets.sql</code> (seed CH + EU14, resolver, <code>app_bootstrap</code>), <code>005_drop_legacy_policies.sql</code> po dvoch týždňoch</li><li>App: ES moduly (bez zmeny správania), prahy z bootstrapu, org switcher za flagom, i18n do JSON</li><li><b>Exit:</b> každý profil má org + členstvo, nula prahov v kóde (grep guard), i18n 100 % de-CH</li></ul></div>
+<div class="card"><span class="n">Fáza 2</span><h3>Protokol, notifikácie, PWA</h3><ul><li><code>006_events.sql</code>, <code>007_storage.sql</code>, <code>008_queue.sql</code> (pgmq, push_subscriptions, cron), <code>009_realtime.sql</code> (broadcast)</li><li>Edge Functions: <code>dispatch</code>, <code>notify-offer</code>, <code>manifest</code></li><li>App: protokol z rulesetu, offline fronta, service worker, push opt-in</li><li><b>Exit:</b> úplné odovzdanie s teplotou a oboma potvrdeniami exportované a ukázané kontaktu z Lebensmittelkontrolle; push doručený na iOS PWA aj Androide</li></ul></div>
+<div class="card"><span class="n">Fáza 3</span><h3>Druhé mesto, white-label, štatistiky</h3><ul><li><code>010_city2.sql</code> – <b>len INSERT, žiadna zmena schémy</b> (to je test)</li><li><code>011_stats.sql</code> (<code>api_v1</code> pohľady, k-anonymita ≥ 5 org), <code>012_webhooks.sql</code></li><li>App: rozlíšenie mesta (subdoména → param → default), tokeny témy pri štarte, manifest na mesto</li><li><b>Exit:</b> druhé mesto onboardované moderátorom cez UI s nulou commitov; štatistiky konzumuje externá strana</li></ul></div>
+<div class="card"><span class="n">Fáza 4</span><h3>Druhá krajina</h3><ul><li><code>013_country.sql</code> (rulesets AT/DE, de-AT overlay), <code>014_legal_ids.sql</code></li><li>Rozhodnutie: ten istý projekt vs. nový podľa právneho regiónu (prenos dát, zmluva mesta, latencia)</li><li><b>Exit:</b> pilotná ponuka vo Viedni s AT pravidlami a formátmi bez forku kódu; právna kontrola AT Datenschutzerklärung</li></ul></div>
+</div>
+</section>
+
+<section id="doplnit"><h2>9 · Čo doplniť s odblokovanou sieťou</h2>
+<p>Tieto veci sa v session nedali otvoriť; sú aj v <a href="doverit.html#arch">zozname na doverenie, sekcia C</a>. Kým nie sú overené, čísla v tomto dokumente sú odhady.</p>
+<ol>
+<li>Supabase pricing (Pro/Team, spend cap, egress/GB, compute tabuľka) a stránka regiónov (Zürich <code>eu-central-2</code>, medzery vo funkciách).</li>
+<li>Realtime limits (kanály na spojenie, veľkosť správy, joins/s podľa plánu).</li>
+<li>Custom SMTP na Free pláne – povolené alebo len Pro.</li>
+<li>Web Push na iOS PWA – minimálna verzia, nutnosť inštalácie, akcie/odznaky (stav 2026).</li>
+<li>Zefix API (endpoint, registrácia, podmienky, kvóty) a špecifikácia kontrolného čísla UID (eCH-0097).</li>
+<li>WhatsApp Business Cloud API (schvaľovanie šablón, cena za konverzáciu v CH/AT), Twilio CH sender ID, Signal (bez oficiálneho API).</li>
+<li>revDSG: adekvátnosť EU (EDÖB), ohlasovanie incidentov, prah registra spracovaní; lehota uchovávania Selbstkontrolle (HyV) a AT ekvivalent.</li>
+<li>Supabase DPA a zoznam subprocesorov.</li>
+<li>PostgREST CSV výstup a limity veľkosti.</li>
+<li>Import maps a <code>Intl.RelativeTimeFormat</code> – minimálne verzie Safari pre telefóny pilotu.</li>
+<li>Retencia Postgres logov podľa plánu (rozhodnutie o pgaudit).</li>
+<li>Či sa dá zmeniť región projektu bez nového projektu.</li>
+</ol>
+</section>
+
+<section id="priloha" class="annex"><h2>10 · Technická príloha – úplné výskumné poznámky (EN)</h2>
+<p class="sub">*Written 2026-09-25. Grounded on the current repo (`/home/user/uebrig/db/001_schema.sql`, 164 lines; `app/index.html`, 43 844 B / 392 lines; `app/config.js`; `README.md`) and on 26 Supabase documentation pages retrieved via `search_docs`. Every number that comes from a doc is cited inline. Anything not covered by a doc is marked **[experience, verify]**. Prices are quoted in USD as the docs give them; CHF conversions are estimates.*</p>
+<h2>0. Where we stand (measured, not remembered)</h2>
+<ul>
+<li><strong>Schema:</strong> two tables (<code>profiles</code> 1:1 to <code>auth.users</code>, <code>offers</code> keyed by <code>kitchen_id → profiles.id</code>), two enums (<code>role_t</code> = kitchen/taker/admin, <code>offer_status_t</code>), three SECURITY DEFINER RPCs with <code>FOR UPDATE</code> row-lock (<code>reserve_offer</code>, <code>release_offer</code>, <code>mark_picked</code>), helpers <code>my_role()</code> / <code>i_am_approved()</code> moved to schema <code>private</code> on 25.9. RLS on both tables; both tables in the <code>supabase_realtime</code> publication.</li>
+<li><strong>App:</strong> single file, supabase-js 2.86.0 UMD from jsDelivr, <code>signInWithOtp</code> magic link, <code>postgres_changes</code> on <code>offers</code> with no filter → reloads board on any change, DE/FR/EN dictionaries in one object <code>I18N</code>, <code>lang</code> persisted in <code>localStorage</code>, <code>Notification</code> API only while the page is open.</li>
+<li><strong>Platform:</strong> Free plan, <code>eu-west-3</code> (Paris), Nano compute. Project pauses after 7 days of low activity on Free (<a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a>, <a href="https://supabase.com/docs/guides/platform/free-project-pausing" rel="noopener" target="_blank">Project pausing</a>); restorable for 90 days.</li>
+<li><strong>Things in the current schema that the roadmap below must fix (found while reading, not assumed):</strong></li>
+<li><code>offers_update_kitchen</code> <code>WITH CHECK</code> only pins <code>reserved_by</code>; a kitchen can set <code>status='picked'</code> or <code>'expired'</code> directly, bypassing the RPC state machine. Add <code>status</code> to the check (only <code>open→cancelled</code> allowed via direct update) or route cancel through an RPC too.</li>
+<li><code>profiles_select_counterpart</code> runs a correlated <code>EXISTS</code> on <code>offers</code> — which itself has RLS — inside a policy on <code>profiles</code>. Nested RLS is exactly the pattern the RLS performance guide says to replace with a SECURITY DEFINER helper (<a href="https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv" rel="noopener" target="_blank">RLS performance</a>, tip 4).</li>
+<li>Policies call <code>public.i_am_approved()</code> / <code>public.my_role()</code> bare, not as <code>(select …)</code>. Lint <code>0003_auth_rls_initplan</code> will flag this; wrapping caches the result per statement (<a href="https://supabase.com/docs/guides/observability/advisors?queryGroups=lint&amp;lint=0003_auth_rls_initplan" rel="noopener" target="_blank">Lint 0003</a>).</li>
+<li><code>lang in ('de','fr','it','en')</code> and <code>allergens &lt;@ array[1..14]</code> are hard-coded jurisdiction facts — both move to the ruleset tables in §3.</li>
+<li><code>address text</code> on both tables is the only location concept; §2 replaces it with <code>sites</code>.</li>
+<li><code>profiles</code> in the realtime publication means every profile change fans out an RLS check per subscriber (Postgres Changes limitation, see §5). Harmless at Bern scale, remove before city 2.</li>
+</ul>
+<hr />
+<h2>1. Tenancy model</h2>
+<h3>Recommendation</h3>
+<p>Three-level hierarchy, <strong>one Supabase project, shared schema, tenant columns on every row</strong>:</p>
+<pre><code>cities (Standort)  1─n  organisations  1─n  sites (Küche / Abgabestelle)
+                              1─n  memberships (user × org × role)
+offers.site_id → sites;  offers.org_id, offers.city_id denormalised (trigger-filled)
+handover_events.offer_id → offers;  + org_id, city_id denormalised
+</code></pre>
+<ul>
+<li><code>cities</code> <strong>is a table with config</strong>: <code>id</code>, <code>slug</code> (<code>bern</code>, <code>zuerich</code>, <code>wien</code>), <code>country</code> (ISO-3166-1), <code>timezone</code> (IANA), <code>default_locale</code>, <code>locales text[]</code>, <code>currency</code>, <code>ruleset_key</code> (→ §3), <code>theme jsonb</code> (→ §9), <code>features jsonb</code> (feature flags per city), <code>status</code> (<code>planned|pilot|live|closed</code>), <code>centre geography(Point)</code>, <code>bbox</code>.</li>
+<li><strong>Every business row carries both <code>org_id</code> and <code>city_id</code>.</strong> <code>org_id</code> is the security boundary (RLS), <code>city_id</code> is the operational boundary (moderation, stats, partitioning, white-label). Both are set by a <code>BEFORE INSERT</code> trigger from <code>site_id</code>, never trusted from the client.</li>
+<li>RLS authorisation goes through <strong>two SECURITY DEFINER helpers in <code>private</code></strong>, each wrapped in <code>(select …)</code> in the policy:</li>
+</ul>
+<pre><code class="language-sql">create function private.my_org_ids() returns uuid[]
+language sql stable security definer set search_path = '' as $$
+  select coalesce(array_agg(org_id), '{}') from public.memberships
+  where user_id = (select auth.uid()) and status = 'active' $$;
+
+create function private.my_city_roles() returns table(city_id uuid, role text)
+language sql stable security definer set search_path = '' as $$
+  select city_id, role from public.city_roles where user_id = (select auth.uid()) $$;
+
+-- policy shape used everywhere:
+create policy offers_select_org on public.offers for select to authenticated
+  using ( org_id = any (array(select private.my_org_ids())) );
+</code></pre>
+<p>The <code>= any(array(select fn()))</code> form is the one the docs benchmark at 2–24 ms on a 1 M-row table <strong>with an index on the tenant column</strong>, versus timeouts without the wrap (<a href="https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv" rel="noopener" target="_blank">RLS performance</a>, section "Added example"). So: <code>create index on offers (org_id)</code>, <code>(city_id, status, pickup_to)</code>, <code>(site_id)</code>.
+- Client queries always add the filter the policy already implies (<code>.eq('city_id', …)</code>), because "policies are implicit where clauses" and the planner needs the explicit filter (<a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide → Add filters</a>).
+- Policies always name <code>to authenticated</code> (or <code>to anon</code> explicitly for the public stats views) — stops <code>anon</code> evaluation before any function call (<a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide → Specify roles</a>).</p>
+<h3>Why not schema-per-tenant or project-per-city</h3>
+<ul>
+<li>The docs do not describe schema-per-tenant as a Supabase pattern; the multi-tenant material that exists (SAML <code>sso_provider_id</code> per tenant with restrictive RLS, pgTAP "complex organizations" example) is all <strong>shared-schema, tenant-column</strong> (<a href="https://supabase.com/docs/guides/auth/enterprise-sso/auth-sso-saml" rel="noopener" target="_blank">SSO SAML → RLS</a>, <a href="https://supabase.com/docs/guides/local-development/testing/pgtap-extended" rel="noopener" target="_blank">Advanced pgTAP</a>).</li>
+<li>Project-per-city multiplies fixed cost: "Each project you launch increases your monthly Compute costs"; compute credits cover one Micro/Nano project only (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/compute" rel="noopener" target="_blank">Compute usage</a>). It also breaks cross-city users (an NGO active in Bern and Biel), cross-city stats, and shared rulesets.</li>
+<li>Project-per-<strong>country</strong> stays on the table for data-residency reasons only (§6); the schema must therefore never assume a single <code>country</code> — it is a column on <code>cities</code>, and all config resolves <code>city → country → default</code>.</li>
+</ul>
+<h3>Trade-offs</h3>
+<ul>
+<li>Denormalised <code>city_id</code>/<code>org_id</code> on child rows = redundancy guarded by triggers and a pgTAP test that asserts <code>offers.city_id = sites.city_id</code> for every row. Accepted: it keeps every policy a single-column predicate.</li>
+<li>Array-of-orgs RLS degrades if a user belongs to thousands of orgs (docs: rethink above ~1 000–10 000 list items). Our users belong to 1–5 orgs. City moderators do not get orgs in the array; they get a separate <code>city_roles</code> predicate.</li>
+<li>A user in company mode vs personal mode: no "personal" context exists in Übrig (unlike Sautero); every user acts for an org. Individuals (a private taker) get a one-person org of <code>kind='individual'</code>. Keeps the model to one path.</li>
+</ul>
+<h3>Migration path from today's profiles/offers (zero-downtime, dual-write)</h3>
+<ol>
+<li><strong>Additive migration (002):</strong> create <code>cities</code> (seed <code>bern</code>), <code>organisations</code>, <code>sites</code>, <code>memberships</code>, <code>city_roles</code>. Add nullable <code>org_id</code>, <code>site_id</code>, <code>city_id</code> to <code>offers</code>. Add <code>org_id</code> to <code>profiles</code> (nullable).</li>
+<li><strong>Backfill in the same transaction:</strong> one org per existing profile (<code>name = profiles.org</code>, <code>kind = case role when 'kitchen' then 'kitchen' else 'taker' end</code>, <code>status = case approved when true then 'approved' else 'pending'</code>), one membership (<code>owner</code>), one site per kitchen profile from <code>profiles.address</code> (geocode later, <code>location</code> nullable at first), <code>offers.site_id/org_id/city_id</code> from the kitchen's org; existing <code>admin</code> profiles → <code>city_roles (bern, 'moderator')</code>.</li>
+<li><strong>Compatibility layer:</strong> keep <code>kitchen_id</code> and <code>reserved_by</code> as-is (they are still the <em>user</em> who acted — useful in the event log). Trigger <code>offers_fill_tenant</code> derives <code>org_id/site_id/city_id</code> when a legacy client inserts with only <code>kitchen_id</code> (from the user's single membership). Old app keeps working unchanged.</li>
+<li><strong>New policies live alongside old ones</strong> (permissive policies OR together). Add the org-based policies, run pgTAP proving old-shape and new-shape clients see identical rows, then drop the <code>kitchen_id = auth.uid()</code> policies in migration 004.</li>
+<li><strong>Feature flag:</strong> <code>cities.features-&gt;&gt;'orgs_ui'</code> read once at boot via RPC <code>app_bootstrap(city_slug)</code>; the new UI (org switcher, site picker) renders only when true. Flip for Bern after pilot users are migrated.</li>
+<li><strong>Finally (005, DESTRUCTIVE, explicit approval):</strong> <code>set not null</code> on <code>offers.org_id/site_id/city_id</code>, drop <code>profiles.org/address</code>, keep <code>profiles.contact/phone/lang</code> as the <em>person</em> record.</li>
+</ol>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide</a> · <a href="https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv" rel="noopener" target="_blank">RLS performance troubleshooting</a> · <a href="https://supabase.com/docs/guides/observability/advisors?queryGroups=lint&amp;lint=0003_auth_rls_initplan" rel="noopener" target="_blank">Lint 0003</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/compute" rel="noopener" target="_blank">Compute usage</a> · <a href="https://supabase.com/docs/guides/local-development/testing/pgtap-extended" rel="noopener" target="_blank">Advanced pgTAP (multi-tenant example)</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Run <code>explain analyze</code> under <code>set local role authenticated</code> on <code>offers</code> after migration 004 with a synthetic 100 k-row load (docs give the recipe) — before city 2, not after.</li>
+</ul>
+<hr />
+<h2>2. Data model additions</h2>
+<h3>Recommendation</h3>
+<pre><code class="language-sql">-- organisations
+create table public.organisations (
+  id uuid primary key default gen_random_uuid(),
+  city_id uuid not null references public.cities(id),          -- home city
+  kind text not null check (kind in ('kitchen','taker','both','individual')),
+  name text not null check (length(name) between 2 and 120),
+  legal_id text,                                               -- CHE-123.456.789 (UID) / FN / SIREN…
+  legal_id_verified_at timestamptz, legal_id_source text,      -- 'zefix' | 'manual'
+  status text not null default 'pending' check (status in ('pending','approved','blocked')),
+  created_at timestamptz not null default now()
+);
+create table public.sites (
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null references public.organisations(id) on delete cascade,
+  city_id uuid not null references public.cities(id),
+  name text not null, address_line text not null, postal_code text, locality text,
+  country char(2) not null,
+  location extensions.geography(Point, 4326),                  -- PostGIS
+  pickup_notes text check (length(pickup_notes) &lt;= 300),
+  is_active boolean not null default true
+);
+create index sites_geo on public.sites using gist (location);
+create table public.memberships (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  org_id uuid not null references public.organisations(id) on delete cascade,
+  role text not null check (role in ('owner','staff')),
+  status text not null default 'active' check (status in ('invited','active','removed')),
+  primary key (user_id, org_id)
+);
+create table public.city_roles (
+  user_id uuid references auth.users(id) on delete cascade,
+  city_id uuid references public.cities(id) on delete cascade,
+  role text not null check (role in ('moderator','platform_admin')),
+  primary key (user_id, city_id)
+);
+</code></pre>
+<p>PostGIS: enable into the <code>extensions</code> schema, store <code>geography(Point)</code>, GIST index, insert as <code>'POINT(lon lat)'</code> (longitude first), expose nearest-neighbour via an RPC using <code>&lt;-&gt;</code> — the docs' <code>nearby_restaurants</code> pattern verbatim (<a href="https://supabase.com/docs/guides/database/extensions/postgis" rel="noopener" target="_blank">PostGIS</a>). Note the doc's warning: PostGIS ≥ 2.3 is <strong>not relocatable</strong> between schemas — pick <code>extensions</code> on first enable.</p>
+<p><strong>Offers:</strong> add <code>site_id</code>, <code>org_id</code>, <code>city_id</code>, <code>ruleset_id</code> (snapshot of the ruleset in force when published, §3), replace <code>allergens smallint[]</code> check with a FK-like check against the ruleset's allergen list (trigger), keep <code>kitchen_id</code>/<code>reserved_by</code> as <em>actor</em> columns.</p>
+<p><strong>Handover protocol as append-only event log:</strong></p>
+<pre><code class="language-sql">create table public.handover_events (
+  id bigint generated always as identity primary key,
+  offer_id uuid not null references public.offers(id),
+  org_id uuid not null, city_id uuid not null,                  -- trigger-filled
+  event_type text not null check (event_type in
+    ('published','reserved','released','handed_over','received','temp_checked',
+     'cancelled','expired','disputed','note')),
+  actor_id uuid not null default auth.uid(),
+  actor_org_id uuid not null,                                   -- whose behalf
+  occurred_at timestamptz not null default now(),
+  payload jsonb not null default '{}',                          -- temp_c, container_count, signature_ref, allergens_confirmed, photo_path
+  ruleset_id uuid not null,                                     -- rules in force at that moment
+  prev_hash bytea, hash bytea not null,                         -- sha256(prev_hash || row) — tamper-evidence
+  constraint payload_valid check (extensions.jsonb_matches_schema(
+    '{&quot;type&quot;:&quot;object&quot;,&quot;properties&quot;:{&quot;temp_c&quot;:{&quot;type&quot;:&quot;number&quot;},&quot;container_count&quot;:{&quot;type&quot;:&quot;integer&quot;,&quot;minimum&quot;:0}},&quot;additionalProperties&quot;:true}', payload))
+);
+revoke update, delete, truncate on public.handover_events from authenticated, anon;
+create trigger handover_events_immutable before update or delete on public.handover_events
+  for each row execute function private.raise_immutable();
+</code></pre>
+<ul>
+<li>Inserts only via RPCs (<code>record_handover(p_offer, p_type, p_payload)</code>), which also advance <code>offers.status</code>; the existing RPCs are rewritten to <em>emit an event</em> and derive status. <code>offers.status</code> becomes a cache of the last event — cheap to read, always reproducible.</li>
+<li><code>pg_jsonschema</code> validates the <code>payload</code> per <code>event_type</code> (the check constraint pattern is exactly what the docs show) (<a href="https://supabase.com/docs/guides/database/extensions/pg_jsonschema" rel="noopener" target="_blank">pg_jsonschema</a>). Keep the schema in a <code>event_schemas</code> table keyed by <code>(event_type, version)</code> and validate in the trigger so schemas can evolve without <code>ALTER TABLE</code>.</li>
+<li>Signatures: store a hash of the signature image + path in a <strong>private</strong> Storage bucket <code>protocols</code>, folder <code>org_id/offer_id/…</code>, RLS on <code>storage.objects</code> using <code>(storage.foldername(name))[1] = any(array(select private.my_org_ids()::text[]))</code> (<a href="https://supabase.com/docs/guides/storage/security/access-control" rel="noopener" target="_blank">Storage access control</a>, <a href="https://supabase.com/docs/guides/storage/schema/helper-functions" rel="noopener" target="_blank">helper functions</a>). Private buckets need signed URLs or a JWT download (<a href="https://supabase.com/docs/guides/storage/buckets/fundamentals" rel="noopener" target="_blank">Buckets</a>). Both counterparties (kitchen org and taker org) need read → the taker's org gets a row in <code>handover_access(offer_id, org_id)</code> written by the <code>reserved</code> event, and the storage policy joins through it via a <code>private.</code> helper.</li>
+<li>Both parties are food-business operators under CH law (README: "Bis zur Übergabe haftet der Betrieb") — the <em>receiving</em> side must be able to prove what it took over. Therefore the <code>received</code> event is written by the taker, the <code>handed_over</code> by the kitchen; a handover is "complete" only with both. Export (§9) renders both.</li>
+</ul>
+<p><strong>Audit trail — three layers, each for a different question:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Tool</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"What happened to this offer, legally?"</td>
+<td><code>handover_events</code> (own table)</td>
+<td>Business audit, exported to the parties, retained per §10</td>
+</tr>
+<tr>
+<td>"Who changed which row, including admins?"</td>
+<td>own <code>audit_log</code> table filled by generic trigger on <code>organisations</code>, <code>memberships</code>, <code>city_roles</code>, <code>rulesets</code> (old/new jsonb, <code>auth.uid()</code>, <code>current_setting('request.headers')::json-&gt;&gt;'x-forwarded-for'</code>)</td>
+<td>Cheap, queryable, RLS-protected (moderators only)</td>
+</tr>
+<tr>
+<td>"Which role ran which SQL against sensitive objects?"</td>
+<td><code>pgaudit</code> object logging via a dedicated no-login role granted <code>select</code> on <code>profiles</code>, <code>handover_events</code></td>
+<td>Goes to Postgres logs, not a table; retention follows plan log retention (<strong><span class="m no">verify</span></strong> per-plan log retention) (<a href="https://supabase.com/docs/guides/database/extensions/pgaudit" rel="noopener" target="_blank">PGAudit</a>)</td>
+</tr>
+<tr>
+<td>Long-term log archive</td>
+<td>Log Drains (Pro+, $60/mo per drain + events)</td>
+<td>Only when a funder/regulator asks; "public alpha" status (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/log-drains" rel="noopener" target="_blank">Log drain usage</a>, <a href="https://supabase.com/docs/guides/getting-started/features" rel="noopener" target="_blank">Features status</a>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Do not use <code>pgaudit</code> session mode with <code>all</code> — the docs warn about volume; object mode on two tables is enough.</p>
+<h3>Trade-offs</h3>
+<ul>
+<li>Event-sourcing the offer state means two writes per transition; at ≤ 100 offers/day/city this is noise. The gain — a legally usable, hash-chained record — is the product.</li>
+<li><code>handover_events</code> grows forever by design; §10 defines what is anonymised (payload PII, actor names) vs. kept (temperatures, times, counts).</li>
+<li>PostGIS geography on Nano compute is fine for k-NN over hundreds of sites; heavy isochrone/routing stays out (the map research already uses OSM offline).</li>
+</ul>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/database/extensions/postgis" rel="noopener" target="_blank">PostGIS</a> · <a href="https://supabase.com/docs/guides/database/extensions/pg_jsonschema" rel="noopener" target="_blank">pg_jsonschema</a> · <a href="https://supabase.com/docs/guides/storage/security/access-control" rel="noopener" target="_blank">Storage access control</a> · <a href="https://supabase.com/docs/guides/storage/schema/helper-functions" rel="noopener" target="_blank">Storage helpers</a> · <a href="https://supabase.com/docs/guides/storage/buckets/fundamentals" rel="noopener" target="_blank">Buckets</a> · <a href="https://supabase.com/docs/guides/database/extensions/pgaudit" rel="noopener" target="_blank">PGAudit</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/log-drains" rel="noopener" target="_blank">Log drains</a> · <a href="https://supabase.com/docs/guides/database/postgres/postgres-log-config" rel="noopener" target="_blank">Postgres log config</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Postgres log retention per plan (needed to decide whether pgaudit alone satisfies a cantonal inspector).</li>
+<li>Whether a hash-chained DB record is accepted as "Selbstkontrolle"-documentation by the Bern Kantonales Laboratorium — legal question, not technical.</li>
+</ul>
+<hr />
+<h2>3. Configuration per jurisdiction (rulesets)</h2>
+<h3>Recommendation</h3>
+<p>Table-driven, versioned, effective-dated, resolved <code>city → country → global</code>:</p>
+<pre><code class="language-sql">create table public.rulesets (
+  id uuid primary key default gen_random_uuid(),
+  scope text not null check (scope in ('global','country','city')),
+  country char(2), city_id uuid references public.cities(id),
+  version int not null,
+  effective_from date not null, effective_to date,
+  rules jsonb not null,                       -- validated by pg_jsonschema against ruleset_schema v1
+  source text, note text,                     -- &quot;LMG/HyV Art. …&quot;, link
+  created_by uuid, created_at timestamptz default now(),
+  check ((scope='country') = (country is not null) or scope='city'),
+  check ((scope='city') = (city_id is not null))
+);
+create unique index rulesets_active on public.rulesets (scope, coalesce(country,''), coalesce(city_id,'00000000-0000-0000-0000-000000000000'), version);
+
+create table public.allergen_lists (
+  code text not null,                          -- 'EU14' | 'US9' | 'CH14'
+  version int not null,
+  items jsonb not null,                        -- [{&quot;id&quot;:1,&quot;key&quot;:&quot;gluten&quot;,&quot;labels&quot;:{&quot;de-CH&quot;:&quot;Glutenhaltiges Getreide&quot;,&quot;fr-CH&quot;:&quot;…&quot;}}]
+  effective_from date not null, effective_to date,
+  primary key (code, version)
+);
+</code></pre>
+<p><code>rules</code> example (CH):</p>
+<pre><code class="language-json">{ &quot;hot_min_c&quot;: 65, &quot;cold_max_c&quot;: 5, &quot;cool_down_max_minutes&quot;: 120, &quot;reheat_core_min_c&quot;: 72,
+  &quot;allergen_list&quot;: &quot;EU14&quot;, &quot;max_hours_after_made&quot;: 24, &quot;require_temp_at_handover&quot;: true,
+  &quot;require_receiver_signature&quot;: true, &quot;label_fields&quot;: [&quot;dish&quot;,&quot;made_at&quot;,&quot;use_by&quot;,&quot;allergens&quot;,&quot;kitchen&quot;] }
+</code></pre>
+<ul>
+<li><strong>Resolver</strong> <code>private.active_ruleset(p_city uuid, p_at timestamptz default now())</code> merges global ← country ← city (<code>jsonb ||</code>, later wins) among rows where <code>effective_from &lt;= p_at::date and (effective_to is null or effective_to &gt; p_at::date)</code>. Returned <code>id</code> of the most specific row is what <code>offers.ruleset_id</code> / <code>handover_events.ruleset_id</code> snapshot.</li>
+<li><strong>Client never hard-codes thresholds.</strong> <code>app_bootstrap(city_slug)</code> (anon-callable, returns no PII) returns <code>{city, ruleset, allergens, locales, theme, features}</code>; the Freigabe-Check renders its seven questions from <code>rules</code>. The existing README hygiene text ("heiss ≥ 65 °C oder innert 2 h auf ≤ 5 °C … ≥ 72 °C Kern") becomes the seed row for <code>country='CH'</code>.</li>
+<li><strong>Schema of <code>rules</code> is itself versioned</strong> (<code>ruleset_schemas(version, schema jsonb)</code>), checked in a trigger with <code>jsonb_matches_schema</code> — a new key (e.g. US "time as public health control" 4 h rule) is a new schema version, not a code change (<a href="https://supabase.com/docs/guides/database/extensions/pg_jsonschema" rel="noopener" target="_blank">pg_jsonschema</a>).</li>
+<li>Currency, date formats, first weekday come from <code>cities.default_locale</code> + <code>Intl</code>, not from rulesets — they are presentation, not law.</li>
+<li>Editing rulesets: moderators with <code>role='platform_admin'</code> only; every change audited (§2 audit_log); <code>effective_from</code> must be ≥ today + 1 for non-admins to stop retroactive rewriting of what was in force.</li>
+</ul>
+<h3>Why</h3>
+<p>EU-14 = CH-14 today, US has 9 (sesame added 2023), Austria adds nothing but different inspection wording; temperature thresholds differ (CH HyV 65 °C hot vs. EU-common 63 °C in UK, 60 °C in parts of the US). Snapshotting <code>ruleset_id</code> on the event is what makes a 2027 export say "at the time, the rule was X".</p>
+<h3>Trade-offs</h3>
+<ul>
+<li>jsonb rules are less type-safe than columns; the pg_jsonschema check plus a pgTAP test per seed row compensates. Columns would force a migration per jurisdiction — the thing we are avoiding.</li>
+<li>Merge semantics (<code>||</code> is shallow) — keep <code>rules</code> flat by convention; the schema enforces flatness (<code>"additionalProperties": false</code>, no nested objects except <code>label_fields</code>).</li>
+</ul>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/database/extensions/pg_jsonschema" rel="noopener" target="_blank">pg_jsonschema</a> · <a href="https://supabase.com/docs/guides/database/json" rel="noopener" target="_blank">Managing JSON</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Exact statutory thresholds per target jurisdiction (CH HyV Anhang; AT LMSVG; DE LMHV; US FDA Food Code 2022) — legal sources, unblocked network needed.</li>
+</ul>
+<hr />
+<h2>4. i18n architecture</h2>
+<h3>Recommendation</h3>
+<ul>
+<li><strong>Source locale: <code>de-CH</code></strong> (ß-free, «guillemets», <code>Fr.</code>/<code>CHF</code>). Every key is authored in de-CH first; <code>de-DE</code>, <code>de-AT</code> are <em>overlays</em> containing only keys that differ (ß, «Jause», currency), resolved by fallback chain <code>de-AT → de-CH → en</code>.</li>
+<li><strong>One JSON file per locale</strong>, <code>app/i18n/de-CH.json</code>, <code>fr-CH.json</code>, <code>it-CH.json</code>, <code>en.json</code>, loaded on demand with <code>fetch()</code> and cached by the service worker (§5). Keys are namespaced (<code>board.reserve</code>, <code>check.q1</code>, <code>protocol.temp_label</code>); values may contain ICU-lite placeholders <code>{count}</code> and plural blocks handled in ~40 lines of vanilla JS:</li>
+</ul>
+<pre><code class="language-js">const pr = new Intl.PluralRules(locale);
+function t(key, vars = {}) {
+  let s = dict[key] ?? fallback[key] ?? key;
+  if (typeof s === 'object') s = s[pr.select(vars.count)] ?? s.other;   // {&quot;one&quot;:&quot;{count} Portion&quot;,&quot;other&quot;:&quot;{count} Portionen&quot;}
+  return s.replace(/\{(\w+)\}/g, (_, k) =&gt; vars[k] ?? '');
+}
+const fmtDT   = new Intl.DateTimeFormat(locale, { timeZone: city.timezone, dateStyle: 'short', timeStyle: 'short' });
+const fmtRel  = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });   // &quot;in 2 Std.&quot;
+const fmtNum  = new Intl.NumberFormat(locale, { style: 'unit', unit: 'celsius' });
+</code></pre>
+<p><code>Intl.PluralRules</code>, <code>DateTimeFormat</code>, <code>RelativeTimeFormat</code>, <code>NumberFormat</code> (unit style) and <code>ListFormat</code> are available in all evergreen browsers and iOS Safari; no library needed. <span class="m no">experience, verify</span> exact minimum iOS version for <code>RelativeTimeFormat</code> (Safari 14).
+- <strong>Time zones come from <code>cities.timezone</code></strong>, never from the device: a Vienna moderator looking at Bern must see Bern's pickup window. All DB timestamps are <code>timestamptz</code>; formatting is the only place a zone appears.
+- <strong>Locale-bearing data in DB:</strong> <code>allergen_lists.items[].labels</code> and <code>cities.name_i18n</code> are jsonb maps keyed by BCP-47; the client picks <code>labels[locale] ?? labels[base] ?? labels['de-CH']</code>. User-generated text (dish names, notes) is not translated — it is shown as typed, with the offer's <code>lang</code> tag for <code>lang=</code> attributes.
+- <strong>Translation workflow:</strong> <code>scripts/i18n_extract.py</code> scans <code>app/**/*.js</code> for <code>t('…')</code> and <code>data-i18n</code> and fails CI if a key is missing in <code>de-CH.json</code>; missing keys in other locales are listed, not fatal, until release. Machine translation: an Edge Function <code>translate</code> (Claude via the existing proxy pattern, or DeepL) writes candidates into <code>translations_review(key, locale, mt_text, status)</code>; a reviewer accepts in a tiny admin view; accepted rows are exported back into the JSON files by script and committed — <strong>the repo, not the DB, is the source of truth for UI strings</strong> (DB holds only per-city overrides such as the city's own greeting).
+- <strong>Coverage meter</strong> runs in pre-commit (lesson from Sautero: a meter that only runs at session close protects nothing).
+- <strong>RTL readiness now, cheaply:</strong> <code>&lt;html lang dir&gt;</code> set at boot from locale; CSS uses logical properties only (<code>margin-inline-start</code>, <code>padding-inline</code>, <code>inset-inline-end</code>, <code>text-align: start</code>); no <code>left/right</code> in the stylesheet (a lint grep). Icons that imply direction (arrows) get <code>[dir=rtl] &amp; { transform: scaleX(-1) }</code>. Nothing else is needed until an RTL locale is actually planned.</p>
+<h3>Trade-offs</h3>
+<ul>
+<li>Hand-rolled ICU subset vs. a library (i18next, FormatJS): the subset covers plural + placeholders, which is 100 % of current strings. Ordinal/select/nested plural would justify FormatJS later; keep the JSON shape FormatJS-compatible (<code>{count, plural, one {…} other {…}}</code> can be generated from our object form) so the swap is a build step, not a rewrite.</li>
+<li>Lazy-loading dictionaries adds one request on first run; the service worker precaches the default locale of the city.</li>
+</ul>
+<h3>Sources</h3>
+<p>No Supabase doc applies; browser-platform knowledge <span class="m no">experience, verify</span> for Safari/iOS minimums.</p>
+<hr />
+<h2>5. Frontend architecture</h2>
+<h3>Recommendation</h3>
+<p><strong>Stay buildless. Leave the single file. Move to ES modules with an import map.</strong></p>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{ &quot;imports&quot;: {
+  &quot;@supabase/supabase-js&quot;: &quot;https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.86.0/+esm&quot;,
+  &quot;app/&quot;: &quot;./js/&quot; } }
+&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;./js/main.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<ul>
+<li>Module layout: <code>js/main.js</code> (boot, router), <code>js/sb.js</code> (client, session), <code>js/i18n.js</code>, <code>js/config.js</code> (bootstrap payload), <code>js/views/{board,mine,offer,protocol,admin}.js</code>, <code>js/lib/{dom,fmt,geo}.js</code>, <code>js/sw-register.js</code>. No bundler, no TypeScript — but <strong>JSDoc + <code>// @ts-check</code> + <code>tsc --noEmit</code> in CI</strong> using types generated by <code>supabase gen types --lang typescript</code> gives compile-time column checking for free (<a href="https://supabase.com/docs/guides/api/rest/generating-types" rel="noopener" target="_blank">Generating types</a>). Rule 9 ("never write a name you have not read") becomes machine-enforced.</li>
+<li>Pin the supabase-js version and add <code>integrity=</code> SRI on the CDN import; or vendor the ESM build into <code>app/vendor/</code> to remove the CDN from the trust chain and the network-call check in the deploy workflow. <strong>[experience]</strong> vendoring is preferable for a PWA that must work offline.</li>
+<li><strong>PWA:</strong> <code>manifest.webmanifest</code> (per-city <code>name</code>/<code>theme_color</code> served via a tiny Edge Function or generated per city at build time — see §9), service worker with three strategies: precache app shell + default dictionary; network-first with cache fallback for <code>app_bootstrap</code>; <strong>never cache authenticated data API responses</strong> (RLS-scoped, per-user). Offline <em>reads</em> = last board snapshot in IndexedDB rendered with an "offline since 12:03" banner. Offline <em>writes</em> = only <code>handover_events</code> (the protocol is filled in cellars and loading bays): queue to IndexedDB, replay via Background Sync where available, else on next <code>online</code> event; events carry a client-generated <code>client_event_id uuid</code> unique index for idempotent replay.</li>
+<li><strong>Realtime → notifications, two tiers:</strong></li>
+<li><em>In-app live list</em> (page open): replace the unfiltered <code>postgres_changes</code> with <strong>Broadcast from the database</strong> — a trigger on <code>offers</code> calls <code>realtime.broadcast_changes('city:' || new.city_id, …)</code>; clients join <code>city:&lt;id&gt;</code> as a <strong>private</strong> channel; authorisation is one RLS policy on <code>realtime.messages</code> checking <code>realtime.topic()</code> against the user's cities. This is the docs' recommended method "for scalability and security", because Postgres Changes runs one RLS read per subscriber per change and is single-threaded (<a href="https://supabase.com/docs/guides/realtime/subscribing-to-database-changes" rel="noopener" target="_blank">Subscribing to changes</a>, <a href="https://supabase.com/docs/guides/realtime/postgres-changes" rel="noopener" target="_blank">Postgres Changes → Limitations</a>, <a href="https://supabase.com/docs/guides/realtime/authorization" rel="noopener" target="_blank">Realtime authorization</a>). Broadcast Authorization is "public beta" (<a href="https://supabase.com/docs/guides/getting-started/features" rel="noopener" target="_blank">Features</a>); messages are stored in <code>realtime.messages</code> for 3 days and replayable (<code>replay.since</code>, max 25) — enough to catch up after a reconnect (<a href="https://supabase.com/docs/guides/realtime/broadcast" rel="noopener" target="_blank">Broadcast</a>). Free quota: 2 M messages, 200 peak connections; Pro 5 M / 500 (<a href="https://supabase.com/docs/guides/realtime/pricing" rel="noopener" target="_blank">Realtime pricing</a>).</li>
+<li><em>Page closed</em> (the real need for takers): <strong>Web Push</strong> via an Edge Function. <code>push_subscriptions(user_id, org_id, city_id, endpoint, p256dh, auth, ua, created_at)</code> with RLS <code>user_id = (select auth.uid())</code>; a Database Webhook on <code>offers</code> INSERT (a <code>pg_net</code> trigger, asynchronous) calls <code>functions/v1/notify-offer</code>, which selects subscribers in the same <code>city_id</code> with <code>kind in ('taker','both')</code>, filters by the org's preferences (veg/hot/pork radius), sends VAPID-signed pushes, deletes 404/410 endpoints (<a href="https://supabase.com/docs/guides/database/webhooks" rel="noopener" target="_blank">Database webhooks</a>, <a href="https://supabase.com/docs/guides/database/extensions/pg_net" rel="noopener" target="_blank">pg_net</a>). VAPID private key in Edge Function secrets. Edge Function limits: 256 MB, 2 s CPU, 150 s wall on Free / 400 s paid, ports 25/587 blocked (<a href="https://supabase.com/docs/guides/functions/limits" rel="noopener" target="_blank">Limits</a>) — fan-out of a few hundred pushes fits; beyond that, queue (§6).</li>
+<li><strong>Install prompt:</strong> capture <code>beforeinstallprompt</code>, show a "Zum Home-Bildschirm" card after the second visit; on iOS show the Share → Add-to-Home-Screen hint, because <strong>Web Push on iOS works only for installed Home-Screen web apps (iOS 16.4+)</strong> <strong>[experience, verify current status]</strong>.</li>
+<li><strong>When to adopt a framework:</strong> never for this scope, unless (a) more than one regular front-end developer, or (b) a view needs &gt; ~15 interdependent reactive states (e.g. a live dispatch map). Then Lit or Preact+HTM via import map — still no bundler. React/Tailwind is explicitly out (project rule).</li>
+<li><strong>Testing:</strong></li>
+<li>RLS/pgTAP: <code>supabase test db</code> on every PR against <code>supabase start</code> in GitHub Actions; every policy gets a positive and a negative test; tests set <code>set local role authenticated; set local request.jwt.claims …</code> (<a href="https://supabase.com/docs/guides/local-development/testing/overview" rel="noopener" target="_blank">Testing overview</a>, <a href="https://supabase.com/docs/guides/database/testing" rel="noopener" target="_blank">Testing your database</a>). Migrations move into <code>supabase/migrations/</code> so <code>db reset</code> replays them (<a href="https://supabase.com/docs/guides/local-development/cli-workflows" rel="noopener" target="_blank">CLI workflows</a>).</li>
+<li>E2E: Playwright against the local stack (Free) — Inbucket/Mailpit captures magic links locally; on Pro, against a preview branch created per PR, which has its own DB, auth, storage and functions (<a href="https://supabase.com/docs/guides/deployment/branching/working-with-branches" rel="noopener" target="_blank">Working with branches</a>). Branching is "beta" and Pro-only (<a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist → Deployment</a>).</li>
+<li>Contract: a JS test that loads <code>app_bootstrap</code> JSON and asserts the Freigabe-Check renders N questions from the ruleset (guards against hard-coding creeping back).</li>
+</ul>
+<h3>Trade-offs</h3>
+<ul>
+<li>Import maps need Safari ≥ 16.4 / Chrome ≥ 89 — acceptable for a 2027 launch; a fallback <code>&lt;script nomodule&gt;</code> message suffices.</li>
+<li>Web Push adds a subscription table with endpoints that are personal data (§10 retention: delete after 90 days without a successful delivery).</li>
+<li>Broadcast-from-DB requires <code>private: true</code> channels and Realtime Authorization; misconfiguring the public/private flag silently drops messages (docs note both sides must match).</li>
+</ul>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/realtime/broadcast" rel="noopener" target="_blank">Broadcast</a> · <a href="https://supabase.com/docs/guides/realtime/subscribing-to-database-changes" rel="noopener" target="_blank">Subscribing to database changes</a> · <a href="https://supabase.com/docs/guides/realtime/postgres-changes" rel="noopener" target="_blank">Postgres Changes</a> · <a href="https://supabase.com/docs/guides/realtime/authorization" rel="noopener" target="_blank">Realtime authorization</a> · <a href="https://supabase.com/docs/guides/realtime/pricing" rel="noopener" target="_blank">Realtime pricing</a> · <a href="https://supabase.com/docs/guides/database/webhooks" rel="noopener" target="_blank">Database webhooks</a> · <a href="https://supabase.com/docs/guides/database/extensions/pg_net" rel="noopener" target="_blank">pg_net</a> · <a href="https://supabase.com/docs/guides/functions/limits" rel="noopener" target="_blank">Edge Function limits</a> · <a href="https://supabase.com/docs/guides/local-development/testing/overview" rel="noopener" target="_blank">Testing overview</a> · <a href="https://supabase.com/docs/guides/deployment/branching/working-with-branches" rel="noopener" target="_blank">Working with branches</a> · <a href="https://supabase.com/docs/guides/api/rest/generating-types" rel="noopener" target="_blank">Generating types</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>iOS Web Push for installed PWAs: current Safari version constraints, badge/actions support.</li>
+<li>Realtime per-plan limits page (<code>/docs/guides/realtime/limits</code>) for channels-per-client and message size — the search returned it by reference only.</li>
+</ul>
+<hr />
+<h2>6. Backend / platform</h2>
+<h3>Recommendation</h3>
+<p><strong>One project for Switzerland now; one project per <em>legal region</em> later (EU/EEA can share; a non-adequate country gets its own).</strong> Decide the <em>region</em> of the CH project before Pro, because a project cannot change region in place (<span class="m no">experience, verify</span> — docs describe "Restore to a new project"/duplicate, not in-place region moves).</p>
+<ul>
+<li><strong>Region:</strong> Paris (<code>eu-west-3</code>) is inside the EU. For Swiss revDSG, transfers to the EU are to countries with adequate protection (FDPIC list) <span class="m no">experience, verify</span>, so Paris is legally fine for a Bern pilot. Supabase also offers <strong>Zurich (<code>eu-central-2</code>)</strong> — the GDPR page lists it in the "Europe" grouping and warns it is <em>not</em> EU (<a href="https://supabase.com/docs/guides/security/gdpr-compliance" rel="noopener" target="_blank">GDPR compliance</a>); the PrivateLink page confirms the region code (<a href="https://supabase.com/docs/guides/platform/privatelink" rel="noopener" target="_blank">PrivateLink</a>). For a municipality-facing product, "Daten in der Schweiz" is a sales argument; for later EU cities Paris is the safer default. Proposal: <strong>create the Pro project in Zurich when going live in Bern</strong> (migrate data via <code>db dump</code>/restore while the dataset is tiny), keep Paris as the staging project. If a second <em>EU</em> country comes, either serve it from Zurich (adequacy decision for CH exists) or open a Frankfurt/Paris project — the schema and app are region-agnostic by §1 (<code>config.js</code> per deployment).
+  Caveat: Edge Functions regional invocation list has <strong>no Zurich</strong> (<a href="https://supabase.com/docs/guides/functions/regional-invocation" rel="noopener" target="_blank">Regional invocations</a>) — functions run "closest to the user" by default, which is fine for notifications; DB-heavy functions would pay a Zurich↔Frankfurt hop.</li>
+<li><strong>When Pro becomes necessary — the day the first non-team user must receive a magic link.</strong> The default SMTP "will refuse to deliver messages to addresses that are not part of the project's team" and is rate-limited "not meant for production" (<a href="https://supabase.com/docs/guides/auth/auth-smtp" rel="noopener" target="_blank">Custom SMTP</a>). Custom SMTP (Resend/Postmark/SES) removes that; after enabling, the default is a low 30 emails/hour until raised in Rate Limits (<a href="https://supabase.com/docs/guides/auth/auth-smtp" rel="noopener" target="_blank">Custom SMTP</a>, <a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a>). Whether custom SMTP is configurable on Free is not stated in the pages retrieved — <strong><span class="m no">verify</span></strong>; regardless, Free pauses after 7 idle days, which a pilot cannot tolerate, and Free has no downloadable backups (<a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a>). Pro: $25/mo + compute (Micro ≈ $10, covered by the $10 credit; Nano is billed as Micro on paid plans and cannot be newly launched there) (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/compute" rel="noopener" target="_blank">Compute</a>); 7 days of daily backups (<a href="https://supabase.com/docs/guides/platform/backups" rel="noopener" target="_blank">Backups</a>). PITR (7-day ≈ $100/mo, needs ≥ Small compute) is <strong>not</strong> needed for the pilot; the docs recommend it above 4 GB or when RPO &lt; 24 h matters (<a href="https://supabase.com/docs/guides/platform/backups" rel="noopener" target="_blank">Backups</a>, <a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a>).</li>
+<li><strong>Auth flow tweaks:</strong> switch magic link to <strong>email OTP code</strong> for the kitchen phone flow (link-in-email breaks when the mail app opens a different browser than the installed PWA) — same <code>signInWithOtp</code>, template change only (<a href="https://supabase.com/docs/guides/auth/auth-email-passwordless" rel="noopener" target="_blank">Passwordless</a>). Use <code>shouldCreateUser: false</code> on the login form and a separate "join by invitation" path (§7). OTP validity ≤ 1 h per the checklist. Enable CAPTCHA on sign-up when abuse appears (docs list it as the most effective bot mitigation).</li>
+<li><strong>Scheduled work — all in Postgres, no external cron:</strong></li>
+<li><code>pg_cron</code> every 5 min: <code>update offers set status='expired' where status in ('open','reserved') and pickup_to &lt; now()</code> <strong>plus</strong> emit an <code>expired</code> event; nightly: retention jobs (§10), materialised stats refresh (§9). Sub-minute schedules are supported; job names are immutable (<a href="https://supabase.com/docs/guides/cron/quickstart" rel="noopener" target="_blank">Cron quickstart</a>).</li>
+<li><code>pg_cron</code> + <code>pg_net</code> + Vault to invoke Edge Functions on a schedule — the docs' exact recipe, secrets in Vault not in the job text (<a href="https://supabase.com/docs/guides/functions/schedule-functions" rel="noopener" target="_blank">Scheduling Edge Functions</a>, <a href="https://supabase.com/docs/guides/database/vault" rel="noopener" target="_blank">Vault</a>).</li>
+<li><strong>Outbound messaging via <code>pgmq</code>:</strong> queue <code>outbound_messages</code> (durable "Basic" queue). Producers: DB triggers (<code>offer published</code> → notify takers; <code>reserved</code> → notify kitchen; <code>handover_complete</code> → send both parties a PDF link). Consumer: Edge Function <code>dispatch</code> invoked by <code>pg_cron</code> every minute (and immediately via <code>pg_net</code> for latency-critical events), which <code>pgmq.read(queue, vt=60, qty=50)</code> → sends via channel adapter (Resend e-mail, Web Push, Twilio SMS, WhatsApp Cloud API, Signal via <code>signal-cli</code> on a tiny VPS <strong>[experience]</strong>) → <code>pgmq.archive</code> on success, leaves for retry on failure; <code>read_ct &gt; 5</code> → dead-letter queue. Do <strong>not</strong> expose <code>pgmq_public</code> to clients — queues stay server-side; the docs are explicit that pgmq tables have no RLS by default (<a href="https://supabase.com/docs/guides/queues/pgmq" rel="noopener" target="_blank">PGMQ</a>, <a href="https://supabase.com/docs/guides/queues/quickstart" rel="noopener" target="_blank">Queues quickstart</a>).
+  Prefer channel <em>preferences</em> over channel <em>sprawl</em>: e-mail + Web Push at launch; SMS only for the "your reservation was cancelled 20 min before pickup" class; WhatsApp only if the pilot takers already coordinate there (README says they do — but Business API template approval and costs must be checked).</li>
+<li><strong>Rate limiting:</strong> Auth endpoints are covered by Supabase (OTP 360/h project-wide default, 60 s per user) (<a href="https://supabase.com/docs/guides/auth/rate-limits" rel="noopener" target="_blank">Rate limits</a>). Data API has no per-user limiter → enforce business limits in RPCs: <code>check_rate('publish_offer', 20, interval '1 hour')</code> against a <code>rate_events(user_id, action, at)</code> table (indexed, pruned by cron). Edge Functions: per-IP token bucket in a <code>kv</code>-style table or Upstash <strong>[experience]</strong>.</li>
+<li><strong>Abuse prevention:</strong> approval gate stays (org <code>status='pending'</code> sees nothing; §1 policies include <code>org.status='approved'</code> via the helper); <code>reports(reporter_org, target_type, target_id, reason, created_at)</code> + moderator queue; <code>before-user-created</code> Auth Hook to block disposable-mail domains (<a href="https://supabase.com/docs/guides/auth/auth-hooks/before-user-created-hook" rel="noopener" target="_blank">Before user created hook</a>).</li>
+</ul>
+<h3>Trade-offs</h3>
+<ul>
+<li>Zurich vs Paris: Zurich wins on positioning, Paris on Edge-Function locality and EU expansion. Both work legally for CH. The cost of choosing wrong is one dump/restore while data is small — so decide before the first real protocol event is stored, not later.</li>
+<li>pgmq + Edge Function polling every minute = ~43 k invocations/month; Free includes 500 k, Pro 2 M (<a href="https://supabase.com/docs/guides/platform/billing-on-supabase" rel="noopener" target="_blank">Billing quotas</a>). Fine.</li>
+<li>Third-party channels are "your responsibility"; Supabase does not monitor them (<a href="https://supabase.com/docs/guides/deployment/shared-responsibility-model" rel="noopener" target="_blank">Shared responsibility</a>) — the dispatcher logs every attempt to <code>message_log</code> so §8 can alert on failure rate.</li>
+</ul>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/security/gdpr-compliance" rel="noopener" target="_blank">GDPR compliance</a> · <a href="https://supabase.com/docs/guides/platform/privatelink" rel="noopener" target="_blank">PrivateLink (region list)</a> · <a href="https://supabase.com/docs/guides/functions/regional-invocation" rel="noopener" target="_blank">Regional invocations</a> · <a href="https://supabase.com/docs/guides/auth/auth-smtp" rel="noopener" target="_blank">Custom SMTP</a> · <a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a> · <a href="https://supabase.com/docs/guides/auth/rate-limits" rel="noopener" target="_blank">Rate limits</a> · <a href="https://supabase.com/docs/guides/auth/auth-email-passwordless" rel="noopener" target="_blank">Passwordless</a> · <a href="https://supabase.com/docs/guides/platform/free-project-pausing" rel="noopener" target="_blank">Project pausing</a> · <a href="https://supabase.com/docs/guides/platform/backups" rel="noopener" target="_blank">Backups</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/compute" rel="noopener" target="_blank">Compute</a> · <a href="https://supabase.com/docs/guides/cron/quickstart" rel="noopener" target="_blank">Cron quickstart</a> · <a href="https://supabase.com/docs/guides/functions/schedule-functions" rel="noopener" target="_blank">Scheduling Edge Functions</a> · <a href="https://supabase.com/docs/guides/database/vault" rel="noopener" target="_blank">Vault</a> · <a href="https://supabase.com/docs/guides/queues/pgmq" rel="noopener" target="_blank">PGMQ</a> · <a href="https://supabase.com/docs/guides/queues/quickstart" rel="noopener" target="_blank">Queues quickstart</a> · <a href="https://supabase.com/docs/guides/auth/auth-hooks/before-user-created-hook" rel="noopener" target="_blank">Before user created hook</a> · <a href="https://supabase.com/docs/guides/deployment/shared-responsibility-model" rel="noopener" target="_blank">Shared responsibility</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Regions page for the full current list and whether Zurich has any feature gaps (branching, read replicas).</li>
+<li>Custom SMTP availability on the Free plan.</li>
+<li>Resend/Postmark EU data-residency options; Twilio CH sender IDs; WhatsApp Business API template approval lead time and per-conversation pricing; Signal has no official business API.</li>
+</ul>
+<hr />
+<h2>7. Identity &amp; access</h2>
+<h3>Recommendation</h3>
+<ul>
+<li><strong>Roles live in tables, not in the JWT</strong> — with one exception. <code>memberships.role</code> (<code>owner|staff</code>) and <code>city_roles.role</code> (<code>moderator|platform_admin</code>) are read by the <code>private.*</code> helpers on every request, so a removed member loses access on the next query, not on the next token refresh. The docs warn that <code>auth.jwt()</code> claims are "not always fresh" (<a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide → auth.jwt()</a>). The exception: a <strong>Custom Access Token Hook</strong> adds <code>app_metadata.platform_admin: true</code> for the handful of platform admins, so the client can render the admin UI without a round-trip; RLS still re-checks the table (<a href="https://supabase.com/docs/guides/api/custom-claims-and-role-based-access-control-rbac" rel="noopener" target="_blank">Custom claims &amp; RBAC</a>, <a href="https://supabase.com/docs/guides/auth/auth-hooks/custom-access-token-hook" rel="noopener" target="_blank">Custom access token hook</a>). Never read <code>user_metadata</code> in a policy (user-writable).</li>
+<li><strong>Permission matrix (pgTAP asserts every cell):</strong></li>
+</ul>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th>staff</th>
+<th>owner</th>
+<th>city moderator</th>
+<th>platform admin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>publish/cancel offer for own org's sites</td>
+<td>✓</td>
+<td>✓</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>reserve as taker org</td>
+<td>✓</td>
+<td>✓</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>write handover events for own side</td>
+<td>✓</td>
+<td>✓</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>manage sites, invite/remove members</td>
+<td>–</td>
+<td>✓</td>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>approve/block orgs in city</td>
+<td>–</td>
+<td>–</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>see protocols of any org in city</td>
+<td>–</td>
+<td>–</td>
+<td>✓ (read)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>edit rulesets, cities, themes</td>
+<td>–</td>
+<td>–</td>
+<td>–</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Invite flow:</strong> owner creates <code>invitations(id, org_id, email_hash, role, token_hash, expires_at, accepted_by)</code>; the dispatcher (§6) mails a link <code>?invite=&lt;token&gt;</code>; the invitee signs in (OTP, <code>shouldCreateUser: true</code> only when a valid invite token is present — checked by RPC <code>accept_invitation(token)</code> after sign-in, which compares <code>sha256(token)</code> and the session e-mail, inserts the membership, marks accepted). Tokens are one-time and 7-day. Uninvited sign-ups land in an org-less state and can only "create a new organisation" (→ pending approval).</li>
+<li><strong>Approval workflow:</strong> <code>organisations.status</code> transitions <code>pending → approved | blocked</code> by a city moderator via RPC <code>set_org_status</code>, which writes <code>audit_log</code> and enqueues an e-mail. The Freigaben screen already exists; it becomes city-scoped.</li>
+<li><strong>Org verification (CH):</strong> field <code>legal_id</code> = UID <code>CHE-###.###.###</code>; client-side checksum (mod-11) <strong>[experience, verify algorithm]</strong>; Edge Function <code>verify-uid</code> calls the Zefix public API (search by UID → legal name, seat, status) and stores <code>legal_id_verified_at</code>, <code>zefix_name</code>; moderator sees "Zefix: Restaurant X GmbH, Bern, aktiv" next to the self-declared name. Later countries: AT Firmenbuch, DE Handelsregister, FR SIRENE — same table, <code>legal_id_source</code> differs. NGOs without UID: manual verification + document upload to the private bucket.</li>
+<li><strong>SSO for municipalities (later):</strong> SAML 2.0 is Pro+ and multi-tenant via <code>sso_provider_id</code> in the JWT; map <code>organisations.sso_provider_id</code> and use a <em>restrictive</em> policy so SSO users can only act inside their org (<a href="https://supabase.com/docs/guides/auth/enterprise-sso/auth-sso-saml" rel="noopener" target="_blank">SSO SAML</a>). Priced at $0.015 per SSO MAU above quota (<a href="https://supabase.com/docs/guides/platform/billing-on-supabase" rel="noopener" target="_blank">Billing</a>). Not before a municipality asks.</li>
+<li><strong>MFA:</strong> TOTP enrollment offered to owners and required (restrictive <code>aal2</code> policy) for <code>city_roles</code> — moderators can see PII across orgs (<a href="https://supabase.com/docs/guides/auth/auth-mfa" rel="noopener" target="_blank">MFA</a>).</li>
+</ul>
+<h3>Trade-offs</h3>
+<ul>
+<li>Table-based roles cost one helper call per request (cached per statement); JWT roles are faster but stale. For a food-safety app where "removed staff must not see pickup addresses" matters, staleness loses.</li>
+<li>Zefix API is a hard external dependency; verification is asynchronous and never blocks approval — the moderator approves with or without it.</li>
+</ul>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/api/custom-claims-and-role-based-access-control-rbac" rel="noopener" target="_blank">Custom claims &amp; RBAC</a> · <a href="https://supabase.com/docs/guides/auth/auth-hooks/custom-access-token-hook" rel="noopener" target="_blank">Custom access token hook</a> · <a href="https://supabase.com/docs/guides/auth/enterprise-sso/auth-sso-saml" rel="noopener" target="_blank">SSO SAML</a> · <a href="https://supabase.com/docs/guides/auth/auth-mfa" rel="noopener" target="_blank">MFA</a> · <a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Zefix REST API: endpoint, auth (registration/API key), terms of use, rate limits.</li>
+<li>UID checksum specification (eCH-0097).</li>
+</ul>
+<hr />
+<h2>8. Observability &amp; ops</h2>
+<h3>Recommendation</h3>
+<ul>
+<li><strong>Logs:</strong> Supabase Logs Explorer (ClickHouse SQL since June 2026, <code>source</code> column per service; API/Postgres/Realtime logs) plus the MCP <code>query_logs</code> tool for the assistant (<a href="https://supabase.com/docs/guides/observability/advanced-log-filtering" rel="noopener" target="_blank">Query logs with SQL</a>). Enable <code>log_min_duration_statement = 500ms</code> and <code>auto_explain</code> for slow queries (<a href="https://supabase.com/docs/guides/database/postgres/postgres-log-config" rel="noopener" target="_blank">Postgres log config</a>). Check Security and Performance Advisors weekly (already available via MCP <code>get_advisors</code>).</li>
+<li><strong>App error tracking:</strong> an <code>client_errors</code> table is <em>not</em> the answer (PII in stack traces, unbounded growth). Use GlitchTip (self-hosted, EU) or Sentry with EU data residency and <code>beforeSend</code> scrubbing of e-mail/phone/address; sample 100 % of errors, 0 % of performance traces <strong>[experience]</strong>. Edge Function errors go to Supabase function logs; the dispatcher additionally writes <code>message_log(status, channel, error_code)</code>.</li>
+<li><strong>Uptime:</strong> an external monitor (UptimeRobot/Better Stack, EU) hits <code>GET /rest/v1/rpc/health</code> (anon-callable, returns <code>{db: ok, ruleset_version, city_count}</code>) every 5 min and the static app URL; alert to phone. Realtime health via the Realtime report page (<a href="https://supabase.com/docs/guides/realtime/reports" rel="noopener" target="_blank">Realtime reports</a>).</li>
+<li><strong>Backups:</strong> Pro daily backups (7 days) are the floor. Add a <strong>weekly off-site logical dump</strong> via GitHub Actions cron: <code>supabase db dump --linked | age -r &lt;pubkey&gt;</code> → private bucket in <em>another</em> provider; storage objects are not part of DB backups (<a href="https://supabase.com/docs/guides/platform/backups" rel="noopener" target="_blank">Backups</a>), so also <code>supabase storage cp -r</code> for the <code>protocols</code> bucket (legal records). Restore drill once per quarter into a scratch project; the drill is a runbook, and the runbook has a date of last execution in <code>facts.json</code>.</li>
+<li><strong>Runbooks (one page each, in <code>docs/runbooks/</code>):</strong> project paused (Free) / restore; magic-link mail not arriving (SMTP reputation, rate limits, link scanners — the docs describe the scanner problem and the redirect-page fix); Realtime silent (public/private flag mismatch, <code>setAuth()</code> missing); expired offers not expiring (cron job inactive — <code>cron.job.active</code>); dispatcher backlog (<code>pgmq.metrics</code>); rollback of a migration (branch delete/recreate, <code>db reset --linked</code> <strong>only</strong> on staging); key rotation (publishable key is public by design; rotate the <em>secret</em> key and Edge Function secrets); data-subject request (export/delete by <code>user_id</code>).</li>
+<li><strong>Incident comms:</strong> status page (static, on the same GitHub Pages) + templated German notice (Sautero's <code>pilot-comms</code> pattern). Breach: revDSG requires notification to the FDPIC "as soon as possible" when high risk; keep the template ready <strong>[experience, verify wording]</strong>.</li>
+<li><strong>Cost model (estimates; USD list prices from docs, CHF ≈ 0.85 × USD — verify the pricing page):</strong></li>
+</ul>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Plan &amp; add-ons</th>
+<th>USD/mo (list)</th>
+<th>≈ CHF/mo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bern pilot (Free)</td>
+<td>Free, Nano, default SMTP for team only</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Bern live</td>
+<td>Pro 25 + Micro compute 10 − 10 credits + custom domain 10 + Resend free tier</td>
+<td>≈ 35</td>
+<td>≈ 30</td>
+</tr>
+<tr>
+<td>5 cities (~300 orgs, ~2 000 MAU)</td>
+<td>Pro 25 + Small 15 − 10 + custom domain 10 + PITR-7d 100 (optional) + Resend paid ~20</td>
+<td>≈ 60 (160 with PITR)</td>
+<td>≈ 50–135</td>
+</tr>
+<tr>
+<td>50 cities, 2 countries (~3 000 orgs, ~20 000 MAU, 2 projects)</td>
+<td>Pro/Team + Medium 60 + Micro staging 10 − 10 + 2 domains 20 + PITR-14d 200 + log drain 60 + egress overage + SMS/WhatsApp usage</td>
+<td>≈ 350–600 + messaging</td>
+<td>≈ 300–500 + messaging</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quota anchors from docs: MAU 50 k Free / 100 k Pro; egress 5 GB / 250 GB; DB 500 MB / 8 GB; Realtime 2 M msgs &amp; 200 peak conns / 5 M &amp; 500; Edge invocations 500 k / 2 M (<a href="https://supabase.com/docs/guides/platform/billing-on-supabase" rel="noopener" target="_blank">Billing</a>). Compute price table: Micro ≈ $10, Small ≈ $15, Medium ≈ $60, Large ≈ $111 (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/compute" rel="noopener" target="_blank">Compute</a>); PITR 7/14/28 days ≈ $100/$200/$400 (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/point-in-time-recovery" rel="noopener" target="_blank">PITR usage</a>); custom domain ≈ $10 (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/custom-domains" rel="noopener" target="_blank">Custom domain usage</a>); log drain ≈ $60 + events (<a href="https://supabase.com/docs/guides/platform/manage-your-usage/log-drains" rel="noopener" target="_blank">Log drain usage</a>). Custom domain, PITR, log drains and compute are <strong>not</strong> covered by the Spend Cap.</p>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/observability/advanced-log-filtering" rel="noopener" target="_blank">Query logs with SQL</a> · <a href="https://supabase.com/docs/guides/database/postgres/postgres-log-config" rel="noopener" target="_blank">Postgres log config</a> · <a href="https://supabase.com/docs/guides/realtime/reports" rel="noopener" target="_blank">Realtime reports</a> · <a href="https://supabase.com/docs/guides/platform/backups" rel="noopener" target="_blank">Backups</a> · <a href="https://supabase.com/docs/guides/platform/billing-on-supabase" rel="noopener" target="_blank">Billing</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/compute" rel="noopener" target="_blank">Compute</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/point-in-time-recovery" rel="noopener" target="_blank">PITR usage</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/custom-domains" rel="noopener" target="_blank">Custom domain usage</a> · <a href="https://supabase.com/docs/guides/platform/manage-your-usage/log-drains" rel="noopener" target="_blank">Log drain usage</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Current pricing page (Team plan price, spend-cap behaviour, egress price per GB); FDPIC breach-notification wording.</li>
+</ul>
+<hr />
+<h2>9. Public API &amp; integrations</h2>
+<h3>Recommendation</h3>
+<ul>
+<li><strong>Read-only public stats per city:</strong> materialised view <code>stats.city_daily (city_id, day, offers_published, portions_offered, portions_handed_over, orgs_active, co2e_kg_est)</code> refreshed nightly by <code>pg_cron</code>; exposed <strong>only</strong> through a versioned view <code>api_v1.city_stats</code> with <code>security_invoker = true</code> (views created by <code>postgres</code> bypass RLS otherwise — docs warn) and <code>grant select … to anon</code>. Add <code>api_v1</code> to the exposed schemas; never expose <code>public</code> aggregates that could de-anonymise a single kitchen (k-anonymity ≥ 5 orgs per bucket, enforced in the view). Endpoint = PostgREST: <code>GET /rest/v1/city_stats?city=eq.bern</code> with the publishable key — no Edge Function needed. Cache headers via a Cloudflare Worker in front if load appears <strong>[experience]</strong>.</li>
+<li><strong>Open data:</strong> same view as CSV — PostgREST returns CSV with <code>Accept: text/csv</code>; document it as <code>https://api.uebrig.ch/rest/v1/city_stats?…</code> once a custom domain exists (custom domains keep API URLs portable across projects and are a paid add-on (<a href="https://supabase.com/docs/guides/platform/custom-domains" rel="noopener" target="_blank">Custom domains</a>)). Licence CC0 like the rest of the repo.</li>
+<li><strong>CSV export for municipalities/funders (authenticated):</strong> RPC <code>export_protocols(p_org uuid, p_from date, p_to date) returns text</code> (moderators: any org in their city; owners: own org), streaming PostgREST CSV. Large exports → Edge Function writing a file into the private bucket and returning a signed URL (1 h).</li>
+<li><strong>Webhooks for partner tools:</strong> <code>webhook_endpoints(org_id|city_id, url, secret, events text[], active)</code>; the same <code>pgmq</code> outbox (§6) carries <code>webhook.deliver</code> messages; the dispatcher signs with Standard Webhooks headers (<code>webhook-id</code>, <code>webhook-timestamp</code>, <code>webhook-signature</code> HMAC-SHA256) — the same scheme Supabase uses for its own hooks — and retries with backoff; deliveries logged in <code>webhook_deliveries</code>. Events: <code>offer.published</code>, <code>offer.reserved</code>, <code>offer.handed_over</code>, <code>offer.cancelled</code>, <code>org.approved</code>. Payload contains ids and non-PII summary; partners fetch details with their own JWT.</li>
+<li><strong>Inbound partner integration (TGTG-like):</strong> partner posts to Edge Function <code>partner/offers</code> with an API key stored hashed in <code>api_keys(org_id, key_hash, scopes)</code>; the function acts with the secret key <strong>but</strong> sets <code>request.jwt.claims</code> to impersonate the org's service user before inserting, so RLS and triggers still apply <strong>[experience]</strong>.</li>
+<li><strong>API versioning:</strong> schema per major version (<code>api_v1</code>, <code>api_v2</code>), views only, no tables. Breaking change = new schema, old one kept ≥ 12 months. Edge Functions carry the version in the path (<code>/functions/v1/partner-v1-offers</code>).</li>
+<li><strong>White-label per city:</strong> <code>cities.theme jsonb</code> = design tokens (<code>{"--brand":"#0A1A2F","--accent":"#34F7D7","--radius":"12px","logo":"cities/bern/logo.svg","name":"Übrig Bern"}</code>) returned by <code>app_bootstrap(slug)</code>; boot applies <code>document.documentElement.style.setProperty()</code> per token; logo from a <strong>public</strong> bucket <code>brand</code> (public buckets are CDN-cached and skip RLS on read (<a href="https://supabase.com/docs/guides/storage/buckets/fundamentals" rel="noopener" target="_blank">Buckets</a>)). City resolution order: subdomain (<code>bern.uebrig.ch</code>) → <code>?city=</code> → user's default city → geolocation prompt. The manifest is served per city by a tiny Edge Function (<code>/functions/v1/manifest?city=bern</code>) so the installed PWA carries the city name and colour. Content the city may override: greeting, imprint contact, partner logos — stored in <code>cities.content_i18n jsonb</code>, sanitised as text, <strong>never</strong> as HTML (single <code>escapeHtml</code> boundary, no <code>innerHTML</code> with user data — project rule §11).</li>
+</ul>
+<h3>Trade-offs</h3>
+<ul>
+<li>PostGIS views for a "map of all sites" as open data would expose kitchen locations; publish only city-level aggregates and <em>taker</em> organisations that opt in (<code>sites.public_listing boolean</code>).</li>
+<li>Version-per-schema means duplicate view definitions for a year; acceptable, and declarative schema files make the diff obvious (<a href="https://supabase.com/docs/guides/local-development/cli-workflows" rel="noopener" target="_blank">CLI workflows</a>).</li>
+</ul>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide → Views</a> · <a href="https://supabase.com/docs/guides/platform/custom-domains" rel="noopener" target="_blank">Custom domains</a> · <a href="https://supabase.com/docs/guides/storage/buckets/fundamentals" rel="noopener" target="_blank">Buckets</a> · <a href="https://supabase.com/docs/guides/deployment/branching/working-with-branches" rel="noopener" target="_blank">Working with branches (webhook payload uses Standard Webhooks)</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>PostgREST CSV output on the current Supabase PostgREST version; response size limits for <code>text/csv</code> via the Data API.</li>
+</ul>
+<hr />
+<h2>10. Security &amp; compliance</h2>
+<h3>Recommendation</h3>
+<p><strong>RLS review checklist (run by <code>rls-guard</code> or by hand; each item = a pgTAP test where possible):</strong>
+1. Every table in an exposed schema has RLS enabled (event trigger <code>rls_auto_enable</code> from the docs installed so new tables cannot forget it) (<a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide</a>).
+2. Every policy names <code>to authenticated</code> or <code>to anon</code>; none is <code>to public</code>.
+3. Every <code>auth.uid()</code>/<code>auth.jwt()</code>/<code>private.*</code> call is wrapped in <code>(select …)</code>; Advisor lint 0003 is clean.
+4. Every tenant column used in a policy is indexed.
+5. No policy on table A subqueries table B under RLS — use a <code>private.</code> SECURITY DEFINER helper with <code>set search_path = ''</code>.
+6. SECURITY DEFINER functions live in <code>private</code> (not exposed), have <code>EXECUTE</code> revoked from <code>anon</code>/<code>public</code>, and never take row data as a parameter that would defeat the initPlan cache.
+7. <code>UPDATE</code> policies have both <code>USING</code> and <code>WITH CHECK</code>; <code>WITH CHECK</code> pins every column the client must not change (today's <code>offers_update_kitchen</code> fails this — §0).
+8. Views are <code>security_invoker = true</code> or live in an unexposed schema.
+9. Storage: private by default; every <code>storage.objects</code> policy pins <code>bucket_id</code>; listing vs. download separated with <code>storage.allow_only_operation('object.list')</code> where needed (<a href="https://supabase.com/docs/guides/storage/schema/helper-functions" rel="noopener" target="_blank">Storage helpers</a>).
+10. Realtime: "Allow public access" off; <code>realtime.messages</code> policies check <code>realtime.topic()</code> against tenant membership (<a href="https://supabase.com/docs/guides/realtime/authorization" rel="noopener" target="_blank">Realtime authorization</a>).
+11. <code>pgmq</code>, <code>net</code>, <code>vault</code>, <code>cron</code>, <code>private</code>, <code>stats</code> schemas are <strong>not</strong> in the exposed list; <code>vault.decrypted_secrets</code> has no grant to <code>authenticated</code>.
+12. Negative tests: anon sees zero rows everywhere except <code>api_v1</code>; staff of org A cannot read org B; a removed member (status <code>removed</code>) loses access without token refresh; a pending org sees no open offers.
+13. Generic guard: a pgTAP test that iterates <code>pg_policies</code> and fails on any policy whose <code>qual</code> contains <code>auth.uid()</code> not preceded by <code>(select</code>.</p>
+<p><strong>Secrets:</strong> the publishable key in <code>config.js</code> is public by design; it grants nothing beyond RLS (<a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide → Bypassing</a>). The secret key exists only in Edge Function secrets and GitHub Actions secrets; third-party API keys (Resend, Twilio, VAPID, Zefix) in Edge Function secrets; keys needed <em>inside</em> SQL (cron → function auth) in Vault (<a href="https://supabase.com/docs/guides/database/vault" rel="noopener" target="_blank">Vault</a>). Enable SSL enforcement and Network Restrictions on the DB; MFA on the Supabase org with two owners (<a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a>).</p>
+<p><strong>PII minimisation:</strong>
+- Phone numbers: move to <code>contact_channels(org_id, kind, value, visible_after text)</code> and reveal only to the counterparty of a <em>reserved</em> offer (today's <code>profiles_select_counterpart</code> reveals the kitchen's phone to every approved taker for every open offer — tighten to reserved-only, kitchens' pickup address stays visible since it <em>is</em> the offer).
+- Person names: the protocol needs "who handed over" — store <code>actor_id</code>; render the name from <code>profiles</code> at read time; after retention, the join returns "ehemaliges Mitglied".
+- Push endpoints, IP addresses in <code>audit_log</code>: 90-day retention.
+- Photos of dishes: optional, no faces, EXIF stripped client-side <strong>[experience]</strong>.</p>
+<p><strong>Retention (pg_cron nightly, each step idempotent and logged):</strong>
+- <code>offers</code>: 30 days after <code>pickup_to</code> → <code>note</code>, <code>address</code> copy nulled (site remains), status kept; 24 months → row deleted, aggregate already in <code>stats.city_daily</code>.
+- <code>handover_events</code>: payload PII (<code>signature_ref</code>, free text) removed after <strong>24 months</strong>; temperatures/times/counts kept for the statutory self-control retention — CH practice is commonly cited as 2 years <strong>[experience, verify with cantonal lab]</strong>; the row itself is never deleted (hash chain).
+- <code>invitations</code> 30 days after expiry; <code>rate_events</code> 7 days; <code>message_log</code> 90 days; <code>auth.users</code> without membership and without login for 12 months → deleted via admin API (their events keep <code>actor_id</code> as a dangling UUID, which is the point).</p>
+<p><strong>revDSG (CH, in force 1.9.2023):</strong> privacy notice at first sign-in (what, why, retention, Supabase as processor in FR/CH, Resend/Twilio as sub-processors, rights, FDPIC); a <strong>processing register</strong> (Verzeichnis der Bearbeitungstätigkeiten) — not mandatory below 250 employees unless high-risk, but a one-page register is cheap and funders ask; <strong>DPA with Supabase</strong> — Supabase provides one on request (<a href="https://supabase.com/docs/guides/security/gdpr-compliance" rel="noopener" target="_blank">GDPR compliance → DPA</a>); Supabase is SOC 2 Type 2 (<a href="https://supabase.com/docs/guides/security" rel="noopener" target="_blank">Security</a>). Health data is not processed (allergens describe food, not people — keep it that way; never store a taker's allergies).</p>
+<p><strong>EU expansion notes:</strong> GDPR Art. 28 processor contract = the same Supabase DPA; data location Paris (EU) or Zurich (adequate third country, per the docs' own note that Zurich is not EU and needs a specific EU region if EU-only is required) (<a href="https://supabase.com/docs/guides/security/gdpr-compliance" rel="noopener" target="_blank">GDPR compliance</a>); Art. 30 register becomes mandatory-in-practice; Art. 33 72-hour breach notice; cookie/consent: the app sets only functional storage (session, locale) — no consent banner needed, but state it in the notice <strong>[experience, verify per country]</strong>.</p>
+<h3>Sources</h3>
+<p><a href="https://supabase.com/docs/guides/database/postgres/row-level-security" rel="noopener" target="_blank">RLS guide</a> · <a href="https://supabase.com/docs/guides/storage/schema/helper-functions" rel="noopener" target="_blank">Storage helpers</a> · <a href="https://supabase.com/docs/guides/realtime/authorization" rel="noopener" target="_blank">Realtime authorization</a> · <a href="https://supabase.com/docs/guides/database/vault" rel="noopener" target="_blank">Vault</a> · <a href="https://supabase.com/docs/guides/deployment/going-into-prod" rel="noopener" target="_blank">Production checklist</a> · <a href="https://supabase.com/docs/guides/security/gdpr-compliance" rel="noopener" target="_blank">GDPR compliance</a> · <a href="https://supabase.com/docs/guides/security" rel="noopener" target="_blank">Security overview</a></p>
+<h3>Verify later</h3>
+<ul>
+<li>Statutory retention for food-safety self-control records in CH (HyV) and AT; FDPIC guidance on processing registers for small entities; Supabase DPA text and sub-processor list.</li>
+</ul>
+<hr />
+<h2>11. Phased build plan</h2>
+<p>Conventions for every phase: migrations are numbered files in <code>db/</code> <strong>and</strong> mirrored to <code>supabase/migrations/</code> so <code>supabase db reset</code> replays them; every migration ships with <code>supabase/tests/database/NNN_*.test.sql</code> (pgTAP); "rollback" = the forward migration that undoes it, written <em>before</em> the change ships; nothing is "done" until seen on a real phone against the live project.</p>
+<h3>Phase 0 — now: Bern pilot, nothing that breaks</h3>
+<ul>
+<li><strong>Migrations:</strong> <code>002_hardening.sql</code> (additive/compatible only): wrap helper calls in <code>(select …)</code>; pin <code>status</code> in <code>offers_update_kitchen</code> <code>WITH CHECK</code> (<code>status in ('open','cancelled')</code>); replace <code>profiles_select_counterpart</code>'s correlated subquery with <code>private.can_see_profile(uuid)</code>; add <code>cities</code> table with one row <code>bern</code> and <code>offers.city_id</code> default → Bern (nullable, trigger-filled); remove <code>profiles</code> from the realtime publication.</li>
+<li><strong>RLS tests:</strong> pgTAP: taker cannot set <code>picked</code> via UPDATE; taker sees kitchen phone only for open/reserved-by-me offers; anon sees nothing.</li>
+<li><strong>App:</strong> none required; optional: switch to OTP code template; add <code>shouldCreateUser</code> handling.</li>
+<li><strong>Ops:</strong> custom SMTP (Resend) + Pro <strong>if</strong> any non-team user must log in; otherwise keep Free and a weekly <code>db dump</code> in CI; decide Zurich vs Paris (§6).</li>
+<li><strong>Rollback:</strong> <code>002_down.sql</code> drops the new policies and re-creates the old ones (kept verbatim in the file).</li>
+<li><strong>Exit:</strong> Advisor security/performance lints clean; pgTAP green in CI; one real kitchen and one real taker completed a reservation on their phones.</li>
+</ul>
+<h3>Phase 1 — org/membership + cities + rulesets, dual-write, feature flags</h3>
+<ul>
+<li><strong>Migrations:</strong> <code>003_orgs.sql</code> (tables from §2 minus events; backfill; <code>offers_fill_tenant</code> trigger; new org policies alongside old); <code>004_rulesets.sql</code> (rulesets, allergen_lists, seed CH + EU14, <code>active_ruleset</code>, <code>app_bootstrap</code>); <code>005_drop_legacy_policies.sql</code> after two weeks of both running.</li>
+<li><strong>RLS tests:</strong> matrix from §7 (every cell); dual-shape equivalence test (legacy insert with only <code>kitchen_id</code> yields identical visibility to new-shape insert); ruleset resolver returns CH values for Bern at three dates.</li>
+<li><strong>App:</strong> ES-module split behind the same URL (Phase 1a, no behaviour change); read thresholds/allergens from <code>app_bootstrap</code>; org switcher and site picker behind <code>features.orgs_ui</code>; i18n moved to JSON files + <code>t()</code> with plurals.</li>
+<li><strong>Rollback:</strong> feature flag off restores the old UI instantly; <code>003_down.sql</code> drops the new tables (data loss only of orgs created after backfill — acceptable in a flag-off scenario); never drop legacy columns in this phase.</li>
+<li><strong>Exit:</strong> every Bern profile has an org, a membership and (kitchens) a geocoded site; zero hard-coded thresholds in <code>app/</code> (grep guard in pre-commit for <code>65</code>, <code>72</code>, <code>1,2,3,4,5,6,7,8,9,10,11,12,13,14</code>); i18n coverage 100 % de-CH, ≥ 95 % fr/en.</li>
+</ul>
+<h3>Phase 2 — protocol event log + notifications + PWA</h3>
+<ul>
+<li><strong>Migrations:</strong> <code>006_events.sql</code> (handover_events, immutability, hash chain, jsonb schemas, RPCs rewritten to emit events, <code>offers.status</code> derived); <code>007_storage.sql</code> (private <code>protocols</code> bucket + policies, public <code>brand</code>); <code>008_queue.sql</code> (<code>pgmq</code> queue, <code>push_subscriptions</code>, <code>message_log</code>, cron jobs: expiry, dispatcher, retention); <code>009_realtime.sql</code> (broadcast trigger on offers, <code>realtime.messages</code> policy, publication emptied).</li>
+<li><strong>Edge Functions:</strong> <code>dispatch</code>, <code>notify-offer</code> (or folded into dispatch), <code>manifest</code>.</li>
+<li><strong>RLS tests:</strong> events immutable (UPDATE/DELETE raise); taker org reads only its own offers' events; storage policy positive/negative; realtime policy: user in Bern cannot join <code>city:zuerich</code>; queue schemas not exposed (test <code>information_schema</code> grants).</li>
+<li><strong>App:</strong> protocol screen driven by ruleset (<code>require_temp_at_handover</code>), offline queue with idempotent replay, service worker, install prompt, Web Push opt-in, broadcast channel replaces <code>postgres_changes</code>.</li>
+<li><strong>Rollback:</strong> Postgres Changes kept subscribable for one release (both paths coded); dispatcher can be paused via <code>cron.alter_job(active := false)</code>; events table stays (append-only, harmless).</li>
+<li><strong>Exit:</strong> a full handover with temperature + both-party confirmation exported as CSV/PDF and shown to the Bern pilot's food inspector contact; push notification received on an installed iOS PWA and on Android; Realtime peak connections and message counts observed in the report page under Free/Pro quota.</li>
+</ul>
+<h3>Phase 3 — second city, white-label, public stats</h3>
+<ul>
+<li><strong>Migrations:</strong> <code>010_city2.sql</code> (insert city row, theme, moderators; <strong>no schema change</strong> — that is the test); <code>011_stats.sql</code> (<code>stats</code> schema, materialised views, <code>api_v1</code> views with <code>security_invoker</code>, anon grants); <code>012_webhooks.sql</code> (endpoints, deliveries).</li>
+<li><strong>RLS tests:</strong> a Zürich moderator cannot approve a Bern org; <code>api_v1.city_stats</code> never returns a bucket with &lt; 5 orgs; anon can read <code>api_v1</code> only.</li>
+<li><strong>App:</strong> city resolution (subdomain → param → default), theme tokens at boot, per-city manifest; public stats page (static, fetches <code>api_v1</code>).</li>
+<li><strong>Ops:</strong> Pro, custom domain <code>api.uebrig.ch</code>, PITR decision, preview branches for PRs, uptime monitor, restore drill #1.</li>
+<li><strong>Rollback:</strong> <code>cities.status = 'closed'</code> hides a city everywhere (policies include <code>city.status &lt;&gt; 'closed'</code>); views can be dropped without touching tables.</li>
+<li><strong>Exit:</strong> second city onboarded by a moderator through the UI with <strong>zero commits</strong>; stats endpoint documented and consumed by at least one external party (municipality dashboard or journalist).</li>
+</ul>
+<h3>Phase 4 — second country: rulesets, locale, project/region decision</h3>
+<ul>
+<li><strong>Migrations:</strong> <code>013_country.sql</code> (rulesets <code>scope='country'</code> for AT/DE, <code>allergen_lists</code> unchanged for EU, <code>cities</code> rows with <code>country</code>, <code>de-AT</code> overlay file); <code>014_legal_ids.sql</code> (<code>legal_id_source</code> values, verification function per country).</li>
+<li><strong>Decision:</strong> same project (Zurich/Paris) vs. new project per legal region — driven by (a) the target country's transfer rules toward the current region, (b) a municipal contract demanding in-country hosting, (c) latency. If a new project: <code>supabase db dump --schema-only</code> + migrations replay + seed rulesets; the app is pointed at it by <code>config.js</code> per deployment; cross-project stats via the <code>api_v1</code> endpoints, not DB links.</li>
+<li><strong>RLS tests:</strong> an AT moderator sees no CH data even with the same schema; ruleset resolver picks AT values for Vienna; de-AT overlay resolves to de-CH for missing keys.</li>
+<li><strong>Exit:</strong> Vienna pilot offer published with AT rules and AT date/currency formatting, no code fork; legal review of the AT privacy notice done; DPA/Art. 28 covered.</li>
+</ul>
+<h3>Things to verify with unblocked network</h3>
+<ol>
+<li><strong>Supabase pricing page</strong> — Pro/Team fees, spend cap, egress per GB, current compute table; and <strong>regions page</strong> — full list incl. <code>eu-central-2</code> Zurich and any feature gaps.</li>
+<li><strong>Realtime limits page</strong> (<code>/docs/guides/realtime/limits</code>) — channels per connection, message size, joins/sec per plan.</li>
+<li><strong>Custom SMTP on Free plan</strong> — allowed or Pro-only.</li>
+<li><strong>Web Push on iOS PWA</strong> — minimum iOS/Safari version, requirement to be installed to Home Screen, support for actions/badges (2026 state).</li>
+<li><strong>Zefix API</strong> — public REST endpoint, registration, terms, quotas; <strong>UID checksum</strong> spec (eCH-0097).</li>
+<li><strong>WhatsApp Business (Cloud API) terms</strong> — template approval, per-conversation pricing in CH/AT, opt-in wording; Twilio CH alphanumeric sender rules; Signal (no official API — confirm).</li>
+<li><strong>revDSG</strong> specifics: FDPIC adequacy list (EU listed), breach-notification duty wording, processing-register threshold; <strong>CH HyV</strong> retention period for self-control records; AT LMSVG equivalents.</li>
+<li><strong>Supabase DPA</strong> text and sub-processor list (needed for the privacy notice).</li>
+<li><strong>PostgREST CSV</strong> support and size limits on the current Supabase version.</li>
+<li><strong>Import maps / <code>Intl.RelativeTimeFormat</code></strong> minimum Safari versions for the pilot's phones.</li>
+<li>Postgres <strong>log retention per plan</strong> (for the pgaudit decision).</li>
+<li>Whether <strong>project region can be changed</strong> without a new project (docs seen only describe restore/duplicate).</li>
+</ol>
+<hr />
+<h3>Scope declined</h3>
+<ul>
+<li><strong>Schema-per-tenant or project-per-city:</strong> rejected in §1 — cost, cross-tenant users, and no Supabase doc support for the pattern.</li>
+<li><strong>A framework or bundler now:</strong> rejected in §5 — one developer, ~10 views; ES modules + import map + <code>tsc --noEmit</code> on JSDoc give the maintainability without a build step.</li>
+<li><strong>Storing UI translations in the database:</strong> rejected in §4 — repo is the source of truth; only per-city content overrides live in <code>cities</code>.</li>
+<li><strong>PITR, log drains, read replicas for the pilot:</strong> deferred to Phase 3/4 with explicit triggers (DB &gt; 4 GB, regulator/funder demand, second region).</li>
+<li><strong>Storing takers' personal allergies or any health data:</strong> declined permanently in §10 — the product needs allergens <em>of food</em>, not of people.</li>
+<li><strong>Exposing <code>pgmq_public</code> to browsers:</strong> declined in §6 — queues stay server-side.</li>
+</ul>
+</section>
+
+<footer>Übrig · architektonický výskum 25. 9. 2026 · zdroj poznámok: <a href="notes/architektura.md">research/notes/architektura.md</a> · generované <code>research/build_arch.py</code></footer>
+</main></body></html>

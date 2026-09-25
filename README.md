@@ -31,6 +31,11 @@ Drei Dokumente vom 25. 9. 2026 als Entscheidungsgrundlage: [Überblick](https://
 (`overené` / `snippet` / `neoverené`); Rohnotizen in `research/notes/`, Skripte `research/build_*.py`.
 Kartendaten © OpenStreetMap-Mitwirkende (ODbL).
 
+Weitere Dokumente (25. 9. 2026): [Zu prüfende Quellen](https://richardcervenka111-create.github.io/uebrig/research/doverit.html) (Checkliste),
+[Architektur für die Expansion](https://richardcervenka111-create.github.io/uebrig/research/architektura.html) (Mandanten, Regelwerke, Ereignisprotokoll, PWA, Phasenplan),
+[Designmanual „Lístok a pečiať“](https://richardcervenka111-create.github.io/uebrig/research/design.html) und der
+[lokale Redesign-Prototyp](https://richardcervenka111-create.github.io/uebrig/research/design/prototyp.html) (Intro-Animation, Lis, Zatrasenie, Záblesk). Nichts davon ist in `index.html`/`app/` eingebaut – Entscheidungsgrundlage.
+
 ## Was die Checkliste (Startseite) bewusst nicht ist
 
 Keine Plattform, die Kuchen und Abnehmer automatisch verbindet. Das bräuchte einen Server mit
