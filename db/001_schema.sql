@@ -110,7 +110,7 @@ create or replace function public.reserve_offer(p_offer uuid) returns public.off
 language plpgsql security definer set search_path = public, pg_temp as $$
 declare o public.offers;
 begin
-  if public.my_role() <> 'taker' or not public.i_am_approved() then raise exception 'not_allowed'; end if;
+  if private.my_role() <> 'taker' or not private.i_am_approved() then raise exception 'not_allowed'; end if;
   select * into o from public.offers where id = p_offer for update;
   if not found then raise exception 'not_found'; end if;
   if o.status <> 'open' or o.pickup_to <= now() then raise exception 'not_open'; end if;
@@ -125,7 +125,7 @@ begin
   select * into o from public.offers where id = p_offer for update;
   if not found then raise exception 'not_found'; end if;
   if o.status <> 'reserved' then raise exception 'not_reserved'; end if;
-  if o.reserved_by <> auth.uid() and o.kitchen_id <> auth.uid() and public.my_role() <> 'admin' then raise exception 'not_allowed'; end if;
+  if o.reserved_by <> auth.uid() and o.kitchen_id <> auth.uid() and private.my_role() <> 'admin' then raise exception 'not_allowed'; end if;
   update public.offers set status = 'open', reserved_by = null, reserved_at = null where id = p_offer returning * into o;
   return o;
 end $$;
@@ -152,3 +152,12 @@ alter publication supabase_realtime add table public.profiles;
 
 -- ---------- Ablauf: offene Ausschreibungen nach Abholfenster als 'expired' lesen ----------
 -- (kein Cron nötig: die Select-Policy blendet abgelaufene aus; die Küche sieht sie in "Meine" weiterhin.)
+
+-- ---------- Nachtrag 25.09.2026: Helfer aus der API nehmen ----------
+-- Schema "private" ist für PostgREST unsichtbar; Policies folgen dem Umzug (OID-Referenz).
+-- In den RPCs heissen die Aufrufe danach private.my_role() / private.i_am_approved().
+create schema if not exists private;
+grant usage on schema private to authenticated;
+alter function public.my_role() set schema private;
+alter function public.i_am_approved() set schema private;
+revoke execute on function public.reserve_offer(uuid), public.release_offer(uuid), public.mark_picked(uuid) from anon, public;
