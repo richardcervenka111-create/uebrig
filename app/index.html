@@ -66,7 +66,7 @@ table.adm{border-collapse:collapse;width:100%;font-size:14px}table.adm td,table.
 <div class="wrap">
   <header class="top">
     <div class="brand"><h1>Übrig Bern</h1><small data-i18n="tagline">Was übrig bleibt, findet jemanden.</small></div>
-    <div class="langs" role="group" aria-label="Sprache"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="fr" aria-pressed="false">FR</button></div>
+    <div class="langs" role="group" aria-label="Sprache"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="fr" aria-pressed="false">FR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
   </header>
 
   <nav class="tabs" id="tabs" hidden>
@@ -177,7 +177,7 @@ table.adm{border-collapse:collapse;width:100%;font-size:14px}table.adm td,table.
 <script>
 (function(){
 'use strict';
-var ALLERG={de:['Gluten','Krebstiere','Eier','Fisch','Erdnüsse','Soja','Milch','Nüsse','Sellerie','Senf','Sesam','Sulfite','Lupinen','Weichtiere'],fr:['Gluten','Crustacés','Œufs','Poisson','Arachides','Soja','Lait','Fruits à coque','Céleri','Moutarde','Sésame','Sulfites','Lupin','Mollusques']};
+var ALLERG={de:['Gluten','Krebstiere','Eier','Fisch','Erdnüsse','Soja','Milch','Nüsse','Sellerie','Senf','Sesam','Sulfite','Lupinen','Weichtiere'],fr:['Gluten','Crustacés','Œufs','Poisson','Arachides','Soja','Lait','Fruits à coque','Céleri','Moutarde','Sésame','Sulfites','Lupin','Mollusques'],en:['Gluten','Crustaceans','Eggs','Fish','Peanuts','Soy','Milk','Tree nuts','Celery','Mustard','Sesame','Sulphites','Lupin','Molluscs']};
 var I18N={
 de:{tagline:'Was übrig bleibt, findet jemanden.',noconfig:'Die App ist noch nicht mit einer Datenbank verbunden (config.js fehlt).',
  t_board:'Angebote',t_new:'Melden',t_mine:'Meine',t_admin:'Freigaben',t_profile:'Profil',
@@ -214,10 +214,28 @@ fr:{tagline:'Ce qui reste trouve quelqu’un.',noconfig:'L’app n’est pas enc
  reserved_ok:'Réservé. Contacte la cuisine et viens pendant la fenêtre de retrait.',err_not_open:'Trop tard, déjà réservé.',err_generic:'Échec : ',
  mine_empty:'Pas encore d’offres.',adm_h:'Validations',a_role:'Rôle',a_org:'Établissement / organisation',a_contact:'Contact',a_since:'depuis',a_approved:'validé',b_approve:'Valider',b_block:'Bloquer',
  c_notify:'Notification du navigateur pour les nouvelles offres (page ouverte)',notify_title:'Übrig : nouvelle offre',saved:'Enregistré.',
- foot:'Übrig Bern est libre (CC0). Jusqu’à la remise, l’établissement est responsable de la sécurité alimentaire, ensuite le receveur. Données dans une base en UE (Supabase), visibles seulement par les comptes validés.',foot_tool:'Check-list, étiquettes et protocole sans connexion'}};
+ foot:'Übrig Bern est libre (CC0). Jusqu’à la remise, l’établissement est responsable de la sécurité alimentaire, ensuite le receveur. Données dans une base en UE (Supabase), visibles seulement par les comptes validés.',foot_tool:'Check-list, étiquettes et protocole sans connexion'},
+en:{tagline:'What is left over finds someone.',noconfig:'The app is not connected to a database yet (config.js missing).',
+ t_board:'Offers',t_new:'Announce',t_mine:'Mine',t_admin:'Approvals',t_profile:'Profile',
+ login_h:'Sign in',login_p:'Enter your e-mail. You get a link, no password. New businesses and organisations are approved by the Übrig team before they see offers.',b_link:'Send link',link_sent:'Link sent. Check your inbox (and spam) and open it on this device.',link_err:'Could not send a link: ',
+ ob_h:'Who are you?',r_kitchen:'Kitchen / business giving food away',r_taker:'Organisation / person collecting food',f_org:'Business or organisation',f_contact:'Name',f_phone:'Phone',f_address:'Address (handover place or seat)',b_save:'Save',b_logout:'Sign out',
+ pend_h:'Thank you. We are approving you.',pend_p:'A person from the Übrig team checks new businesses and organisations, usually within a day. Once approved, offers appear here. You can leave the page open; it updates itself.',
+ board_hint_taker:'Live: new offers appear on their own. Reserving means you collect within the pick-up window.',board_hint_kitchen:'This is what recipients see right now. Your own offers are under “Mine”.',board_empty:'Nothing is left over right now. The list updates itself.',
+ new_h:'Announce leftovers',check_h:'Release check',v_ok:'Released.',v_no:'Confirm all points first.',
+ rules:['The food was never in the guest area: no buffet, no returns from tables, no opened portion.','Kept hot at 65 °C or more, or chilled to 5 °C or below within 2 hours of cooking. Never more than 2 hours at room temperature.','Preparation date and time are known and go on the label.','All 14 allergens in the dish are known and declared.','Clean, closed, labelled container. No raw egg, raw fish or raw meat dishes.','Transport in the cold chain (cooler box) or hot in an insulated box.','The recipient knows the use-by time and reheats thoroughly before serving (72 °C core).'],
+ f_dish:'Dish',f_portions:'Portions',c_veg:'vegetarian',c_vegan:'vegan',c_pork:'no pork',c_hot:'hot (≥ 65 °C)',f_allerg:'Allergens contained (LIV Annex 6)',f_made:'Prepared',f_useby:'Use by',f_from:'Pick-up from',f_to:'to',f_where:'Handover place',f_note:'Note',b_publish:'Publish',
+ new_note:'After publishing, all approved recipients see your offer live. Whoever reserves sees your name, phone and the handover place.',
+ need_fields:'Fill in dish, portions, times and handover place.',need_check:'Complete the release check first.',published:'Published.',
+ st_open:'open',st_reserved:'reserved',st_picked:'collected',st_cancelled:'withdrawn',st_expired:'expired',
+ portions:'portions',allerg_none:'none of the 14 allergens',pickup:'Pick-up',useby:'Use by',made:'Prepared',hot:'hot',cold:'chilled',
+ b_reserve:'Reserve',b_release:'Return reservation',b_picked:'Collected',b_cancel:'Withdraw',reserved_by:'Reserved by',kitchen:'Kitchen',where:'Place',contact:'Contact',
+ reserved_ok:'Reserved. Contact the kitchen and collect within the pick-up window.',err_not_open:'Too late, already reserved.',err_generic:'Did not work: ',
+ mine_empty:'No offers yet.',adm_h:'Approvals',a_role:'Role',a_org:'Business / organisation',a_contact:'Contact',a_since:'since',a_approved:'approved',b_approve:'Approve',b_block:'Block',
+ c_notify:'Browser notification for new offers (only while the page is open)',notify_title:'Übrig: new offer',saved:'Saved.',
+ foot:'Übrig Bern is free (CC0). Until handover the business is responsible for food safety, afterwards the recipient. Data lives in a database in the EU (Supabase), visible only to approved businesses and organisations.',foot_tool:'Checklist, labels and log without signing in'}};
 
 var $=function(id){return document.getElementById(id);}, el=function(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;};
-var lang='de'; try{ var sl=localStorage.getItem('ub_lang'); if(sl&&I18N[sl]) lang=sl; }catch(e){} if(!sl && (navigator.language||'').slice(0,2)==='fr') lang='fr';
+var lang='de'; try{ var sl=localStorage.getItem('ub_lang'); if(sl&&I18N[sl]) lang=sl; }catch(e){} if(!sl){ var nv=(navigator.language||'').slice(0,2); if(nv==='fr'||nv==='en') lang=nv; }
 function t(k){ return I18N[lang][k]; }
 var toastTimer; function toast(m){ var tt=$('toast'); tt.textContent=m; tt.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ tt.classList.remove('show'); },2600); }
 function fmt(iso){ if(!iso) return ''; var d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'. '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
