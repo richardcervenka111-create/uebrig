@@ -25,7 +25,7 @@
 <script src="config.js"></script>
 <style>
 :root{
-  --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#7A746C;
+  --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#6B655D;
   --radius:4px;--radius-card:10px;--shadow:3px;--row:62px;--gutter:20px;--col:430px;
   --f-name:"Fraunces",Georgia,serif;--f-text:"Atkinson Hyperlegible",system-ui,sans-serif;--f-fact:"IBM Plex Mono",ui-monospace,monospace;
   --t-touch:80ms;--t-answer:240ms;--e-answer:cubic-bezier(.36,.07,.19,.97);
@@ -84,7 +84,7 @@ textarea{min-height:60px;resize:vertical}
 .offer.reserved{border-color:var(--brass)}.offer.picked{border-color:var(--rule);opacity:.85}.offer.cancelled,.offer.expired{border-color:var(--rule);opacity:.6;box-shadow:none}
 .offer .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
 .offer .h b{font-size:18px}.offer .pill{font-family:var(--f-fact);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--stamp)}
-.offer.reserved .pill{color:var(--brass)}.offer.picked .pill,.offer.cancelled .pill,.offer.expired .pill{color:var(--mute)}
+.offer.reserved .pill{color:var(--ink-2)}.offer.picked .pill,.offer.cancelled .pill,.offer.expired .pill{color:var(--mute)}
 .offer .meta{font-size:14px;color:var(--ink-2);display:grid;gap:2px}
 .offer .al{display:flex;gap:4px;flex-wrap:wrap}.offer .al span{border:1px solid var(--rule);color:var(--ink-2);border-radius:999px;padding:1px 8px;font-size:12px}
 .notice{border-radius:var(--radius-card);padding:12px 14px;font-size:14px;background:var(--sheet);border:1px solid var(--rule);color:var(--ink-2)}
@@ -399,7 +399,7 @@ async function loadBoard(){
   list.forEach(function(o){ box.appendChild(offerCard(o,'board')); if(profile.role==='taker' && !knownIds[o.id] && Object.keys(knownIds).length && notify && window.Notification && Notification.permission==='granted'){ try{ new Notification(t('notify_title'), {body:o.portions+' '+t('portions')+' · '+o.dish}); }catch(e){} } knownIds[o.id]=true; });
 }
 async function loadMine(){
-  var q = profile.role==='kitchen' ? sb.from('offers').select('*').eq('kitchen_id', session.user.id) : sb.from('offers').select('*').eq('reserved_by', session.user.id);
+  var q = profile.role==='kitchen' ? sb.from('offers').select('*').eq('kitchen_id', session.user.id) : profile.role==='admin' ? sb.from('offers').select('*') : sb.from('offers').select('*').eq('reserved_by', session.user.id);
   var r=await q.order('created_at',{ascending:false}).limit(50); var list=r.data||[];
   await profilesFor(list.map(function(o){return o.kitchen_id;}).concat(list.map(function(o){return o.reserved_by;})));
   var box=$('mine'); box.textContent=''; if(!list.length) box.appendChild(el('p','small',t('mine_empty')));

@@ -11,6 +11,8 @@ Live: https://richardcervenka111-create.github.io/uebrig/
 Gestaltung «Lístok a pečiať» (Papier, Atrament, Pečiať; Fraunces/Atkinson/Plex Mono) nach dem
 [Designmanual](https://richardcervenka111-create.github.io/uebrig/research/design.html); live seit 25. 9. 2026.
 Protokolle der alten Startseite (`ub_state`) werden beim ersten Öffnen übernommen.
+[Datenschutz](https://richardcervenka111-create.github.io/uebrig/datenschutz.html) beschreibt, was der Code heute tut
+(Startseite: nur `localStorage`; App: Supabase, Region Paris). Installierbar als PWA (`manifest.webmanifest`, `icons/`).
 
 ## Die App (`app/`): Angebote live melden und reservieren
 
@@ -22,8 +24,11 @@ Zweite Stufe, mit Anmeldung (Magic-Link per E-Mail) und einer Supabase-Datenbank
   damit nie zwei dasselbe bekommen. Danach sehen beide Seiten Kontakt und Übergabeort.
 - **Admin** schaltet neue Betriebe und Organisationen frei (`Freigaben`). Ohne Freigabe sieht
   niemand Daten anderer.
-- Schema und Zugriffsregeln: `db/001_schema.sql` (2 Tabellen, RLS auf allem, 3 RPCs).
+- Schema und Zugriffsregeln: `db/001_schema.sql` (2 Tabellen, RLS auf allem, 3 RPCs),
+  `db/002_hardening.sql` (Trigger-Guard, gekapselte Policies), `db/002_rls_test.sql` (20 Isolationstests,
+  Protokoll in `db/RLS_TEST_2026-09-25.md`), `db/003_bootstrap_admin.sql` (erster Admin).
   Verbindung: `app/config.js` (öffentlicher Publishable Key; alles Weitere regelt RLS).
+- Gleiche Gestaltung wie die Startseite seit 25. 9. 2026 (Tokens, Lis-Buttons, Kruh-Checkboxen, Angebote als Lístky).
 
 ## Research (`research/`, slowakisch)
 
@@ -38,8 +43,10 @@ Kartendaten © OpenStreetMap-Mitwirkende (ODbL).
 
 Weitere Dokumente (25. 9. 2026): [Zu prüfende Quellen](https://richardcervenka111-create.github.io/uebrig/research/doverit.html) (Checkliste),
 [Architektur für die Expansion](https://richardcervenka111-create.github.io/uebrig/research/architektura.html) (Mandanten, Regelwerke, Ereignisprotokoll, PWA, Phasenplan),
-[Designmanual „Lístok a pečiať“](https://richardcervenka111-create.github.io/uebrig/research/design.html). Der Redesign-Prototyp
-ist seit 25. 9. 2026 die Startseite (`index.html`); `research/design/prototyp.html` leitet dorthin weiter. `app/` folgt.
+[Designmanual „Lístok a pečiať“](https://richardcervenka111-create.github.io/uebrig/research/design.html),
+[Audit und Plan](https://richardcervenka111-create.github.io/uebrig/research/plan.html) (Befunde nach Schwere, was erledigt ist,
+Fahrplan, offene Entscheidungen). Der Redesign-Prototyp ist seit 25. 9. 2026 die Startseite (`index.html`);
+`research/design/prototyp.html` leitet dorthin weiter; `app/` trägt seit demselben Abend dieselbe Gestaltung.
 
 ## Was die Checkliste (Startseite) bewusst nicht ist
 
@@ -59,4 +66,7 @@ Die Seite ist keine Rechtsberatung; verbindlich ist die kantonale Lebensmittelko
 ## Technik
 
 Eine Datei, DE / FR / IT / EN, keine Netzwerkaufrufe (der Deploy-Workflow prüft das).
+Vor jedem Deploy läuft `tests/e2e.mjs` (Playwright, Chromium: Intro, Blätter inkl. iPad-Scroll, 7/7-Fluss,
+Validierung, Druck = eine Seite, Protokoll bearbeiten, FR/IT/EN, Übernahme alter Protokolle, Kontrast,
+App-Hülle, Datenschutz). Lokal: `PW_PATH=<pfad zu playwright> BASE_URL=http://127.0.0.1:8080 node tests/e2e.mjs`.
 Lizenz CC0. Verwandt: Allergen-Poster, Bärn hilft, Notfallblatt.

@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,360;1,9..144,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#7A746C;
+  --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#6B655D;
   --shadow:3px;--radius:4px;--row:62px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme=light]){--paper:#1A1814;--sheet:#23201B;--ink:#F3EEE6;--ink-2:#E6DFD3;--rule:#3A352E;--mute:#A79F93;--stamp:#B5483A}}
@@ -83,7 +83,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 </head>
 <body>
 <main>
-<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Financovanie</a><a href="architektura.html">Architektúra</a><a href="doverit.html">Čo doveriť</a><a href="design/prototyp.html">Prototyp</a><a href="../">Übrig Bern</a></nav>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Financovanie</a><a href="architektura.html">Architektúra</a><a href="doverit.html">Čo doveriť</a><a href="design/prototyp.html">Prototyp</a><a href="plan.html">Audit a plán</a><a href="../">Übrig Bern</a></nav>
 
 <header>
 <span class="k">Dizajnový manuál · verzia 1.0 · 25. 9. 2026</span>
@@ -141,7 +141,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <div class="sw"><i style="background:#6E2A21"></i><div><b>Pečiať tmavá</b><small class="mono">#6E2A21 · stlačený lis, odkaz :active</small></div></div>
 <div class="sw"><i style="background:#C4A36A"></i><div><b>Okrová</b><small class="mono">#C4A36A · záblesk, jediný akcent na atramente</small></div></div>
 <div class="sw"><i style="background:#D8D0C4"></i><div><b>Linka</b><small class="mono">#D8D0C4 · obrysy, perforácia, tichý lis</small></div></div>
-<div class="sw"><i style="background:#7A746C"></i><div><b>Tlmená</b><small class="mono">#7A746C · popisky, sekundárny text</small></div></div>
+<div class="sw"><i style="background:#6B655D"></i><div><b>Tlmená</b><small class="mono">#6B655D · popisky, sekundárny text</small></div></div>
 </div>
 <h3>Sémantika</h3>
 <div class="tw"><table><thead><tr><th>Stav</th><th>Farba</th><th>Kedy</th></tr></thead><tbody>
@@ -157,7 +157,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <tr><td>Atrament</td><td>Hárok</td><td class="mono">17,18 : 1</td><td>AAA</td></tr>
 <tr><td>Pečiať</td><td>Papier</td><td class="mono">5,91 : 1</td><td>AA text, AAA veľký text</td></tr>
 <tr><td>Papier (text lisu)</td><td>Pečiať</td><td class="mono">5,91 : 1</td><td>AA – tučné 16 px je v poriadku</td></tr>
-<tr><td>Tlmená</td><td>Papier</td><td class="mono">4,00 : 1</td><td>tesne pod AA (4,5) – <b>len 13 px+ popisky a Plex Mono 11 px verzálky s rozpalom; nikdy pre vety</b></td></tr>
+<tr><td>Tlmená</td><td>Papier</td><td class="mono">5,0 : 1</td><td>AA splnené pre každý text (do 25. 9. 2026 bola Tlmená #7A746C s 4,0 : 1 – stmavená na #6B655D po meraní, výnimka „len popisky“ zrušená)</td></tr>
 <tr><td>Tlmená</td><td>Hárok</td><td class="mono">4,48 : 1</td><td>prakticky AA</td></tr>
 <tr><td>Okrová</td><td>Papier</td><td class="mono">2,07 : 1</td><td><b>nikdy ako text na papieri</b> – len záblesk a dekor</td></tr>
 <tr><td>Okrová</td><td>Atrament</td><td class="mono">7,42 : 1</td><td>AAA – jediný povolený akcentový text na tmavom</td></tr>
@@ -284,7 +284,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <!-- 8 -->
 <h2 id="pristupnost"><span class="k">08 · Prístupnosť</span>Meria sa, nehodnotí sa</h2>
 <ul>
-<li>Kontrast textu ≥ 4,5 : 1 (tabuľka vyššie); jediná výnimka Tlmená na Papieri 4,0 : 1 len pre popisky ≥ 13 px alebo Plex Mono verzálky – pre vety sa používa Atrament.</li>
+<li>Kontrast textu ≥ 4,5 : 1 pre všetok text, bez výnimky. <b>Zmerané 25. 9. 2026:</b> Tlmená <span class="mono">#7A746C</span> na Papieri dávala 4,0 : 1 a používala sa aj na vety pod poľami (hint, 13 px) – výnimka „len popisky“ sa v kóde nedodržala. Tlmená je preto stmavená na <span class="mono">#6B655D</span> (5,0 : 1 na Papieri, 5,3 : 1 na Hárku); Mosadz sa nikdy nepoužíva ako farba textu (2,3 : 1). Strážca: e2e test počíta pomer z vypočítaných štýlov a padne pod 4,5.</li>
 <li>Cieľ dotyku ≥ 44 × 44 px; riadky 62 px; medzera medzi cieľmi ≥ 8 px.</li>
 <li>Farba nikdy sama: kruh má bod aj zmenu textu; lis má text; pečiať má slovo FREIGEGEBEN.</li>
 <li>Fokus viditeľný: 2 px Atrament obrys s odsadením 2 px; poradie tabulátora = poradie čítania.</li>
@@ -326,7 +326,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <pre>:root{
   /* farba */
   --paper:#F3EEE6;  --sheet:#FFFBF4;  --ink:#1A1814;  --ink-2:#2A2622;
-  --stamp:#9C3B2E;  --stamp-dk:#6E2A21;  --brass:#C4A36A;  --rule:#D8D0C4;  --mute:#7A746C;
+  --stamp:#9C3B2E;  --stamp-dk:#6E2A21;  --brass:#C4A36A;  --rule:#D8D0C4;  --mute:#6B655D;
   /* tvar */
   --radius:4px;  --radius-card:10px;  --radius-chip:999px;  --shadow:3px;  --row:62px;  --gutter:20px;  --col:430px;
   /* písmo */
@@ -360,14 +360,14 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <div class="verdict"><b>Stav 25. 9. 2026:</b> Richard povedal „vieme to nahodiť live?“ – prototyp sa stal úvodnou stránkou <span class="mono">index.html</span> (DE/FR/IT/EN, zoznam „Wer nimmt Essen an“, prenos starých protokolov). Body nižšie s ☑ sú splnené pre statickú stránku; aplikácia <span class="mono">app/</span> je ďalší krok.</div>
 <ul>
 <li>☑ Richard schválil manuál nasadením („vieme to nahodiť live“).</li>
-<li>☐ Tokeny do <span class="mono">app/tokens.css</span>; písma self-hostované (OFL) vo <span class="mono">app/fonts/</span>.</li>
+<li>☐ Písma self-hostované (OFL) vo <span class="mono">fonts/</span> – z tohto prostredia nemožné (jsDelivr a npm registry vracajú 403), Google Fonts priznané v Datenschutz; tokeny zatiaľ v každom súbore zvlášť (tri súbory, jeden blok – zlúčiť pri ďalšom kroku app).</li>
 <li>☑ Statická stránka (Freigabe-Check, Meldung, Etikett, Protokoll) prevlečená na lístok a pečiať – live 25. 9. 2026.</li>
-<li>☐ Plattform-App (prihlásenie, ponuky, rezervácie, admin) na tie isté tokeny; zoznam ponúk = lístky, rezervácia = pečiať.</li>
+<li>☑ Plattform-App (prihlásenie, ponuky, rezervácie, admin) na tie isté tokeny – 25. 9. 2026 večer, logika nedotknutá, overené snímkami všetkých šiestich pohľadov; lístky a pečiať v zozname ponúk čakajú na prvé skutočné dáta.</li>
 <li>☑ Pohyb podľa kapitoly 07, kontrola s <span class="mono">prefers-reduced-motion</span>.</li>
-<li>☐ Kontrast a ciele dotyku premerané na reálnom telefóne v kuchyni pri ostrom svetle.</li>
-<li>☐ Ikona aplikácie a favicon z redukovanej pečiate; manifest PWA.</li>
+<li>☐ Kontrast a ciele dotyku premerané na reálnom telefóne v kuchyni pri ostrom svetle (kontrast je od 25. 9. strážený testom, dotyk ostáva na Richardovom telefóne).</li>
+<li>☑ Ikona aplikácie a favicon z redukovanej pečiate; manifest PWA (<span class="mono">manifest.webmanifest</span>, <span class="mono">icons/</span>, og obrázok) – 25. 9. 2026.</li>
 </ul>
-<p>Živá stránka: <a href="../"><b>übrig Bern</b></a> – celý tok Prüfen → Meldung → Etikett → Protokoll v novom vizuáli. Pôvodný odkaz na prototyp presmeruje tam.</p>
+<p>Živá stránka: <a href="../"><b>übrig Bern</b></a> – celý tok Prüfen → Meldung → Etikett → Protokoll v novom vizuáli. Pôvodný odkaz na prototyp presmeruje tam. Audit celého projektu a plán ďalších krokov: <a href="plan.html"><b>Audit a plán</b></a>.</p>
 
 <footer>Übrig · dizajnový manuál v1.0 · 25. 9. 2026 · zdroje: board „Uebrig — Lístok a pečiať“ (Figma), PDF „Prvý návrh, dotiahnutý“, návrh „nach dem service“, referenčná implementácia uebrig.html · písma: Fraunces (OFL), Atkinson Hyperlegible (OFL), IBM Plex Mono (OFL)</footer>
 </main>

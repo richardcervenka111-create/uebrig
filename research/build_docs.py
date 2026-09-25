@@ -109,7 +109,7 @@ def page(title, desc, body, nav_extra=''):
 </head>
 <body>
 <main>
-<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="../">Übrig Bern</a>{nav_extra}</nav>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="plan.html">Audit a plán</a><a href="../">Übrig Bern</a>{nav_extra}</nav>
 {body}
 <footer>Übrig Bern · výskumný podklad zo {TODAY} · nie je právne ani daňové poradenstvo · zdrojové poznámky: <a href="notes/">research/notes/</a>, syntéza: <a href="REPORT.md">REPORT.md</a></footer>
 </main>

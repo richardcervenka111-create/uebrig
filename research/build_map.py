@@ -401,7 +401,7 @@ HTML = f"""<!doctype html>
 </head>
 <body>
 <main>
-<nav class="top"><a href="./">← Prehľad situácie</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="../">Übrig Bern</a></nav>
+<nav class="top"><a href="./">← Prehľad situácie</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="plan.html">Audit a plán</a><a href="../">Übrig Bern</a></nav>
 <header>
 <h1>Kde a kedy zatvárajú kuchyne v Berne – a ako ich obísť jedným e-cargo bikom</h1>
 <p class="sub">Vizuálny podklad k projektu Übrig Bern: {len(est)} podnikov s otváracími hodinami z OpenStreetMap, z toho <b>{len(in_buckets)}</b> s odhadovaným zatvorením kuchyne medzi 19:00 a 22:00, sedem miest, kde sa večer jedáva, a jedna trasa v dvoch etapách. Stav {TODAY}.</p>

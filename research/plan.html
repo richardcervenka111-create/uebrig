@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Übrig – audit a plán</title>
+<meta name="description" content="Kompletný audit projektu Übrig (úvodná stránka, app, databáza, CI, dokumenty, právo) k 25. 9. 2026, čo je hotové, plán ďalšieho postupu v bodoch a otvorené rozhodnutia pre Richarda.">
+<style>
+:root{--bg:#fbfaf7;--card:#fff;--ink:#1b1b1b;--ink2:#52514e;--mute:#6f6d66;--line:#e6e3dc;--accent:#0d366b;--accent2:#2a78d6;--ok:#0ca30c;--warn:#b26a00;--no:#c1121f;--stamp:#9C3B2E}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#9a988f;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5;--ok:#5dd35d;--warn:#f2c159;--no:#f08a8a}}
+:root[data-theme=dark]{--bg:#15161a;--card:#1e2026;--ink:#f2f1ec;--ink2:#c3c2b7;--mute:#9a988f;--line:#2e3138;--accent:#86b6ef;--accent2:#3987e5;--ok:#5dd35d;--warn:#f2c159;--no:#f08a8a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:22px 16px 70px}
+nav.top{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem;margin-bottom:18px}nav.top a{color:var(--accent)}
+header h1{font-size:clamp(1.6rem,3.5vw,2.3rem);margin:.2em 0 .3em;letter-spacing:-.01em;line-height:1.15}
+.lead{font-size:1.05rem;color:var(--ink2);max-width:72ch}
+h2{font-size:1.35rem;margin:38px 0 10px;padding-top:14px;border-top:1px solid var(--line)}h3{font-size:1.05rem;margin:22px 0 6px}
+p,li{color:var(--ink2)}a{color:var(--accent)}code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}
+.k{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.num{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.num b{display:block;font-size:1.5rem;color:var(--accent)}.num small{color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:.93rem;margin:10px 0}td,th{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mute);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.scroll{overflow-x:auto}
+.b{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.b.no{background:#fde8e8;color:var(--no)}.b.warn{background:#fff1dc;color:var(--warn)}.b.min{background:#eef2f7;color:var(--accent)}.b.ok{background:#e6f6e6;color:var(--ok)}
+.b.done{background:#e6f6e6;color:var(--ok)}.b.wait{background:#fff1dc;color:var(--warn)}.b.open{background:#eef2f7;color:var(--accent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .b{background:rgba(255,255,255,.08)}}
+.q{border-left:4px solid var(--accent);padding:10px 14px;margin:14px 0;background:var(--card);border-radius:0 10px 10px 0}
+.q b.t{display:block;color:var(--ink);font-size:1.02rem;margin-bottom:4px}
+.q ol{margin:6px 0 4px 18px}.q .rec{color:var(--accent);font-weight:600}
+.red{color:#c1121f;font-weight:700}
+ol.plan>li{margin:10px 0}ol.plan b{color:var(--ink)}
+footer{margin-top:44px;color:var(--mute);font-size:.88rem;border-top:1px solid var(--line);padding-top:12px}
+.toc{columns:2;column-gap:28px;font-size:.95rem}@media (max-width:640px){.toc{columns:1}}
+</style></head><body><main>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="architektura.html">Architektúra</a><a href="design.html">Dizajn</a><a href="doverit.html">Čo doveriť</a><a href="../">Übrig Bern</a></nav>
+
+<header>
+<span class="k">Übrig · audit a plán · 25. 9. 2026 večer</span>
+<h1>Kde projekt stojí, čo je opravené, čo ďalej</h1>
+<p class="lead">Kompletný audit šiestich oblastí (úvodná stránka, aplikácia, databáza, nasadenie, dokumenty, právo). Každý nález má závažnosť, stav a dôkaz. Všetko, čo sa dalo urobiť bez Richardovho rozhodnutia, je urobené a nasadené v ten istý deň; čo rozhodnutie potrebuje, je v kapitole 5 s možnosťami a odporúčaním.</p>
+</header>
+
+<ol class="toc">
+<li><a href="#cisla">Stav v číslach</a></li>
+<li><a href="#audit">Audit podľa oblastí</a></li>
+<li><a href="#hotove">Čo sa dnes urobilo</a></li>
+<li><a href="#plan">Plán v bodoch</a></li>
+<li><a href="#rozhodnutia">Rozhodnutia pre Richarda</a></li>
+<li><a href="#zabrany">Zábrany – ako sa to stráži</a></li>
+</ol>
+
+<p><span class="b no">kritické</span> <span class="b warn">dôležité</span> <span class="b min">drobné</span> <span class="b ok">v poriadku</span> &nbsp;·&nbsp; stav: <span class="b done">HOTOVÉ</span> <span class="b wait">ČAKÁ na rozhodnutie</span> <span class="b open">OTVORENÉ – blokuje prostredie</span></p>
+
+<h2 id="cisla">1 · Stav v číslach</h2>
+<div class="grid">
+<div class="num"><b>live</b><small>úvodná stránka + app na GitHub Pages, deploy #17 zelený (test + deploy)</small></div>
+<div class="num"><b>4</b><small>jazyky DE / FR / IT / EN na úvodnej stránke (app DE / FR / EN)</small></div>
+<div class="num"><b>37</b><small>kontrol v e2e teste, ktorý beží pred každým nasadením (Playwright, Chromium)</small></div>
+<div class="num"><b>2 · 10 · 8</b><small>tabuľky · politiky RLS · funkcie v databáze; 1 trigger-guard; 3 migrácie v repozitári</small></div>
+<div class="num"><b>20 / 20</b><small>izolačných testov RLS prešlo (opakovateľný skript <code>db/002_rls_test.sql</code>)</small></div>
+<div class="num"><b>1</b><small>používateľ v databáze – Richard, od dnes admin + freigegeben; 0 ponúk</small></div>
+<div class="num"><b>19+</b><small>commitov za dva dni (24.–25. 9.), 17 behov Pages, 1 červený (opravený za 6 minút)</small></div>
+<div class="num"><b>83 · 48 kB</b><small>index.html · app/index.html – jeden súbor, bez buildu, bez frameworku</small></div>
+</div>
+
+<h2 id="audit">2 · Audit podľa oblastí</h2>
+
+<h3>A · Úvodná stránka (<code>index.html</code>)</h3>
+<div class="scroll"><table>
+<tr><th>Nález</th><th>Závažnosť</th><th>Stav</th><th>Dôkaz / čo sa urobilo</th></tr>
+<tr><td>List „Wer nimmt Essen an“ sa na iPade nedal skrolovať, vrch bol mimo obrazovky (Richardov screenshot)</td><td><span class="b no">kritické</span></td><td><span class="b done">HOTOVÉ</span></td><td>Príčina: veil bol <code>display:grid; place-items:end</code> s výškou v <code>dvh</code> – list vyšší než obrazovka vyrastal nahor a Safari ho neorezal. Oprava fb401b5: flex ukotvený dole, <code>vh</code> záloha + <code>@supports dvh</code>, <code>overscroll-behavior</code>, zámok skrolovania stránky. Zábrana: e2e kontrola „orgs sheet inside viewport and scrollable“ – <b>videná červená</b> na reprodukovanej chybe, zelená na opravenom kóde.</td></tr>
+<tr><td>Kontrast Tlmenej farby (<code>#7A746C</code>) na Papieri bol 4,0 : 1 – pod AA (4,5) – a používal sa aj na vety pod poľami</td><td><span class="b warn">dôležité</span></td><td><span class="b done">HOTOVÉ</span></td><td>Manuál mal výnimku „len popisky“, kód ju nedodržal. Token stmavený na <code>#6B655D</code> (5,0 : 1 na Papieri, 5,3 : 1 na Hárku) v stránke, app, Datenschutz a manuáli. Mosadz (2,3 : 1) sa už nepoužíva ako farba textu. Zábrana: e2e počíta pomer z vypočítaných štýlov pre 8 kombinácií a padne pod 4,5.</td></tr>
+<tr><td>Kontrola v deploy-workflowe počítala <em>riadky</em> s <code>data-lang=</code>, nie výskyty – po presune jazykov do lišty zhodila beh #14</td><td><span class="b min">drobné</span></td><td><span class="b done">HOTOVÉ</span></td><td>564ebe3: každé tlačidlo jazyka na vlastnom riadku; test beží pred nasadením a počíta prvky, nie riadky.</td></tr>
+<tr><td>Písma sa sťahujú z Google Fonts – prehliadač posiela IP adresu tretej strane</td><td><span class="b warn">dôležité</span></td><td><span class="b open">OTVORENÉ</span></td><td>Self-hosting z tohto prostredia nejde: jsDelivr aj npm registry vracajú 403 (skúšané 3 spôsoby). Zatiaľ priznané v Datenschutz. Pri otvorenej sieti je to 10 minút: stiahnuť OFL woff2 (Fraunces, Atkinson Hyperlegible, IBM Plex Mono) do <code>fonts/</code>, prepísať <code>@font-face</code>.</td></tr>
+<tr><td>Stránka nefunguje bez signálu (žiadny service worker) – kuchyňa v suteréne</td><td><span class="b min">drobné</span></td><td><span class="b wait">ČAKÁ</span></td><td>Rozhodnutie R2. Riziko service workera: zastaraný obsah po nasadení, ak sa urobí zle. Návrh: network-first pre HTML, cache pre ikony a písma.</td></tr>
+<tr><td>Na iOS s „Bewegung reduzieren“ krúžky neblikajú (Richard: „na mobile nepreblikne nič“)</td><td><span class="b min">drobné</span></td><td><span class="b wait">ČAKÁ</span></td><td>Kód bliká len keď je pohľad Prüfen viditeľný a nie je otvorený list – to bola prvá príčina (blikalo pod introm) a je opravená. Druhá možná príčina je systémové nastavenie; pätička to teraz oznámi. Overiť na Richardovom iPhone (R8).</td></tr>
+<tr><td>Žiadne sieťové volania, dáta len v <code>localStorage</code></td><td><span class="b ok">v poriadku</span></td><td>–</td><td>Workflow zakazuje <code>fetch(</code>, <code>XMLHttpRequest</code>, <code>sendBeacon</code>; e2e kontroluje prenos starého protokolu <code>ub_state</code>.</td></tr>
+<tr><td>Tlač etikety = jedna strana; 7/7 tok; validácia e-mailu a povinné potvrdenie; log otvoriť/upraviť</td><td><span class="b ok">v poriadku</span></td><td>–</td><td>Všetko kryté e2e (PDF má presne 1 stranu, hint pri chýbajúcom potvrdení, úprava záznamu nahradí pôvodný).</td></tr>
+</table></div>
+
+<h3>B · Aplikácia (<code>app/index.html</code>)</h3>
+<div class="scroll"><table>
+<tr><th>Nález</th><th>Závažnosť</th><th>Stav</th><th>Dôkaz / čo sa urobilo</th></tr>
+<tr><td>App spracúva osobné údaje (e-mail, telefón, adresa) a nemala nijaký odkaz na ochranu údajov</td><td><span class="b no">kritické</span></td><td><span class="b done">HOTOVÉ</span></td><td><a href="../datenschutz.html">datenschutz.html</a> napísaný podľa kódu, ako existuje dnes (nie podľa zámeru): čo je len v prehliadači, čo je v Supabase (Paríž), kto čo vidí po rezervácii, Google Fonts a jsDelivr priznané. Odkaz v pätičke stránky aj app; e2e kontroluje prítomnosť odkazu a dostupnosť súboru.</td></tr>
+<tr><td>Richardov profil bol po prvom prihlásení <code>kitchen / nicht freigegeben</code> – nikto by nemohol nikoho schváliť</td><td><span class="b no">kritické</span></td><td><span class="b done">HOTOVÉ</span></td><td>Migrácia <code>003_bootstrap_admin</code> (podľa e-mailu, nie podľa ID) nasadená a overená: <code>role=admin, approved=true</code>. Prvý admin sa dá nastaviť len z databázy – zapísané v <code>db/003_bootstrap_admin.sql</code>.</td></tr>
+<tr><td>Starý oranžový vizuál, iné písma než úvodná stránka</td><td><span class="b warn">dôležité</span></td><td><span class="b done">HOTOVÉ</span></td><td>8e07c7f: tokeny „Lístok a pečiať“, Fraunces / Atkinson / Plex Mono, lis, kruh, ponuky ako lístky. Logika dát nedotknutá (diff len v <code>&lt;style&gt;</code>, hlavičke a pätičke). Overené snímkami 6 pohľadov; e2e stráži, že app nemá <code>innerHTML</code> s dátami.</td></tr>
+<tr><td>Admin v záložke „Meine“ videl len ponuky, ktoré sám rezervoval (t. j. nič)</td><td><span class="b min">drobné</span></td><td><span class="b done">HOTOVÉ</span></td><td>Admin teraz vidí všetky ponuky (RLS mu to dovoľuje, klient to len nevyužíval).</td></tr>
+<tr><td>Expirácia ponuky sa počíta len v prehliadači (Meine), v databáze ostáva <code>open</code></td><td><span class="b min">drobné</span></td><td><span class="b wait">ČAKÁ</span></td><td>Pri 0 ponukách neškodí. Do fázy 1 architektúry: <code>pg_cron</code> alebo podmienka v politike / RPC. Súvisí s R1 (Pro plán má cron bez obmedzení).</td></tr>
+<tr><td><code>supabase-js</code> z jsDelivr bez <code>integrity</code> atribútu</td><td><span class="b min">drobné</span></td><td><span class="b open">OTVORENÉ</span></td><td>Hash sa nedá spočítať bez stiahnutia súboru (403 z tohto prostredia). Pri otvorenej sieti: SRI hash alebo súbor vo <code>vendor/</code>.</td></tr>
+<tr><td>Realtime: odber všetkých zmien tabuľky <code>offers</code> bez filtra</td><td><span class="b ok">v poriadku</span></td><td>–</td><td>RLS filtruje riadky aj v realtime; každá zmena len znovu načíta zoznam. Pri berskej škále (desiatky ponúk denne) správne; pri expanzii filter podľa regiónu (architektúra, fáza 2).</td></tr>
+<tr><td>Verejný publishable kľúč v <code>config.js</code></td><td><span class="b ok">v poriadku</span></td><td>–</td><td>Zámer Supabase modelu: kľúč je verejný, prístup riadi výlučne RLS – a tá má 20 testov.</td></tr>
+<tr><td>Text pravidiel: „heiss ≥ 65 °C, innert 2 h auf ≤ 5 °C“</td><td><span class="b min">drobné</span></td><td><span class="b wait">ČAKÁ</span></td><td>Prísnejšie než niektoré odporúčania (60 °C / 2 h + 3 h chladenie). Prísnejšie je bezpečné; overiť jedným telefonátom na Kantonales Laboratorium Bern (R7) a potom zjednotiť text stránky, app a README.</td></tr>
+</table></div>
+
+<h3>C · Databáza (Supabase <code>tegbrfloehfblkmjawha</code>, Paríž, Free)</h3>
+<div class="scroll"><table>
+<tr><th>Nález</th><th>Závažnosť</th><th>Stav</th><th>Dôkaz / čo sa urobilo</th></tr>
+<tr><td>Free plán pozastaví projekt po 7 dňoch bez aktivity – živá app by jedno ráno nešla</td><td><span class="b no">kritické</span></td><td><span class="b wait">ČAKÁ</span></td><td>Rozhodnutie R1: Pro (25 USD/mes., denné zálohy, e-mail limity vyššie) alebo Free + týždenný „keep-alive“ z GitHub Actions. Do pilotu s reálnymi organizáciami odporúčam Pro.</td></tr>
+<tr><td>Prihlasovacie e-maily idú cez vstavaný SMTP Supabase – limit rádovo jednotky e-mailov za hodinu, odosielateľ <code>noreply@mail.app.supabase.io</code></td><td><span class="b no">kritické</span></td><td><span class="b wait">ČAKÁ</span></td><td>Pri onboardingu troch organizácií v jeden večer by sa magic-linky zastavili. Rozhodnutie R3: vlastná doména + SMTP (Resend má bezplatných 3 000 e-mailov mesačne a je pripojený ako nástroj v tomto prostredí).</td></tr>
+<tr><td>Kuchyňa mohla priamo meniť <code>status</code>/<code>reserved_by</code>; pomocné funkcie neboli obalené <code>(select …)</code>; vnorené EXISTS</td><td><span class="b no">kritické</span></td><td><span class="b done">HOTOVÉ</span></td><td>Migrácia <code>002_hardening</code>: BEFORE UPDATE trigger-guard, všetky politiky znovu vytvorené s obalenými volaniami, <code>private.can_see_profile</code>. Test <code>002_rls_test.sql</code>: 20 / 20, protokol <code>db/RLS_TEST_2026-09-25.md</code>.</td></tr>
+<tr><td>Security advisor: 3 × „SECURITY DEFINER volateľné prihlásenými“ (<code>reserve_offer</code>, <code>release_offer</code>, <code>mark_picked</code>)</td><td><span class="b ok">v poriadku</span></td><td>–</td><td>Zámer: rezervácia musí zamknúť riadok cudzej kuchyne (<code>FOR UPDATE</code>), preto beží ako definer; funkcie vnútri overujú <code>auth.uid()</code>, schválenie a stav. Zapísané, netreba meniť.</td></tr>
+<tr><td>Security advisor: „Leaked password protection disabled“</td><td><span class="b min">drobné</span></td><td>–</td><td>App nepoužíva heslá (len magic-link), nastavenie sa netýka ničoho. Zapnúť sa dá jedným klikom v Dashboard → Auth → Passwords, ale nič nemení.</td></tr>
+<tr><td>Bez záloh mimo Supabase (Free plán nemá automatické zálohy)</td><td><span class="b warn">dôležité</span></td><td><span class="b wait">ČAKÁ</span></td><td>Pri 0 ponukách zatiaľ nič nehrozí. Riešenie: Pro (denné zálohy) alebo týždenný <code>pg_dump</code> z GitHub Actions do privátneho repozitára – potrebuje heslo databázy ako GitHub secret, ktoré držíš len ty (súčasť R1).</td></tr>
+<tr><td>Schéma: 2 tabuľky, každá s RLS, statusy ako ENUM, žiadne zbytočné tabuľky</td><td><span class="b ok">v poriadku</span></td><td>–</td><td>Zodpovedá zásade „štíhle jadro“. Fáza 1 architektúry pridá <code>organizations</code> (dnes 6 organizácií natvrdo v <code>index.html</code>) a stĺpec regiónu.</td></tr>
+</table></div>
+
+<h3>D · Nasadenie a CI (<code>.github/workflows/pages.yml</code>)</h3>
+<div class="scroll"><table>
+<tr><th>Nález</th><th>Závažnosť</th><th>Stav</th><th>Dôkaz / čo sa urobilo</th></tr>
+<tr><td>Pred nasadením nebežal žiadny test správania – iPad chyba prešla na live</td><td><span class="b warn">dôležité</span></td><td><span class="b done">HOTOVÉ</span></td><td>Job <code>test</code> (Playwright + Chromium, ~1 minúta) beží pred <code>deploy</code>; červený test = žiadne nasadenie. Beh #17: test 34 kontrol zelený, deploy zelený. Lokálne spustiteľné jedným príkazom (README).</td></tr>
+<tr><td>Nové súbory (ikony, manifest, Datenschutz) sa nekopírovali do <code>_site</code></td><td><span class="b warn">dôležité</span></td><td><span class="b done">HOTOVÉ</span></td><td><code>paths</code> aj krok „Stage site“ rozšírené; e2e overuje, že <code>datenschutz.html</code> a <code>research/plan.html</code> odpovedajú 200.</td></tr>
+<tr><td>Minúty GitHub Actions</td><td><span class="b ok">v poriadku</span></td><td>–</td><td>~2 minúty na beh (test 1 min + deploy 1 min), 17 behov za 2 dni – hlboko pod bezplatným limitom. <code>paths</code> filter bráni behom pri zmene len poznámok.</td></tr>
+<tr><td>Push na <code>main</code> nasadzuje priamo, bez PR a ochrany vetvy</td><td><span class="b min">drobné</span></td><td>–</td><td>Pri jednom vývojárovi správne; test pred deployom je tá ochrana. Pri druhom človeku zapnúť „require status checks“.</td></tr>
+</table></div>
+
+<h3>E · Dokumenty</h3>
+<div class="scroll"><table>
+<tr><th>Nález</th><th>Závažnosť</th><th>Stav</th><th>Dôkaz / čo sa urobilo</th></tr>
+<tr><td>README opisoval app v starom vizuáli a nepoznal Datenschutz, testy ani migrácie 002/003</td><td><span class="b min">drobné</span></td><td><span class="b done">HOTOVÉ</span></td><td>Prepísané sekcie App, Research, Technik; odkaz na tento dokument.</td></tr>
+<tr><td>Dizajnový manuál: kapitola 14 mala ☐ pri PWA a app, kontrastná výnimka bola v rozpore s kódom</td><td><span class="b min">drobné</span></td><td><span class="b done">HOTOVÉ</span></td><td>☑ manifest + ikony, ☑ app na tokenoch; kapitola 08 a tabuľka kontrastov opravené s dátumom merania.</td></tr>
+<tr><td>Chýbal dokument „kde stojíme“ – všetko bolo rozptýlené v commitoch a chate</td><td><span class="b warn">dôležité</span></td><td><span class="b done">HOTOVÉ</span></td><td>Tento dokument; odkaz v navigácii všetkých research dokumentov aj v build skriptoch (aby ho prebuild nezmazal).</td></tr>
+<tr><td>Research: 634 neotvorených zdrojov v <a href="doverit.html">Čo doveriť</a></td><td><span class="b min">drobné</span></td><td><span class="b open">OTVORENÉ</span></td><td>Blokuje sieť tohto prostredia (WebSearch vyčerpaný, väčšina hostov 403). Richard alebo otvorená sieť.</td></tr>
+</table></div>
+
+<h3>F · Právo</h3>
+<div class="scroll"><table>
+<tr><th>Nález</th><th>Závažnosť</th><th>Stav</th><th>Dôkaz / čo sa urobilo</th></tr>
+<tr><td>Datenschutzerklärung</td><td><span class="b no">kritické</span></td><td><span class="b done">HOTOVÉ</span></td><td>Napísaná podľa kódu; každé tvrdenie som overil grepom (kľúče <code>localStorage</code>, región projektu, politiky viditeľnosti telefónu po rezervácii). Otvorená položka v texte: e-mail pre žiadosti o údaje – doplní sa s R4.</td></tr>
+<tr><td>Impressum chýba (v CH povinné pri komerčnej ponuke; pri spolku odporúčané a očakávané)</td><td><span class="b warn">dôležité</span></td><td><span class="b wait">ČAKÁ</span></td><td>Potrebuje meno, adresu a kontakt zodpovednej osoby alebo spolku (R4). Šablóna je pripravená, doplním do 10 minút po odpovedi.</td></tr>
+<tr><td>Licencia CC0 v repozitári, OSM atribúcia (ODbL) v mape, zodpovednosť za bezpečnosť potravín uvedená na stránke, v app a v Datenschutz</td><td><span class="b ok">v poriadku</span></td><td>–</td><td><code>LICENSE</code>, pätička mapy, kapitola 5 Datenschutz.</td></tr>
+<tr><td>Darovací kanál: list „Unterstützen“ hovorí „Spendenkonto folgt mit der Vereinsgründung“</td><td><span class="b min">drobné</span></td><td><span class="b wait">ČAKÁ</span></td><td>Pravdivé, ale bez cesty. R6: Twint QR / bankový účet spolku / Open Collective.</td></tr>
+</table></div>
+
+<h2 id="hotove">3 · Čo sa dnes urobilo (25. 9. 2026)</h2>
+<div class="card"><ul>
+<li><b>fb401b5</b> – skrolovanie listov na iOS (Richardov screenshot), zámok stránky, <code>vh</code> záloha.</li>
+<li><b>564ebe3</b> – kontrola workflowu (jazyky po riadkoch), beh #15 zelený.</li>
+<li><b>8e07c7f</b> – PWA manifest + 7 ikon + og obrázok; Datenschutz; app v dizajne „Lístok a pečiať“; e2e test 34 kontrol ako brána pred nasadením; beh #17 zelený.</li>
+<li><b>tento commit</b> – prvý admin (migrácia 003), kontrast Tlmenej 4,0 → 5,0 : 1 + strážca, admin „Meine“, mosadz nie ako text, manuál kap. 08/14, README, navigácia, tento dokument; e2e 37 kontrol.</li>
+<li><b>Databáza</b> – 002_hardening + 20 testov RLS ráno; 003_bootstrap_admin večer; advisors prečítané a zapísané.</li>
+<li><b>Negatívne testy</b> – strážca skrolovania videný červený na reprodukovanej chybe (grid + <code>place-items:end</code>), zelený na zdravom kóde; kontrastný strážca padá pri návrate <code>#7A746C</code>.</li>
+</ul></div>
+
+<h2 id="plan">4 · Plán v bodoch</h2>
+<p>Poradie je podľa toho, čo najskôr zastaví pilot. Pri každom bode je, kto ho odblokuje a čím sa overí, že je hotový.</p>
+<ol class="plan">
+<li><b>Backend pripravený na pilot (týždeň 1).</b> Vlastný SMTP + odosielateľská doména (R3), Pro alebo keep-alive (R1), týždenná záloha. <em>Overenie:</em> tri magic-linky za 5 minút doručené na tri rôzne adresy; záloha v repozitári s dátumom. <em>Odblokuje:</em> Richard (R1, R3, secret).</li>
+<li><b>Impressum + e-mail pre údaje (týždeň 1).</b> Po R4 doplním Impressum a Datenschutz, e2e overí odkaz v oboch pätičkách. <em>Odblokuje:</em> Richard (R4).</li>
+<li><b>Prvé tri organizácie (týždeň 1–2).</b> Passantenheim, Sleeper, Gassenküche zo zoznamu na stránke: nemecká správa (pilot-comms), registrácia ako <code>taker</code>, Richard schváli v „Freigaben“. <em>Overenie:</em> 3 schválené profily v databáze; každá organizácia otvorila app na svojom telefóne.</li>
+<li><b>Prvá kuchyňa a prvá skutočná ponuka (týždeň 2–3).</b> Kandidáti z <a href="mapa.html">mapy</a> (zatváranie 19–22 h, do 1,5 km od príjemcov). <em>Overenie:</em> jedna ponuka → rezervácia → „Abgeholt“ na dvoch reálnych telefónoch; čas od ponuky k rezervácii zmeraný.</li>
+<li><b>App, kolo 2 – s reálnymi dátami (týždeň 3).</b> Lístky v zozname ponúk doladiť podľa skutočných textov, rezervácia ako pečiať, expirácia v databáze (<code>pg_cron</code>), e2e pre app proti testovaciemu projektu (R5). <em>Overenie:</em> e2e app ≥ 10 kontrol zelené v CI.</li>
+<li><b>Offline a písma (keď je sieť).</b> Service worker network-first (R2), self-host písiem, SRI pre <code>supabase-js</code>. <em>Overenie:</em> stránka sa otvorí v režime letu po prvej návšteve; Datenschutz stratí odsek o Google.</li>
+<li><b>Architektúra, fáza 1 (mesiac 2).</b> Podľa <a href="architektura.html">architektúry</a>: tabuľka <code>organizations</code> nahradí 6 natvrdo zapísaných organizácií, stĺpec regiónu, záznam odovzdaní ako udalosti. <em>Overenie:</em> RLS testy rozšírené o región, 0 zmien pre existujúcich používateľov.</li>
+<li><b>Meranie (od prvej ponuky).</b> Týždenný počet ponúk, porcií, podiel vyzdvihnutých, čas do rezervácie – z databázy do research dokumentu, nikdy z pamäti. <em>Overenie:</em> prvá mesačná správa s číslami a commitom, na ktorom boli merané.</li>
+</ol>
+
+<h2 id="rozhodnutia">5 · Rozhodnutia pre Richarda</h2>
+<p>Stačí odpovedať číslom a písmenom (napr. „R1 a, R2 b“). Odporúčanie je označené.</p>
+
+<div class="q"><b class="t">R1 · Supabase plán a zálohy</b>
+<ol type="a"><li><span class="rec">Pro, 25 USD/mesiac (odporúčam pred prvou organizáciou)</span> – projekt sa nepozastaví, denné zálohy, vyššie limity e-mailov a cron bez obmedzení.</li><li>Free + týždenný keep-alive ping z GitHub Actions + týždenný <code>pg_dump</code> (potrebujem heslo DB ako GitHub secret – nastavíš ho ty).</li><li>Free bez ničoho – riziko: app jedno ráno nejde.</li></ol></div>
+
+<div class="q"><b class="t">R2 · Offline režim úvodnej stránky (service worker)</b>
+<ol type="a"><li><span class="rec">Áno, network-first (odporúčam)</span> – po prvej návšteve funguje bez signálu, nové verzie sa načítajú, keď je sieť.</li><li>Nie, zatiaľ nechať – menej pohyblivých častí.</li></ol></div>
+
+<div class="q"><b class="t">R3 · Doména a odosielateľ e-mailov</b>
+<ol type="a"><li><span class="rec">Kúpiť doménu (napr. uebrig.ch alebo uebrig.bern) a nastaviť Resend ako SMTP (odporúčam)</span> – magic-linky z <code>login@uebrig.ch</code>, 3 000 e-mailov mesačne zadarmo; stránka ostáva na GitHub Pages s vlastnou doménou.</li><li>Len SMTP cez Resend na subdoméne, ktorú už máš.</li><li>Nechať vstavaný SMTP Supabase – funguje pre teba, nie pre pilot.</li></ol></div>
+
+<div class="q"><b class="t">R4 · Impressum a zodpovedná osoba</b>
+<ol type="a"><li><span class="rec">Do založenia spolku: ty ako fyzická osoba (meno, poštová adresa, e-mail) – odporúčam, dá sa doplniť dnes</span>.</li><li>Počkať na spolok a uviesť spolok (názov, sídlo, e-mail, predsedu).</li></ol>
+<p>V oboch prípadoch potrebujem: poštovú adresu a e-mail pre žiadosti o údaje (môže byť nová schránka, napr. <code>hallo@…</code>).</p></div>
+
+<div class="q"><b class="t">R5 · Testovací projekt pre e2e app</b>
+<ol type="a"><li><span class="rec">Druhý Supabase projekt „uebrig-test“ (Free) len pre CI (odporúčam)</span> – testy rezervácie bežia proti skutočnej RLS bez rizika pre produkciu.</li><li>Testovať len klientske správanie so zamockovaným Supabase – rýchlejšie, ale RLS netestuje.</li></ol></div>
+
+<div class="q"><b class="t">R6 · Darovací kanál pre „Unterstützen“</b>
+<ol type="a"><li>Twint QR na tvoje meno už teraz (najrýchlejšie, osobná zodpovednosť).</li><li><span class="rec">Bankový účet spolku po založení + Twint (odporúčam, čisté účtovníctvo)</span>.</li><li>Open Collective (transparentné, poplatok ~10 %).</li></ol></div>
+
+<div class="q"><b class="t">R7 · Teploty v pravidlách (65 °C / 5 °C / 2 h)</b>
+<ol type="a"><li><span class="rec">Zavoláš na Kantonales Laboratorium Bern (031 633 11 11) a potvrdíš alebo upravíš – odporúčam, 10 minút</span>.</li><li>Nechať prísnejšiu verziu bez overenia.</li></ol></div>
+
+<div class="q"><b class="t">R8 · Overenie na tvojom iPhone</b>
+<p>Nastavenia → Zugänglichkeit → Bewegung → „Bewegung reduzieren“: ak je zapnuté, krúžky neblikajú a pätička to oznámi. Napíš, či je zapnuté a či pätičku vidíš. Zároveň otvor list „Wer nimmt Essen an“ na iPade a potvrď, že skroluje.</p></div>
+
+<div class="q"><b class="t">R9 · Písma a zdroje pri otvorenej sieti</b>
+<ol type="a"><li><span class="rec">Dáš mi na chvíľu prostredie so sieťou (alebo spustíš lokálne skript, ktorý pripravím) – odporúčam</span>: self-host písiem, SRI hash, a začnem odškrtávať 634 zdrojov v „Čo doveriť“.</li><li>Nechať Google Fonts a priznanie v Datenschutz.</li></ol></div>
+
+<h2 id="zabrany">6 · Zábrany – ako sa to stráži</h2>
+<div class="scroll"><table>
+<tr><th>Čo</th><th>Kde beží</th><th>Videné padnúť?</th></tr>
+<tr><td>37 e2e kontrol (intro, listy a skrolovanie, 7/7, validácia, tlač = 1 strana, log, jazyky, prenos starého protokolu, kontrast, app hülle, Datenschutz, plán)</td><td>GitHub Actions, job <code>test</code> pred každým deployom; lokálne jedným príkazom</td><td>áno – skrolovanie (reprodukovaná chyba), kontrast (návrat starej farby), e-mail validácia (zámerne zlý vstup)</td></tr>
+<tr><td>Žiadne sieťové volania na úvodnej stránke; 4 jazyky; viewport</td><td>job <code>deploy</code>, krok „Sanity check“</td><td>áno – beh #14 (počítanie riadkov)</td></tr>
+<tr><td>20 izolačných testov RLS</td><td><code>db/002_rls_test.sql</code>, opakovateľný cez <code>apply_migration</code>, výsledky do dočasnej tabuľky</td><td>áno – pred hardeningom padali 3 z 20</td></tr>
+<tr><td>Trigger-guard na <code>offers</code> (status, kitchen_id, reserved_by, časové pečiatky)</td><td>databáza, BEFORE UPDATE</td><td>áno – v RLS testoch (kuchyňa skúša <code>status='picked'</code>)</td></tr>
+<tr><td>Security advisors Supabase</td><td>ručne po každej migrácii (dnes 2×)</td><td>–</td></tr>
+</table></div>
+<p class="red">🟥 Dôležité: dve veci môžu pilot zastaviť bez ohľadu na kód – pozastavenie Free projektu po 7 dňoch nečinnosti (R1) a limit prihlasovacích e-mailov vstavaného SMTP (R3). Obe sú rozhodnutia s peniazmi alebo doménou, preto sú tvoje.</p>
+
+<footer>Übrig · audit a plán · 25. 9. 2026 · merané na commite 8e07c7f a jeho následníkovi (tento dokument) · čísla z <code>pg_policies</code>, <code>pg_proc</code>, GitHub Actions API a e2e výstupu, nie z pamäti · <a href="./">späť na prehľad</a></footer>
+</main></body></html>

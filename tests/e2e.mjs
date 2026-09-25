@@ -93,6 +93,17 @@ try {
   await page.goto(BASE + '/index.html'); await sleep(800);
   check('legacy log migrated', await page.evaluate(() => document.querySelectorAll('#log button').length === 1 && document.getElementById('business').value === 'Alt-Beiz'));
 
+  // contrast: every text token on paper and sheet ≥ 4.5:1 (design manual 08; --mute was 4.0:1 until 25. 9. 2026)
+  const contrast = await page.evaluate(() => {
+    const cs = getComputedStyle(document.documentElement); const v = (n) => cs.getPropertyValue(n).trim();
+    const lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+    const L = (hex) => { const h = hex.replace('#', ''); return .2126 * lin(parseInt(h.slice(0, 2), 16)) + .7152 * lin(parseInt(h.slice(2, 4), 16)) + .0722 * lin(parseInt(h.slice(4, 6), 16)); };
+    const ratio = (a, b) => { const x = L(a), y = L(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+    const out = {}; for (const bg of ['--paper', '--sheet']) for (const fg of ['--ink', '--ink-2', '--mute', '--stamp']) out[fg + ' on ' + bg] = +ratio(v(fg), v(bg)).toFixed(2); return out;
+  });
+  const low = Object.entries(contrast).filter(([, r]) => r < 4.5);
+  check('text tokens ≥ 4.5:1 on paper and sheet', low.length === 0, JSON.stringify(low.length ? low : contrast));
+
   check('no page errors on start page', pageErrors.filter(e => !/net::ERR|Failed to load resource|fonts\.g/.test(e)).length === 0, pageErrors.join(' | ').slice(0, 300));
 
   // ---------- app shell ----------
@@ -103,11 +114,14 @@ try {
   check('app shows login or no-config notice', await p2.evaluate(() => !document.getElementById('v_login').hidden || !document.getElementById('noconfig').hidden));
   check('app: no innerHTML with data (static scan)', !(await p2.evaluate(() => /innerHTML\s*=\s*[^'"`]/.test(document.documentElement.outerHTML))));
   check('app: Datenschutz link present', await p2.evaluate(() => !!document.querySelector('a[href*="datenschutz"]')));
+  check('app: mute token ≥ 4.5:1', await p2.evaluate(() => { const cs = getComputedStyle(document.documentElement); return cs.getPropertyValue('--mute').trim().toLowerCase() === '#6b655d' && cs.getPropertyValue('--paper').trim().toLowerCase() === '#f3eee6'; }));
   check('no page errors in app', errs2.length === 0, errs2.join(' | ').slice(0, 300));
 
   // ---------- datenschutz ----------
   const p3 = await ctx.newPage(); const r3 = await p3.goto(BASE + '/datenschutz.html');
   check('datenschutz.html reachable', r3 && r3.ok());
+  const r4 = await p3.goto(BASE + '/research/plan.html');
+  check('research/plan.html reachable', r4 && r4.ok());
 } finally {
   await browser.close();
 }

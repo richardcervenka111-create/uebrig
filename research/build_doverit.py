@@ -120,7 +120,7 @@ HTML = f"""<!doctype html>
 <title>Übrig Bern – čo doveriť</title>
 <meta name="description" content="Odškrtávací zoznam všetkého, čo sa vo výskume k Übrig Bern nedalo otvoriť alebo overiť: 24 kľúčových položiek, architektúra, a všetkých {total_urls} zdrojov podľa témy.">
 <style>{CSS}</style></head><body><main>
-<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="architektura.html">Architektúra</a><a href="design.html">Dizajn</a><a href="../">Übrig Bern</a></nav>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Monetizácia a financovanie</a><a href="architektura.html">Architektúra</a><a href="design.html">Dizajn</a><a href="plan.html">Audit a plán</a><a href="../">Übrig Bern</a></nav>
 <h1>Čo sa mi nepodarilo otvoriť – zoznam na doverenie</h1>
 <p class="sub">Výskum z {TODAY} bežal v prostredí, ktorého sieťová politika blokovala priame načítanie takmer všetkých stránok (403 pri bern.ch, be.ch, fedlex, blv, sleeper.ch, nadácie, stránky reštaurácií…) a rozpočet vyhľadávania sa vyčerpal. Fakty sú preto zo snippetov vyhľadávača, nie z prečítaných stránok. Tento zoznam je všetko, čo treba prejsť, aby bol výskum na 100 %. Odškrtnutia sa ukladajú v tomto prehliadači.</p>
 <div class="prog"><b>Hotovo</b><span id="cnt">0 / 0</span><div class="bar"><i id="barfill"></i></div><div class="tools"><button id="exp">Export .txt</button><button id="reset">Vynulovať</button></div></div>

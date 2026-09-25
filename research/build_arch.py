@@ -163,7 +163,7 @@ HTML = f"""<!doctype html>
 <title>Übrig – architektúra pre expanziu</title>
 <meta name="description" content="Ako postaviť Übrig tak, aby začal v Berne a rozšíril sa do ďalších miest a krajín bez prerábania: model nájomcov, pravidlá podľa jurisdikcie, protokol ako záznam udalostí, PWA, Supabase platforma, plán vo fázach.">
 <style>{CSS}</style></head><body><main>
-<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Financovanie</a><a href="doverit.html">Čo doveriť</a><a href="design.html">Dizajn</a><a href="../">Übrig Bern</a></nav>
+<nav class="top"><a href="./">Prehľad situácie</a><a href="mapa.html">Mapa a trasa</a><a href="financovanie.html">Financovanie</a><a href="doverit.html">Čo doveriť</a><a href="design.html">Dizajn</a><a href="plan.html">Audit a plán</a><a href="../">Übrig Bern</a></nav>
 {BODY}
 <footer>Übrig · architektonický výskum {TODAY} · zdroj poznámok: <a href="notes/architektura.md">research/notes/architektura.md</a> · generované <code>research/build_arch.py</code></footer>
 </main></body></html>"""
