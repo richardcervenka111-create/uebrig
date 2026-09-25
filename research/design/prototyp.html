@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>übrig – Prototyp</title>
-<meta name="description" content="Lokálny návrh Übrig po redesigne „Lístok a pečiať“: spúšťacia animácia, lis, kruh, zatrasenie, záblesk, lístok. Nič sa neposiela – všetko ostáva v prehliadači.">
+<meta name="description" content="Lokálny návrh Übrig po redesigne „Lístok a pečiať“: intro, koncept, lis, kruh, zatrasenie, záblesk, lístok, protokol. Nič sa neposiela – všetko ostáva v prehliadači.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,360;1,9..144,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
   --radius:4px;--radius-card:10px;--shadow:3px;--row:62px;--gutter:20px;--col:430px;
   --f-name:"Fraunces",Georgia,serif;--f-text:"Atkinson Hyperlegible",system-ui,sans-serif;--f-fact:"IBM Plex Mono",ui-monospace,monospace;
   --t-touch:80ms;--t-answer:240ms;--t-cue:600ms;--e-answer:cubic-bezier(.36,.07,.19,.97);
-  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
 }
 @media (prefers-reduced-motion: reduce){:root{--t-answer:0ms;--t-cue:0ms}}
 *{box-sizing:border-box}
@@ -24,91 +24,123 @@ html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
 body{font-family:var(--f-text);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer}
-h1,h2,.name{font-family:var(--f-name);font-weight:500;font-style:italic}
+h1,h2,h3.name,.name{font-family:var(--f-name);font-weight:500;font-style:italic}
 .mono{font-family:var(--f-fact)}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
-/* ---------- intro ---------- */
+/* ---------- intro (×1.35 ×1.35 of the original; ends on the Enter button, no auto-fade) ---------- */
 html.nojs #intro{display:none}
-#intro{position:fixed;inset:0;background:var(--paper);z-index:50;display:grid;place-items:center;cursor:pointer}
-#intro .scene{display:grid;justify-items:center;gap:18px;transform:translateY(-4vh)}
+#intro{position:fixed;inset:0;background:var(--paper);z-index:50;display:grid;place-items:center}
+#intro .scene{display:grid;justify-items:center;gap:18px;transform:translateY(-3vh);width:100%;padding:0 var(--gutter)}
 #intro .word{font-family:var(--f-name);font-style:italic;font-weight:500;font-size:clamp(64px,18vw,96px);line-height:1;letter-spacing:-.02em;position:relative;opacity:0;transform:translateY(8px)}
 #intro .word .u{position:relative}
 #intro .word .dots{position:absolute;left:0;right:0;top:-.02em;display:flex;justify-content:center;gap:.14em;opacity:0;transform:translateY(-6px)}
 #intro .word .dots i{width:.11em;height:.11em;border-radius:50%;background:var(--ink);display:block}
-#intro svg{width:120px;height:120px}
+#intro svg.seal{width:120px;height:120px}
 #intro .c1,#intro .c2,#intro .wedge{fill:none;stroke:var(--stamp);stroke-linecap:round}
 #intro .c1{stroke-width:2.2;stroke-dasharray:208;stroke-dashoffset:208}
 #intro .c2{stroke-width:1.5;stroke-dasharray:170;stroke-dashoffset:170}
 #intro .wedge{stroke-width:2.4;stroke-dasharray:70;stroke-dashoffset:70}
 #intro .dot{fill:var(--stamp);transform-origin:36px 36px;transform:scale(0)}
-#intro .tag{font-family:var(--f-fact);font-size:13px;letter-spacing:.6em;color:var(--ink-2);opacity:0}
-#intro .skip{position:absolute;bottom:calc(24px + var(--safe-b));font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
-#intro.play .word{animation:rise 486ms var(--e-answer) 162ms forwards}
-#intro.play .dots{animation:drop 297ms var(--e-answer) 513ms forwards}
-#intro.play .c1{animation:draw 540ms ease-out 567ms forwards}
-#intro.play .c2{animation:draw 540ms ease-out 675ms forwards}
-#intro.play .wedge{animation:draw 351ms ease-out 945ms forwards}
-#intro.play .dot{animation:press 162ms var(--e-answer) 1215ms forwards}
-#intro.play .tag{animation:settle 405ms ease-out 1350ms forwards}
-#intro.play{animation:fade 216ms ease-out 1755ms forwards}
-#intro.still .word,#intro.still .dots,#intro.still .tag{opacity:1;transform:none}
+#intro .tag{font-family:var(--f-fact);font-size:13px;letter-spacing:.6em;color:var(--ink-2);opacity:0;white-space:nowrap}
+#intro .enter{width:min(320px,100%);margin-top:18px;opacity:0;transform:translateY(8px)}
+#intro.play .word{animation:rise 656ms var(--e-answer) 219ms forwards}
+#intro.play .dots{animation:drop 401ms var(--e-answer) 693ms forwards}
+#intro.play .c1{animation:draw 729ms ease-out 765ms forwards}
+#intro.play .c2{animation:draw 729ms ease-out 911ms forwards}
+#intro.play .wedge{animation:draw 474ms ease-out 1276ms forwards}
+#intro.play .dot{animation:press 219ms var(--e-answer) 1640ms forwards}
+#intro.play .tag{animation:settle 547ms ease-out 1823ms forwards}
+#intro.play .enter{animation:rise 400ms var(--e-answer) 2450ms forwards}
+#intro.play .enter .face{animation:nudge 520ms var(--e-answer) 3150ms 1}
+#intro.still .word,#intro.still .dots,#intro.still .tag,#intro.still .enter{opacity:1;transform:none}
 #intro.still .c1,#intro.still .c2,#intro.still .wedge{stroke-dashoffset:0}
 #intro.still .dot{transform:scale(1)}
-#intro.still{animation:fade 216ms ease-out 405ms forwards}
+#intro.leave{animation:fade 216ms ease-out forwards}
 @keyframes rise{to{opacity:1;transform:translateY(0)}}
 @keyframes drop{to{opacity:1;transform:translateY(0)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes press{0%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes settle{from{opacity:0;letter-spacing:.6em}to{opacity:1;letter-spacing:.32em}}
 @keyframes fade{to{opacity:0;visibility:hidden}}
+@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}}
 
+/* ---------- overlays (concept, support, welcome, log detail) ---------- */
+.veil{position:fixed;inset:0;background:rgba(26,24,20,.42);z-index:40;display:grid;place-items:end center;padding:0}
+.sheetbox{width:min(var(--col),100%);max-height:calc(100dvh - 24px);overflow:auto;background:var(--sheet);border:1px solid var(--rule);border-radius:14px 14px 0 0;padding:20px var(--gutter) calc(20px + var(--safe-b));position:relative;transform:translateY(24px);opacity:0;transition:transform var(--t-answer) var(--e-answer),opacity var(--t-answer) ease}
+.veil.in .sheetbox{transform:none;opacity:1}
+.sheetbox h2{margin:0 0 6px;font-size:30px;line-height:1.05}
+.sheetbox .k{font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);display:block;margin-bottom:8px}
+.sheetbox p{margin:0 0 12px;color:var(--ink-2)}
+.sheetbox .x{position:absolute;top:8px;right:8px;width:44px;height:44px;border:0;background:none;color:var(--mute);font-size:24px;line-height:1;border-radius:8px}
+.steps{display:grid;gap:10px;margin:14px 0 18px}
+.stepc{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px}
+.stepc b{display:block}.stepc small{color:var(--ink-2)}
+.stepc .n{font-family:var(--f-fact);color:var(--stamp);font-size:13px;padding-top:2px}
+.actions{display:grid;gap:10px;margin-top:8px}
+.unroll{overflow:hidden;clip-path:inset(0 0 100% 0);transform-origin:top;transition:clip-path 520ms var(--e-answer)}
+.veil.in .unroll{clip-path:inset(0 0 0 0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:45}
 
+/* ---------- app ---------- */
+.app{max-width:var(--col);margin:0 auto;min-height:100dvh;position:relative;padding-bottom:calc(112px + var(--safe-b))}
+header.top{position:sticky;top:0;z-index:30;background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(10px + var(--safe-t)) var(--gutter) 8px;border-bottom:1px solid transparent}
+header.top.scrolled{border-bottom-color:var(--rule)}
+header.top .step{color:var(--stamp);letter-spacing:.12em;text-transform:uppercase;font-size:11px;white-space:nowrap}
+header.top .count{color:var(--mute);font-size:11px}
+header.top .right{display:flex;align-items:center;gap:4px}
+.support{border:1.1px solid var(--ink);background:var(--sheet);color:var(--ink);border-radius:999px;padding:0 12px;height:34px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.support svg{width:14px;height:14px}
+.support:active{transform:translate(1px,1px)}
+.info{width:40px;height:40px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
+.info svg{width:22px;height:22px}
+.info[aria-pressed=true]{color:var(--ink)}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px var(--gutter) 14px}
+.brand button{background:none;border:0;padding:0;display:flex;align-items:center;gap:12px;color:inherit;text-align:left}
+.brand h1{margin:0;font-size:34px;letter-spacing:-.02em;line-height:1}
+.mark{width:36px;height:36px;flex:none}
+.langs{display:flex;gap:2px;font-family:var(--f-fact);font-size:11px;letter-spacing:.12em}
+.langs button{gap:0;padding:8px 8px;min-height:44px;color:var(--mute);border-bottom:2px solid transparent;border-radius:0}
+.langs button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--stamp)}
+.tabs{display:flex;padding:0 var(--gutter) 16px}
+.tabs button{background:transparent;border:0;color:var(--mute);padding:6px 0;margin-right:18px;border-bottom:2px solid transparent;transition:border-color 160ms ease,color 160ms ease}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--stamp)}
+.panel{padding:0 var(--gutter) 24px}
 /* info bubble */
 .tip{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px 44px 12px 14px;margin:0 0 12px;font-size:14px;line-height:1.45;color:var(--ink-2)}
 .tip::before{content:"";position:absolute;top:-7px;left:26px;width:12px;height:12px;background:var(--sheet);border-left:1px solid var(--rule);border-top:1px solid var(--rule);transform:rotate(45deg)}
 .tip .k{font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);display:block;margin-bottom:4px}
 .tip .x{position:absolute;top:4px;right:4px;width:40px;height:40px;border:0;background:none;color:var(--mute);font-size:20px;line-height:1;border-radius:8px}
-.tip .x:hover{color:var(--ink)}
-.info{width:44px;height:44px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
-.info svg{width:22px;height:22px}
-.info[aria-pressed=true]{color:var(--ink)}
-
-/* ---------- app ---------- */
-.app{max-width:var(--col);margin:0 auto;min-height:100dvh;position:relative;padding-bottom:calc(112px + var(--safe-b))}
-header.top{display:flex;align-items:center;justify-content:space-between;padding:22px var(--gutter) 8px}
-header.top .step{color:var(--stamp);letter-spacing:.12em;text-transform:uppercase;font-size:11px}
-header.top .count{color:var(--mute);font-size:11px}
-.brand{display:flex;align-items:center;gap:12px;padding:0 var(--gutter) 18px}
-.brand h1{margin:0;font-size:34px;letter-spacing:-.02em;line-height:1}
-.brand{justify-content:space-between}
-.brand button{background:none;border:0;padding:0;display:flex;align-items:center;gap:12px;color:inherit;text-align:left}
-.langs{display:flex;gap:2px;font-family:var(--f-fact);font-size:11px;letter-spacing:.12em}
-.langs button{gap:0;padding:8px 8px;min-height:44px;color:var(--mute);border-bottom:2px solid transparent;border-radius:0}
-.langs button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--stamp)}
-.mark{width:36px;height:36px;flex:none}
-.tabs{display:flex;padding:0 var(--gutter) 16px;gap:0}
-.tabs button{background:transparent;border:0;color:var(--mute);padding:6px 0;margin-right:18px;border-bottom:2px solid transparent;transition:border-color 160ms ease,color 160ms ease}
-.tabs button.on{color:var(--ink);border-bottom-color:var(--stamp)}
-.panel{padding:0 var(--gutter) 24px}
+/* check rows */
 .checks{display:grid;gap:8px}
-.check{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius-card);padding:14px 14px 14px 12px;min-height:var(--row);transition:border-color 120ms ease;position:relative;overflow:hidden}
+.check{display:grid;grid-template-columns:28px 1fr 40px;gap:10px;align-items:center;width:100%;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px 6px 12px 12px;min-height:var(--row);transition:border-color 120ms ease;position:relative;overflow:hidden}
 .check.on{border-color:var(--stamp)}
-.check .ring{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center}
+.check .main{display:contents}
+.check .ring{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;cursor:pointer}
 .check.on .ring{border-color:var(--stamp)}
 .check .dot{width:10px;height:10px;border-radius:50%;background:var(--stamp);transform:scale(0);transition:transform 120ms var(--e-answer)}
 .check.on .dot{transform:scale(1)}
-.check span{color:var(--mute)}.check.on span{color:var(--ink)}
+.check .lbl{color:var(--mute);cursor:pointer;padding:8px 0}
+.check.on .lbl{color:var(--ink)}
+.check .i{width:40px;height:40px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
+.check .i svg{width:20px;height:20px}
+.check .i[aria-expanded=true]{color:var(--ink)}
+.check .why{grid-column:1 / -1;font-size:13px;color:var(--ink-2);padding:2px 6px 4px 0;border-top:1px dashed var(--rule);margin-top:4px;padding-top:8px}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(196,163,106,0)}40%{box-shadow:0 0 0 5px rgba(196,163,106,.45)}}
+.check.blink .ring{animation:blink 700ms ease-out 1}
 .note{color:var(--mute);font-size:13px;margin:10px 0 0}
+/* fields */
 label.field{display:block;margin:0 0 14px;position:relative}
 label.field .k{display:block;font-family:var(--f-fact);font-size:11px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-label.field .hint{display:block;color:var(--mute);font-size:13px;margin-top:6px;min-height:0}
-input[type=text],input[type=number],input[type=time],textarea,select{width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px;outline:none;min-height:46px}
+label.field .hint{display:block;color:var(--mute);font-size:13px;margin-top:6px}
+input[type=text],input[type=number],input[type=time],input[type=email],input[type=tel],textarea,select{width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px;outline:none;min-height:46px}
 input:focus,textarea:focus,select:focus{border-color:var(--ink)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid var(--rule);background:var(--sheet);border-radius:999px;padding:8px 12px;font-size:13px;color:var(--mute);min-height:36px}
 .chip.on{border-color:var(--stamp);color:var(--ink)}
+.confirm{margin-top:6px}
+/* ticket */
 .ticket{background:var(--sheet);border:1.25px solid var(--ink);border-radius:var(--radius);padding:22px 20px 24px;box-shadow:6px 6px 0 var(--rule);position:relative;transform:translateY(12px);opacity:0;transition:transform var(--t-answer) var(--e-answer),opacity var(--t-answer) ease}
 .ticket.in{transform:none;opacity:1}
 .ticket .head{display:flex;justify-content:space-between;align-items:flex-start}
@@ -122,11 +154,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
 .ticket .meta{color:var(--mute);font-size:13px;margin-bottom:16px}
 .ticket p{margin:0 0 8px;font-size:14px}
 .msg{white-space:pre-wrap;background:var(--sheet);border:1px dashed var(--rule);border-radius:8px;padding:14px;font-size:14px;margin-top:14px}
+/* log */
 .log{display:grid;gap:8px}
-.log article{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px}
+.log button{text-align:left;width:100%;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;display:grid;gap:2px}
 .log .when{color:var(--mute);font-size:11px}
+.log strong{font-size:16px}
 .empty{color:var(--mute);padding:24px 0}
-.dock{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(var(--col),100%);padding:12px var(--gutter) calc(16px + var(--safe-b));background:linear-gradient(to top,var(--paper) 70%,transparent)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:8px 0 14px}
+.kv dt{font-family:var(--f-fact);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding-top:3px}
+.kv dd{margin:0}
+/* dock + press */
+.dock{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(var(--col),100%);padding:12px var(--gutter) calc(16px + var(--safe-b));background:linear-gradient(to top,var(--paper) 70%,transparent);z-index:20}
 .press{position:relative;width:100%;border:0;background:transparent;padding:0}
 .press .shade{position:absolute;inset:var(--shadow) calc(-1*var(--shadow)) calc(-1*var(--shadow)) var(--shadow);background:var(--stamp);border-radius:var(--radius);transition:background 120ms ease}
 .press .face{position:relative;display:block;width:100%;border:1.1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:var(--radius);padding:16px;font-weight:700;min-height:54px;transform:translate(0,0);transition:transform var(--t-touch) ease,background 120ms ease,color 120ms ease,border-color 120ms ease}
@@ -135,36 +173,111 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
 .press.stamp .face{background:var(--stamp);color:var(--paper)}
 .press.ghost .shade{display:none}
 .press.ghost .face{background:var(--sheet);color:var(--ink)}
+.press.danger .face{background:var(--sheet);color:var(--stamp-dk);border-color:var(--stamp)}
 .press:not(.quiet):active .face{transform:translate(3px,3px)}
-.press.sit .face{animation:sit var(--t-touch) ease}
-@keyframes sit{50%{transform:translate(3px,3px)}}
-/* cues */
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
 .press.shake .face{animation:shake var(--t-answer) var(--e-answer)}
+.press.gentle .face{animation:nudge 520ms var(--e-answer) 1}
 @keyframes glint{from{background-position:-160% 0}to{background-position:260% 0}}
 .glint::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(196,163,106,.5) 50%,transparent 60%);background-size:200% 100%;animation:glint var(--t-cue) ease-out 1}
 label.field.glint::after{top:22px}
 .dockhint{text-align:center;color:var(--mute);font-size:13px;margin:8px 0 0;min-height:18px}
 .foot{padding:0 var(--gutter);color:var(--mute);font-size:11px;font-family:var(--f-fact);letter-spacing:.06em}
-@media print{body{background:#fff}.app{max-width:none;padding:0}header.top,.tabs,.dock,.brand,.no-print,#intro{display:none!important}.ticket{box-shadow:none}}
+@media (prefers-reduced-motion: reduce){.check.blink .ring,.press.gentle .face,#intro.play .enter .face{animation:none}.unroll{clip-path:none;transition:none}}
+
+/* ---------- print: one page, only the label ---------- */
+@media print{
+  @page{size:A4 portrait;margin:14mm}
+  html,body{height:auto;background:#fff}
+  .app{max-width:none;min-height:0;padding:0}
+  header.top,.tabs,.dock,.brand,.no-print,#intro,.veil,#confetti,.tip,.foot,.dockhint,.msg{display:none!important}
+  section.panel{display:none!important}
+  #view-ticket{display:block!important;padding:0;break-inside:avoid;page-break-inside:avoid}
+  .ticket{box-shadow:none;transform:none;opacity:1;max-width:120mm;break-inside:avoid}
+  .ticket .seal{transform:none;opacity:1}
+}
 </style>
 </head>
 <body>
-<div id="intro" role="button" aria-label="Intro überspringen" tabindex="0">
+<div id="intro">
   <div class="scene">
     <div class="word"><span class="u">u<span class="dots" aria-hidden="true"><i></i><i></i></span></span>brig</div>
-    <svg viewBox="0 0 72 72" aria-hidden="true"><circle class="c1" cx="36" cy="36" r="33"/><circle class="c2" cx="36" cy="36" r="27"/><path class="wedge" d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2"/><circle class="dot" cx="36" cy="36" r="3.2"/></svg>
+    <svg class="seal" viewBox="0 0 72 72" aria-hidden="true"><circle class="c1" cx="36" cy="36" r="33"/><circle class="c2" cx="36" cy="36" r="27"/><path class="wedge" d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2"/><circle class="dot" cx="36" cy="36" r="3.2"/></svg>
     <div class="tag">nach dem service</div>
+    <button class="press enter" id="enter" type="button"><span class="shade"></span><span class="face" data-i18n="enter">Eintreten</span></button>
   </div>
-  <div class="skip" data-i18n="skip">tippen zum überspringen</div>
+</div>
+
+<canvas id="confetti" hidden></canvas>
+
+<!-- concept -->
+<div class="veil" id="concept" hidden role="dialog" aria-modal="true" aria-labelledby="c-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="concept" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="c_k">Das Konzept</span>
+    <h2 id="c-title" data-i18n="c_title">Was in der Küche übrig bleibt, geht sicher weiter.</h2>
+    <p data-i18n="c_p1">übrig ist der Zettel für die letzten fünfzehn Minuten der Schicht: sieben Hygiene-Fragen, eine Meldung, ein Etikett, ein Protokoll. Was freigegeben ist, holt eine soziale Organisation ab – am selben Abend.</p>
+    <div class="steps">
+      <div class="stepc"><span class="n">01</span><div><b data-i18n="c_s1">Prüfen</b><small data-i18n="c_s1t">Sieben Fragen. Alle Ja, sonst geht nichts raus.</small></div></div>
+      <div class="stepc"><span class="n">02</span><div><b data-i18n="c_s2">Meldung</b><small data-i18n="c_s2t">Was, wie viel, wann, wo – und wer es abgibt.</small></div></div>
+      <div class="stepc"><span class="n">03</span><div><b data-i18n="c_s3">Etikett</b><small data-i18n="c_s3t">Auf den Behälter und in die Gruppe. Gleiche Form, gleiche Reihenfolge.</small></div></div>
+      <div class="stepc"><span class="n">04</span><div><b data-i18n="c_s4">Protokoll</b><small data-i18n="c_s4t">Bleibt im Browser. Beide Seiten wissen, was wann übergeben wurde.</small></div></div>
+    </div>
+    <p data-i18n="c_p2">Kein Konto, kein Server, kein Dashboard. Gebaut in Bern von Freiwilligen – für Küchen und für Menschen, die abends noch etwas Warmes brauchen.</p>
+    <div class="actions">
+      <button class="press stamp" type="button" data-close="concept"><span class="shade"></span><span class="face" data-i18n="c_go">Los geht's</span></button>
+      <button class="press ghost" type="button" data-open="support"><span class="shade"></span><span class="face" data-i18n="support">Unterstützen</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- support -->
+<div class="veil" id="support" hidden role="dialog" aria-modal="true" aria-labelledby="s-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="support" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="s_k">Unterstützen</span>
+    <h2 id="s-title" data-i18n="s_title">Ein Abend übrig kostet elf Franken.</h2>
+    <p data-i18n="s_p1">So viel kostet ein E-Cargo-Bike für eine Abholrunde (carvelo2go, drei Stunden). Thermoboxen, Etiketten, die Koordination – alles trägt der Verein. Kein Investor, keine Werbung.</p>
+    <p data-i18n="s_p2">Drei Arten zu helfen: als Küche mitmachen, als Organisation abholen, oder mit einem Beitrag. Das Spendenkonto folgt mit der Vereinsgründung – bis dahin zählt jeder Kontakt.</p>
+    <div class="actions">
+      <button class="press stamp" type="button" id="shareBtn"><span class="shade"></span><span class="face" data-i18n="s_share">Link teilen</span></button>
+      <button class="press ghost" type="button" data-close="support"><span class="shade"></span><span class="face" data-i18n="close">Schliessen</span></button>
+    </div>
+    <p class="note" id="shareNote"></p>
+  </div>
+</div>
+
+<!-- welcome after 7/7 -->
+<div class="veil" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="w-title">
+  <div class="sheetbox unroll"><button type="button" class="x" data-close="welcome" aria-label="Schliessen">×</button>
+    <span class="k" data-i18n="w_k">Sieben Mal Ja</span>
+    <h2 id="w-title" data-i18n="w_title">Freigegeben.</h2>
+    <p data-i18n="w_p">Das Essen darf raus. Jetzt noch drei Dinge: was es ist, wie viel, und wann es abgeholt werden kann. Dann druckst du das Etikett.</p>
+    <div class="actions"><button class="press stamp" type="button" data-close="welcome"><span class="shade"></span><span class="face" data-i18n="w_go">Zur Meldung</span></button></div>
+  </div>
+</div>
+
+<!-- log detail -->
+<div class="veil" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="d-title">
+  <div class="sheetbox"><button type="button" class="x" data-close="detail" aria-label="Schliessen">×</button>
+    <span class="k mono" id="d-when"></span>
+    <h2 id="d-title" style="font-family:var(--f-text);font-style:normal;font-weight:700;font-size:22px"></h2>
+    <dl class="kv" id="d-kv"></dl>
+    <div class="actions">
+      <button class="press" type="button" id="d-edit"><span class="shade"></span><span class="face" data-i18n="d_edit">Bearbeiten</span></button>
+      <button class="press ghost" type="button" id="d-label"><span class="shade"></span><span class="face" data-i18n="d_label">Etikett zeigen</span></button>
+      <button class="press danger ghost" type="button" id="d-del"><span class="shade"></span><span class="face" data-i18n="d_del">Eintrag löschen</span></button>
+    </div>
+  </div>
 </div>
 
 <div class="app">
   <noscript><p class="note" style="padding:12px 20px;border:1px solid var(--rule);border-radius:8px;margin:12px 20px">Diese Vorschau läuft ohne JavaScript (z. B. Dateivorschau auf dem iPhone). Bitte die Datei in Safari oder Chrome öffnen – oder den Link unter github.io verwenden.</p></noscript>
-  <header class="top">
+  <header class="top" id="topbar">
     <span class="mono step" id="stepLabel">1  Prüfen</span>
-    <span style="display:flex;align-items:center;gap:6px"><span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
-    <button type="button" class="info" id="infoBtn" aria-pressed="true" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></span>
+    <span class="right">
+      <span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
+      <button type="button" class="info" id="infoBtn" aria-pressed="true" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <button type="button" class="support" data-open="support"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-i18n="support">Unterstützen</span></button>
+    </span>
   </header>
   <div class="brand">
     <button type="button" id="replay" title="Intro nochmals abspielen">
@@ -184,26 +297,34 @@ label.field.glint::after{top:22px}
   <section id="view-check" class="panel">
     <div class="tip" data-tip="check"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
     <div class="checks" id="checks"></div>
-    <p class="note" data-i18n="note_check">Sieben Fragen. Alle Ja — sonst geht nichts raus.</p>
+    <p class="note" data-i18n="note_check">Sieben Fragen. Alle Ja — sonst geht nichts raus. Das i erklärt jede Zeile.</p>
   </section>
 
   <section id="view-form" class="panel" hidden>
     <div class="tip" data-tip="form"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
-    <label class="field"><span class="k" data-i18n="f_dish">Gericht</span><input id="dish" type="text" placeholder="z. B. Gemüserisotto, Salat separat" data-i18n-ph="ph_dish" data-req="1"><span class="hint" id="h-dish"></span></label>
+    <label class="field"><span class="k" data-i18n="f_dish">Gericht</span><input id="dish" type="text" placeholder="z. B. Gemüserisotto, Salat separat" data-i18n-ph="ph_dish"><span class="hint" id="h-dish"></span></label>
     <div class="row2">
-      <label class="field"><span class="k" data-i18n="f_portions">Portionen</span><input id="portions" type="number" min="1" inputmode="numeric" placeholder="18" data-req="1"><span class="hint" id="h-portions"></span></label>
+      <label class="field"><span class="k" data-i18n="f_portions">Portionen</span><input id="portions" type="number" min="1" inputmode="numeric" placeholder="18"><span class="hint" id="h-portions"></span></label>
       <label class="field"><span class="k" data-i18n="f_state">Zustand</span><select id="state"><option value="gekühlt" data-i18n="st_cold">gekühlt</option><option value="heiss" data-i18n="st_hot">heiss</option></select></label>
     </div>
     <div class="row2">
       <label class="field"><span class="k" data-i18n="f_from">Abholen von</span><input id="from" type="time" value="21:30"></label>
       <label class="field"><span class="k" data-i18n="f_until">bis</span><input id="until" type="time" value="22:15"></label>
     </div>
-    <label class="field"><span class="k" data-i18n="f_place">Ort</span><input id="place" type="text" placeholder="Strasse, Eingang" data-i18n-ph="ph_place" data-req="1"><span class="hint" id="h-place"></span></label>
-    <label class="field"><span class="k" data-i18n="f_contact">Kontakt</span><input id="contact" type="text" placeholder="Betrieb · Name · Telefon" data-i18n-ph="ph_contact" data-req="1"><span class="hint" id="h-contact"></span></label>
+    <label class="field"><span class="k" data-i18n="f_place">Ort</span><input id="place" type="text" placeholder="Strasse, Eingang" data-i18n-ph="ph_place"><span class="hint" id="h-place"></span></label>
+    <label class="field"><span class="k" data-i18n="f_business">Betrieb</span><input id="business" type="text" placeholder="Restaurant Sonne" data-i18n-ph="ph_business" autocomplete="organization"><span class="hint" id="h-business"></span></label>
+    <div class="row2">
+      <label class="field"><span class="k" data-i18n="f_phone">Telefon</span><input id="phone" type="tel" placeholder="079 555 11 22" inputmode="tel" autocomplete="tel"><span class="hint" id="h-phone"></span></label>
+      <label class="field"><span class="k" data-i18n="f_email">E-Mail</span><input id="email" type="email" placeholder="kueche@sonne.ch" inputmode="email" autocomplete="email"><span class="hint" id="h-email"></span></label>
+    </div>
     <label class="field"><span class="k" data-i18n="f_allergens">Allergene</span><div class="chips" id="allergens"></div></label>
     <div class="row2">
       <label class="field"><span class="k" data-i18n="f_cooked">Zubereitet</span><input id="cooked" type="text"></label>
       <label class="field"><span class="k" data-i18n="f_best">Konsumieren bis</span><input id="best" type="text"></label>
+    </div>
+    <div class="confirm">
+      <button type="button" class="check" id="confirm" role="checkbox" aria-checked="false"><span class="ring"><i class="dot"></i></span><span class="lbl" data-i18n="confirm">Allergene und «Konsumieren bis» sind geprüft und richtig.</span><span></span></button>
+      <p class="hint note" id="h-confirm" style="margin-top:6px"></p>
     </div>
   </section>
 
@@ -230,9 +351,10 @@ label.field.glint::after{top:22px}
 
   <section id="view-log" class="panel" hidden>
     <div class="tip" data-tip="log"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
-    <div class="log" id="log"></div></section>
+    <div class="log" id="log"></div>
+  </section>
 
-  <div class="dock">
+  <div class="dock no-print">
     <button class="press quiet" id="cta" type="button"><span class="shade"></span><span class="face" id="ctaFace">Noch 7 von 7</span></button>
     <p class="dockhint mono" id="dockhint" aria-live="polite"></p>
   </div>
@@ -245,67 +367,117 @@ label.field.glint::after{top:22px}
     de:{tab_check:'Prüfen',tab_form:'Meldung',tab_ticket:'Etikett',tab_log:'Protokoll',
         step:{check:'1  Prüfen',form:'2  Meldung',ticket:'3  Etikett',log:'4  Protokoll'},
         rules:["Nicht im Gästebereich","Heiss ≥ 65 °C oder ≤ 5 °C","Zeit aufs Etikett","14 Allergene bekannt","Geschlossener Behälter","Kühlkette / Warmhaltebox","Empfänger kennt Frist"],
+        why:["Nur Essen, das nie im Gästebereich stand: aus der Küche, vom Pass, aus dem Buffet-Nachschub. Was auf dem Tisch war, geht nicht weiter.",
+             "Heiss gehalten über 65 °C – oder innert zwei Stunden auf 5 °C oder kälter gekühlt. Dazwischen wachsen Keime.",
+             "Zubereitet wann, essbar bis wann: beides kommt aufs Etikett. Ohne Zeit kann der Empfänger nichts entscheiden.",
+             "Du weisst für dieses Gericht, welche der 14 deklarationspflichtigen Allergene drin sind – und schreibst sie auf.",
+             "Deckel drauf, sauber, nicht offen im Blech. Der Behälter geht mit; er kommt zurück oder bleibt.",
+             "Auf dem Weg bleibt es kalt (Kühlbox) oder heiss (Warmhaltebox). Kein Kofferraum ohne Box.",
+             "Die Organisation weiss, bis wann sie es ausgeben oder verwerfen muss – das steht auf dem Etikett und in der Meldung."],
         allergens:["Gluten","Krebstiere","Ei","Fisch","Erdnuss","Soja","Milch","Schalenfrüchte","Sellerie","Senf","Sesam","Sulfite","Lupine","Weichtiere"],
-        note_check:'Sieben Fragen. Alle Ja — sonst geht nichts raus.',f_dish:'Gericht',ph_dish:'z. B. Gemüserisotto, Salat separat',f_portions:'Portionen',f_state:'Zustand',st_cold:'gekühlt',st_hot:'heiss',
-        f_from:'Abholen von',f_until:'bis',f_place:'Ort',ph_place:'Strasse, Eingang',f_contact:'Kontakt',ph_contact:'Betrieb · Name · Telefon',f_allergens:'Allergene',f_cooked:'Zubereitet',f_best:'Konsumieren bis',
-        reheat:'Vor dem Servieren durcherhitzen.',note_ticket:'Dieselbe Form geht in WhatsApp und auf den Behälter.',print:'Etikett drucken',foot:'Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals',skip:'tippen zum überspringen',
-        left:function(n){return 'Noch '+n+' von 7'},hint_check:function(n){return 'Noch '+n+' von 7 — diese Frage zuerst.'},next_form:'Weiter zur Meldung',show_ticket:'Etikett zeigen',to_log:'In Protokoll legen',new_check:'Neue Freigabe',
-        missing:'Fehlt noch.',without:function(f){return 'Ohne '+f+' kein Etikett.'},portions:'Portionen',port:'Port.',allerg:'Allergene',cooked:'Zubereitet',best:'Konsumieren bis',pickup:'Abholen',none:'keine angegeben',empty:'Noch kein Eintrag. Lokal im Browser.',
+        note_check:'Sieben Fragen. Alle Ja — sonst geht nichts raus. Das i erklärt jede Zeile.',
+        f_dish:'Gericht',ph_dish:'z. B. Gemüserisotto, Salat separat',f_portions:'Portionen',f_state:'Zustand',st_cold:'gekühlt',st_hot:'heiss',
+        f_from:'Abholen von',f_until:'bis',f_place:'Ort',ph_place:'Strasse, Eingang',f_business:'Betrieb',ph_business:'Restaurant Sonne',f_phone:'Telefon',f_email:'E-Mail',f_allergens:'Allergene',f_cooked:'Zubereitet',f_best:'Konsumieren bis',
+        confirm:'Allergene und «Konsumieren bis» sind geprüft und richtig.',confirm_hint:'Bitte bestätigen – ohne das gibt es kein Etikett.',
+        reheat:'Vor dem Servieren durcherhitzen.',note_ticket:'Dieselbe Form geht in WhatsApp und auf den Behälter.',print:'Etikett drucken',foot:'Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals',
+        left:function(n){return 'Noch '+n+' von 7'},hint_check:function(n){return 'Noch '+n+' von 7 — diese Frage zuerst.'},next_form:'Weiter zur Meldung',show_ticket:'Etikett zeigen',to_log:'In Protokoll legen',save_edit:'Änderung speichern',new_check:'Neue Freigabe',
+        missing:'Fehlt noch.',bad_email:'Das sieht nicht wie eine E-Mail aus.',without:function(f){return 'Ohne '+f+' kein Etikett.'},portions:'Portionen',port:'Port.',allerg:'Allergene',cooked:'Zubereitet',best:'Konsumieren bis',pickup:'Abholen',none:'keine angegeben',empty:'Noch kein Eintrag. Lokal im Browser.',edited:'geändert',
         state:{'gekühlt':'gekühlt','heiss':'heiss'},
-        tips:{check:'Sieben Hygiene-Fragen. Tippe jede an, die stimmt. Erst bei 7 von 7 wird der Knopf unten rot und es geht weiter — vorher zeigt er dir, was noch fehlt.',
-              form:'Was, wie viel, wann, wo. Gericht, Portionen, Ort und Kontakt sind Pflicht — fehlt etwas, blinkt das Feld. Zubereitet und Konsumieren bis sind vorausgefüllt, prüfe sie.',
-              ticket:'So sieht das Etikett aus. Drucke es auf den Behälter oder kopiere den Text darunter in WhatsApp. «In Protokoll legen» hält die Übergabe fest.',
-              log:'Das Protokoll bleibt nur in diesem Browser — kein Konto, kein Server. «Neue Freigabe» setzt die sieben Fragen zurück.'},
-        info_close:'Schliessen',info_btn:'Hinweise ein/aus'},
+        tips:{check:'Sieben Hygiene-Fragen. Tippe jede an, die stimmt; das i daneben erklärt sie. Erst bei 7 von 7 wird der Knopf unten rot und es geht weiter.',
+              form:'Was, wie viel, wann, wo – und wer. Gericht, Portionen, Ort, Betrieb und Telefon sind Pflicht; ganz unten bestätigst du Allergene und Frist.',
+              ticket:'So sieht das Etikett aus. Drucken (eine Seite) oder den Text darunter in WhatsApp kopieren. «In Protokoll legen» hält die Übergabe fest.',
+              log:'Das Protokoll bleibt nur in diesem Browser. Tippe einen Eintrag: ansehen, bearbeiten, Etikett nochmals zeigen oder löschen.'},
+        info_close:'Schliessen',info_btn:'Hinweise ein/aus',enter:'Eintreten',support:'Unterstützen',close:'Schliessen',
+        c_k:'Das Konzept',c_title:'Was in der Küche übrig bleibt, geht sicher weiter.',
+        c_p1:'übrig ist der Zettel für die letzten fünfzehn Minuten der Schicht: sieben Hygiene-Fragen, eine Meldung, ein Etikett, ein Protokoll. Was freigegeben ist, holt eine soziale Organisation ab – am selben Abend.',
+        c_s1:'Prüfen',c_s1t:'Sieben Fragen. Alle Ja, sonst geht nichts raus.',c_s2:'Meldung',c_s2t:'Was, wie viel, wann, wo – und wer es abgibt.',c_s3:'Etikett',c_s3t:'Auf den Behälter und in die Gruppe. Gleiche Form, gleiche Reihenfolge.',c_s4:'Protokoll',c_s4t:'Bleibt im Browser. Beide Seiten wissen, was wann übergeben wurde.',
+        c_p2:'Kein Konto, kein Server, kein Dashboard. Gebaut in Bern von Freiwilligen – für Küchen und für Menschen, die abends noch etwas Warmes brauchen.',c_go:'Los geht’s',
+        s_k:'Unterstützen',s_title:'Ein Abend übrig kostet elf Franken.',s_p1:'So viel kostet ein E-Cargo-Bike für eine Abholrunde (carvelo2go, drei Stunden). Thermoboxen, Etiketten, die Koordination – alles trägt der Verein. Kein Investor, keine Werbung.',
+        s_p2:'Drei Arten zu helfen: als Küche mitmachen, als Organisation abholen, oder mit einem Beitrag. Das Spendenkonto folgt mit der Vereinsgründung – bis dahin zählt jeder Kontakt.',s_share:'Link teilen',share_ok:'Link kopiert.',share_fail:'Kopieren nicht möglich – Adresse oben im Browser kopieren.',
+        w_k:'Sieben Mal Ja',w_title:'Freigegeben.',w_p:'Das Essen darf raus. Jetzt noch drei Dinge: was es ist, wie viel, und wann es abgeholt werden kann. Dann druckst du das Etikett.',w_go:'Zur Meldung',
+        d_edit:'Bearbeiten',d_label:'Etikett zeigen',d_del:'Eintrag löschen',d_confirm:'Diesen Eintrag löschen?',d_place:'Ort',d_contact:'Kontakt',d_window:'Abholen',d_all:'Allergene',d_cooked:'Zubereitet',d_best:'Konsumieren bis'},
     en:{tab_check:'Check',tab_form:'Message',tab_ticket:'Label',tab_log:'Log',
         step:{check:'1  Check',form:'2  Message',ticket:'3  Label',log:'4  Log'},
         rules:["Not from the guest area","Hot ≥ 65 °C or ≤ 5 °C","Time on the label","14 allergens known","Closed container","Cold chain / hot box","Receiver knows the deadline"],
+        why:["Only food that never stood in the guest area: from the kitchen, the pass, the buffet back-up. What was on a table does not go on.",
+             "Kept hot above 65 °C – or chilled to 5 °C or below within two hours. In between, germs grow.",
+             "Prepared when, edible until when: both go on the label. Without times the receiver cannot decide.",
+             "You know which of the 14 declarable allergens this dish contains – and you write them down.",
+             "Lid on, clean, not open in a tray. The container travels; it comes back or stays.",
+             "On the way it stays cold (cool box) or hot (hot box). No car boot without a box.",
+             "The organisation knows until when it must serve or discard – it is on the label and in the message."],
         allergens:["Gluten","Crustaceans","Egg","Fish","Peanuts","Soy","Milk","Tree nuts","Celery","Mustard","Sesame","Sulphites","Lupin","Molluscs"],
-        note_check:'Seven questions. All yes — or nothing leaves.',f_dish:'Dish',ph_dish:'e.g. vegetable risotto, salad separate',f_portions:'Portions',f_state:'State',st_cold:'chilled',st_hot:'hot',
-        f_from:'Pick up from',f_until:'until',f_place:'Place',ph_place:'Street, entrance',f_contact:'Contact',ph_contact:'Business · name · phone',f_allergens:'Allergens',f_cooked:'Prepared',f_best:'Consume by',
-        reheat:'Reheat thoroughly before serving.',note_ticket:'The same form goes to WhatsApp and onto the container.',print:'Print label',foot:'Prototype · nothing leaves the browser · tap the logo = intro again',skip:'tap to skip',
-        left:function(n){return n+' of 7 left'},hint_check:function(n){return n+' of 7 left — this one first.'},next_form:'Continue to message',show_ticket:'Show label',to_log:'Add to log',new_check:'New release',
-        missing:'Still missing.',without:function(f){return 'No label without '+f+'.'},portions:'portions',port:'port.',allerg:'Allergens',cooked:'Prepared',best:'Consume by',pickup:'Pick up',none:'none given',empty:'No entry yet. Local in the browser.',
+        note_check:'Seven questions. All yes — or nothing leaves. The i explains each line.',
+        f_dish:'Dish',ph_dish:'e.g. vegetable risotto, salad separate',f_portions:'Portions',f_state:'State',st_cold:'chilled',st_hot:'hot',
+        f_from:'Pick up from',f_until:'until',f_place:'Place',ph_place:'Street, entrance',f_business:'Business',ph_business:'Restaurant Sonne',f_phone:'Phone',f_email:'E-mail',f_allergens:'Allergens',f_cooked:'Prepared',f_best:'Consume by',
+        confirm:'Allergens and “consume by” are checked and correct.',confirm_hint:'Please confirm – no label without it.',
+        reheat:'Reheat thoroughly before serving.',note_ticket:'The same form goes to WhatsApp and onto the container.',print:'Print label',foot:'Prototype · nothing leaves the browser · tap the logo = intro again',
+        left:function(n){return n+' of 7 left'},hint_check:function(n){return n+' of 7 left — this one first.'},next_form:'Continue to message',show_ticket:'Show label',to_log:'Add to log',save_edit:'Save changes',new_check:'New release',
+        missing:'Still missing.',bad_email:'That does not look like an e-mail.',without:function(f){return 'No label without '+f+'.'},portions:'portions',port:'port.',allerg:'Allergens',cooked:'Prepared',best:'Consume by',pickup:'Pick up',none:'none given',empty:'No entry yet. Local in the browser.',edited:'edited',
         state:{'gekühlt':'chilled','heiss':'hot'},
-        tips:{check:'Seven hygiene questions. Tap each one that is true. Only at 7 of 7 does the button below turn red and let you continue — before that it shows you what is missing.',
-              form:'What, how much, when, where. Dish, portions, place and contact are required — if one is missing, the field glints. Prepared and consume-by are prefilled; check them.',
-              ticket:'This is the label. Print it onto the container or copy the text below into WhatsApp. “Add to log” records the hand-over.',
-              log:'The log stays in this browser only — no account, no server. “New release” resets the seven questions.'},
-        info_close:'Close',info_btn:'Tips on/off'}
+        tips:{check:'Seven hygiene questions. Tap each one that is true; the i next to it explains it. Only at 7 of 7 does the button below turn red and let you continue.',
+              form:'What, how much, when, where – and who. Dish, portions, place, business and phone are required; at the bottom you confirm allergens and deadline.',
+              ticket:'This is the label. Print it (one page) or copy the text below into WhatsApp. “Add to log” records the hand-over.',
+              log:'The log stays in this browser only. Tap an entry to view, edit, show the label again or delete it.'},
+        info_close:'Close',info_btn:'Tips on/off',enter:'Enter',support:'Support',close:'Close',
+        c_k:'The concept',c_title:'What is left in the kitchen moves on safely.',
+        c_p1:'übrig is the slip for the last fifteen minutes of the shift: seven hygiene questions, one message, one label, one log. What is released gets picked up by a social organisation – the same evening.',
+        c_s1:'Check',c_s1t:'Seven questions. All yes, or nothing leaves.',c_s2:'Message',c_s2t:'What, how much, when, where – and who hands it over.',c_s3:'Label',c_s3t:'Onto the container and into the group. Same form, same order.',c_s4:'Log',c_s4t:'Stays in the browser. Both sides know what was handed over when.',
+        c_p2:'No account, no server, no dashboard. Built in Bern by volunteers – for kitchens and for people who still need something warm in the evening.',c_go:'Let’s go',
+        s_k:'Support',s_title:'One evening of übrig costs eleven francs.',s_p1:'That is one e-cargo bike for a pick-up round (carvelo2go, three hours). Thermo boxes, labels, coordination – the association carries it all. No investor, no ads.',
+        s_p2:'Three ways to help: join as a kitchen, collect as an organisation, or contribute. The donation account follows with the association – until then every contact counts.',s_share:'Share link',share_ok:'Link copied.',share_fail:'Cannot copy – copy the address bar instead.',
+        w_k:'Seven times yes',w_title:'Released.',w_p:'The food may leave. Three more things: what it is, how much, and when it can be picked up. Then you print the label.',w_go:'To the message',
+        d_edit:'Edit',d_label:'Show label',d_del:'Delete entry',d_confirm:'Delete this entry?',d_place:'Place',d_contact:'Contact',d_window:'Pick up',d_all:'Allergens',d_cooked:'Prepared',d_best:'Consume by'}
   };
   var lang='de';try{lang=localStorage.getItem('uebrig-prototyp-lang')||((navigator.language||'').slice(0,2)==='en'?'en':'de')}catch(e){}
   if(!I18N[lang])lang='de';
   var T=function(k){return I18N[lang][k]};
-  var RULES=I18N.de.rules, ALLERGENS=I18N.de.allergens;  /* Schlüssel: deutsche Namen bleiben interne IDs */
+  var RULES=I18N.de.rules, ALLERGENS=I18N.de.allergens;  /* deutsche Namen bleiben interne IDs */
   var REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(id){return document.getElementById(id)};
   var pad=function(n){return String(n).padStart(2,'0')};
   var stampT=function(d){return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'. '+pad(d.getHours())+':'+pad(d.getMinutes())};
   var buzz=function(ms){try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}};
 
+  /* ---- overlays ---- */
+  function openV(id){var v=$(id);v.hidden=false;void v.offsetWidth;requestAnimationFrame(function(){v.classList.add('in')});var f=v.querySelector('.x');if(f)f.focus({preventScroll:true})}
+  function closeV(id){var v=$(id);v.classList.remove('in');setTimeout(function(){v.hidden=true},REDUCED?0:260)}
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openV(b.dataset.open)})});
+  document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){closeV(b.dataset.close)})});
+  document.querySelectorAll('.veil').forEach(function(v){v.addEventListener('click',function(e){if(e.target===v)closeV(v.id)})});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.veil:not([hidden])').forEach(function(v){closeV(v.id)})});
+  $('shareBtn').addEventListener('click',function(){
+    var url=location.href.split('#')[0],n=$('shareNote');
+    if(navigator.share){navigator.share({title:'übrig',url:url}).catch(function(){});return}
+    if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){n.textContent=T('share_ok')},function(){n.textContent=T('share_fail')})}else n.textContent=T('share_fail');
+  });
+
   /* ---- intro ---- */
   var intro=$('intro');
   function playIntro(force){
     var recent=false;
     try{var t=+sessionStorage.getItem('uebrig-intro')||0;recent=(Date.now()-t)<10*60*1000}catch(e){}
-    if(!force&&recent){intro.remove();return}
-    intro.hidden=false;intro.classList.remove('play','still');
-    void intro.offsetWidth;
+    if(!force&&recent){intro.hidden=true;return}
+    intro.hidden=false;intro.classList.remove('play','still','leave');void intro.offsetWidth;
     intro.classList.add(REDUCED?'still':'play');
-    intro.addEventListener('animationend',function done(e){if(e.target===intro){intro.hidden=true;intro.classList.remove('play','still');try{sessionStorage.setItem('uebrig-intro',String(Date.now()))}catch(x){}}});
-    if(!REDUCED&&intro.classList.contains('play'))setTimeout(function(){buzz(10)},1215);
+    if(!REDUCED)setTimeout(function(){buzz(10)},1640);
   }
-  intro.addEventListener('click',function(){intro.hidden=true;intro.classList.remove('play','still');try{sessionStorage.setItem('uebrig-intro',String(Date.now()))}catch(x){}});
-  intro.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')intro.click()});
+  $('enter').addEventListener('click',function(){
+    intro.classList.add('leave');
+    setTimeout(function(){intro.hidden=true;intro.classList.remove('play','still','leave')},REDUCED?0:230);
+    try{sessionStorage.setItem('uebrig-intro',String(Date.now()))}catch(e){}
+    openV('concept');
+  });
   $('replay').addEventListener('click',function(){playIntro(true)});
   playIntro(false);
 
   /* ---- state ---- */
-  var KEY='uebrig-prototyp-v1';
-  var state={checks:RULES.map(function(){return false}),allergens:[],log:[],fields:{}};
-  try{var raw=localStorage.getItem(KEY);if(raw){var d=JSON.parse(raw);state.checks=d.checks||state.checks;state.allergens=d.allergens||[];state.log=d.log||[];state.fields=d.fields||{}}}catch(e){}
-  var views=['check','form','ticket','log'],view='check',lastCue=0;
-  var FIELDS=['dish','portions','state','from','until','place','contact','cooked','best'];
+  var KEY='uebrig-prototyp-v2';
+  var state={checks:RULES.map(function(){return false}),allergens:[],log:[],fields:{},confirm:false};
+  try{var raw=localStorage.getItem(KEY)||localStorage.getItem('uebrig-prototyp-v1');if(raw){var d=JSON.parse(raw);state.checks=d.checks||state.checks;state.allergens=d.allergens||[];state.log=(d.log||[]).map(function(e,i){e.id=e.id||('old'+i);return e});state.fields=d.fields||{};state.confirm=!!d.confirm;
+    if(state.fields.contact&&!state.fields.business){state.fields.business=state.fields.contact}}}catch(e){}
+  var views=['check','form','ticket','log'],view='check',lastCue=0,editingId=null,blinked=false;
+  var FIELDS=['dish','portions','state','from','until','place','business','phone','email','cooked','best'];
   FIELDS.forEach(function(id){if(state.fields[id]!=null)$(id).value=state.fields[id]});
   var now=new Date(),later=new Date(now.getTime()+17.5*3600*1000);
   if(!$('cooked').value)$('cooked').value=stampT(now);
@@ -314,29 +486,68 @@ label.field.glint::after{top:22px}
 
   var perf=$('perf');for(var i=0;i<22;i++)perf.appendChild(document.createElement('i'));
 
+  /* ---- checks with i ---- */
   var checksEl=$('checks');
   RULES.forEach(function(label,i){
-    var b=document.createElement('button');b.type='button';b.className='check';b.setAttribute('role','checkbox');b.setAttribute('aria-checked','false');
-    b.innerHTML='<i class="ring"><i class="dot"></i></i><span></span>';b.querySelector('span').textContent=label;b.dataset.i=i;
-    b.addEventListener('click',function(){
+    var b=document.createElement('div');b.className='check';b.dataset.i=i;
+    b.innerHTML='<span class="ring" role="checkbox" aria-checked="false" tabindex="0"><i class="dot"></i></span><span class="lbl"></span><button type="button" class="i" aria-expanded="false" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><div class="why" hidden></div>';
+    b.querySelector('.lbl').textContent=label;
+    function toggle(){
       var before=state.checks.filter(Boolean).length;
       state.checks[i]=!state.checks[i];save();render();
       var after=state.checks.filter(Boolean).length;
-      if(after===7&&before<7){var cta=$('cta');cta.classList.add('sit');setTimeout(function(){cta.classList.remove('sit')},200);buzz(10)}
-    });
+      if(after===7&&before<7){var cta=$('cta');cta.classList.remove('gentle');void cta.offsetWidth;cta.classList.add('gentle');setTimeout(function(){cta.classList.remove('gentle')},600);buzz(10)}
+    }
+    b.querySelector('.ring').addEventListener('click',toggle);
+    b.querySelector('.ring').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}});
+    b.querySelector('.lbl').addEventListener('click',toggle);
+    b.querySelector('.i').addEventListener('click',function(){var w=b.querySelector('.why'),open=w.hidden;w.hidden=!open;this.setAttribute('aria-expanded',open?'true':'false')});
     checksEl.appendChild(b);
   });
+  function blinkRings(){
+    if(blinked||REDUCED)return;blinked=true;
+    Array.prototype.forEach.call(checksEl.children,function(el,i){setTimeout(function(){el.classList.add('blink');setTimeout(function(){el.classList.remove('blink')},800)},i*70)});
+  }
+
   var allEl=$('allergens');
   ALLERGENS.forEach(function(name){
     var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=name;b.dataset.key=name;b.setAttribute('aria-pressed','false');
     b.addEventListener('click',function(){var s=state.allergens.indexOf(name);if(s>=0)state.allergens.splice(s,1);else state.allergens.push(name);save();render()});
     allEl.appendChild(b);
   });
+  $('confirm').addEventListener('click',function(){state.confirm=!state.confirm;$('h-confirm').textContent='';save();render()});
   document.querySelectorAll('.tabs button').forEach(function(btn){btn.addEventListener('click',function(){view=btn.dataset.view;render()})});
   FIELDS.forEach(function(id){$(id).addEventListener('input',function(){save();clearHint(id)})});
   $('print').addEventListener('click',function(){window.print()});
+  window.addEventListener('scroll',function(){$('topbar').classList.toggle('scrolled',scrollY>4)},{passive:true});
 
-  /* ---- cues: shake + glint ---- */
+  /* ---- tips ---- */
+  var tips={};try{tips=JSON.parse(localStorage.getItem('uebrig-prototyp-tips')||'{}')||{}}catch(e){}
+  var tipsOn=true;try{tipsOn=localStorage.getItem('uebrig-prototyp-tips-on')!=='0'}catch(e){}
+  function saveTips(){try{localStorage.setItem('uebrig-prototyp-tips',JSON.stringify(tips));localStorage.setItem('uebrig-prototyp-tips-on',tipsOn?'1':'0')}catch(e){}}
+  function applyTips(){
+    document.querySelectorAll('.tip').forEach(function(el){var k=el.dataset.tip;el.querySelector('.t').textContent=T('tips')[k];el.querySelector('.x').setAttribute('aria-label',T('info_close'));el.hidden=!tipsOn||!!tips[k]});
+    var ib=$('infoBtn');ib.setAttribute('aria-pressed',tipsOn?'true':'false');ib.setAttribute('aria-label',T('info_btn'));ib.title=T('info_btn');
+  }
+  document.querySelectorAll('.tip .x').forEach(function(x){x.addEventListener('click',function(){tips[x.parentNode.dataset.tip]=true;saveTips();applyTips()})});
+  $('infoBtn').addEventListener('click',function(){tipsOn=!tipsOn;if(tipsOn)tips={};saveTips();applyTips()});
+
+  /* ---- language ---- */
+  function labelOf(id){return T({dish:'f_dish',portions:'f_portions',place:'f_place',business:'f_business',phone:'f_phone',email:'f_email'}[id])||id}
+  function allergenLabel(key){var i=I18N.de.allergens.indexOf(key);return i>=0?T('allergens')[i]:key}
+  function applyLang(){
+    document.documentElement.lang=lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=T(el.dataset.i18n);if(typeof v==='string')el.textContent=v});
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){el.placeholder=T(el.dataset.i18nPh)});
+    Array.prototype.forEach.call(checksEl.children,function(el){el.querySelector('.lbl').textContent=T('rules')[+el.dataset.i];el.querySelector('.why').textContent=T('why')[+el.dataset.i]});
+    Array.prototype.forEach.call(allEl.children,function(el){el.textContent=allergenLabel(el.dataset.key)});
+    document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang?'true':'false')});
+    document.querySelectorAll('.veil .x, .tip .x').forEach(function(x){x.setAttribute('aria-label',T('close'))});
+    applyTips();
+  }
+  document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem('uebrig-prototyp-lang',lang)}catch(e){}applyLang();render()})});
+
+  /* ---- cues ---- */
   function cue(el,hintId,hintText){
     var t=Date.now();if(t-lastCue<1200)return;lastCue=t;
     var cta=$('cta');cta.classList.remove('shake');void cta.offsetWidth;cta.classList.add('shake');
@@ -351,60 +562,85 @@ label.field.glint::after{top:22px}
   }
   function clearHint(id){var h=$('h-'+id);if(h)h.textContent='';$('dockhint').textContent=''}
 
+  /* ---- confetti (paper, brass, stamp) ---- */
+  function confetti(){
+    if(REDUCED)return;
+    var c=$('confetti'),ctx=c.getContext('2d');c.hidden=false;c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+    var cols=['#9C3B2E','#C4A36A','#FFFBF4','#D8D0C4','#1A1814'],parts=[],W=innerWidth,H=innerHeight;
+    for(var i=0;i<90;i++)parts.push({x:W/2+(Math.random()-.5)*80,y:H*0.45,vx:(Math.random()-.5)*9,vy:-6-Math.random()*7,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,w:5+Math.random()*5,h:8+Math.random()*7,c:cols[i%cols.length],a:1});
+    var t0=performance.now();
+    function frame(t){
+      var k=(t-t0)/1000;ctx.clearRect(0,0,W,H);
+      parts.forEach(function(p){p.vy+=0.28;p.x+=p.vx;p.y+=p.vy;p.vx*=0.985;p.r+=p.vr;p.a=Math.max(0,1-(k-0.9)/0.6);ctx.save();ctx.globalAlpha=p.a;ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});
+      if(k<1.6)requestAnimationFrame(frame);else{ctx.clearRect(0,0,W,H);c.hidden=true}
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---- CTA ---- */
   $('cta').addEventListener('click',function(){
     var done=state.checks.filter(Boolean).length;
     if(view==='check'){
       if(done<7){var idx=state.checks.indexOf(false);cue(checksEl.children[idx],'dockhint',T('hint_check')(7-done));return}
-      view='form';
+      confetti();buzz(15);openV('welcome');view='form';
     }else if(view==='form'){
-      var missing=null;['dish','portions','place','contact'].some(function(id){if(!$(id).value.trim()){missing=id;return true}});
+      var missing=null;['dish','portions','place','business','phone'].some(function(id){if(!$(id).value.trim()){missing=id;return true}});
       if(missing){cue($(missing).closest('label'),'h-'+missing,T('missing'));$('dockhint').textContent=T('without')(labelOf(missing));return}
+      var em=$('email').value.trim();if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){cue($('email').closest('label'),'h-email',T('bad_email'));return}
+      if(!state.confirm){cue($('confirm'),'h-confirm',T('confirm_hint'));return}
       view='ticket';
     }else if(view==='ticket'){
-      state.log.unshift({at:stampT(new Date()),dish:$('dish').value,portions:$('portions').value,window:$('from').value+'–'+$('until').value});
+      var entry=snapshot();
+      if(editingId){var i=state.log.findIndex(function(e){return e.id===editingId});if(i>=0){entry.id=editingId;entry.at=state.log[i].at;entry.edited=stampT(new Date());state.log[i]=entry}else state.log.unshift(entry);editingId=null}
+      else state.log.unshift(entry);
       save();buzz(10);view='log';
     }else{
-      state.checks=RULES.map(function(){return false});save();view='check';
+      state.checks=RULES.map(function(){return false});state.confirm=false;editingId=null;save();view='check';
     }
     render();
   });
-  function labelOf(id){return T({dish:'f_dish',portions:'f_portions',place:'f_place',contact:'f_contact'}[id])||id}
-  var tips={};try{tips=JSON.parse(localStorage.getItem('uebrig-prototyp-tips')||'{}')||{}}catch(e){}
-  var tipsOn=true;try{tipsOn=localStorage.getItem('uebrig-prototyp-tips-on')!=='0'}catch(e){}
-  function saveTips(){try{localStorage.setItem('uebrig-prototyp-tips',JSON.stringify(tips));localStorage.setItem('uebrig-prototyp-tips-on',tipsOn?'1':'0')}catch(e){}}
-  function applyTips(){
-    document.querySelectorAll('.tip').forEach(function(el){var k=el.dataset.tip;el.querySelector('.t').textContent=T('tips')[k];el.querySelector('.x').setAttribute('aria-label',T('info_close'));el.hidden=!tipsOn||!!tips[k]});
-    var ib=$('infoBtn');ib.setAttribute('aria-pressed',tipsOn?'true':'false');ib.setAttribute('aria-label',T('info_btn'));ib.title=T('info_btn');
+  function snapshot(){
+    return {id:'e'+Date.now().toString(36),at:stampT(new Date()),dish:$('dish').value,portions:$('portions').value,state:$('state').value,from:$('from').value,until:$('until').value,place:$('place').value,business:$('business').value,phone:$('phone').value,email:$('email').value,allergens:state.allergens.slice(),cooked:$('cooked').value,best:$('best').value,window:$('from').value+'–'+$('until').value};
   }
-  document.querySelectorAll('.tip .x').forEach(function(x){x.addEventListener('click',function(){tips[x.parentNode.dataset.tip]=true;saveTips();applyTips()})});
-  $('infoBtn').addEventListener('click',function(){tipsOn=!tipsOn;if(tipsOn)tips={};saveTips();applyTips()});
-  function allergenLabel(key){var i=I18N.de.allergens.indexOf(key);return i>=0?T('allergens')[i]:key}
-  function applyLang(){
-    document.documentElement.lang=lang;
-    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=T(el.dataset.i18n);if(typeof v==='string')el.textContent=v});
-    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){el.placeholder=T(el.dataset.i18nPh)});
-    Array.prototype.forEach.call(checksEl.children,function(el){el.querySelector('span').textContent=T('rules')[+el.dataset.i]});
-    Array.prototype.forEach.call(allEl.children,function(el){el.textContent=allergenLabel(el.dataset.key)});
-    document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang?'true':'false')});
-    applyTips();
-  }
-  document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem('uebrig-prototyp-lang',lang)}catch(e){}applyLang();render()})});
-
+  function contactLine(o){return [o.business,o.phone,o.email].filter(Boolean).join(' · ')}
   function draft(){
     var all=state.allergens.length?state.allergens.map(allergenLabel).join(', '):T('none');
-    return ['übrig — '+$('dish').value,$('portions').value+' '+T('portions')+' · '+T('state')[$('state').value],$('contact').value,T('allerg')+': '+all,T('cooked')+' '+$('cooked').value,T('best')+' '+$('best').value,T('pickup')+' '+$('from').value+'–'+$('until').value,$('place').value,T('reheat')].join('\n');
+    return ['übrig — '+$('dish').value,$('portions').value+' '+T('portions')+' · '+T('state')[$('state').value],contactLine({business:$('business').value,phone:$('phone').value,email:$('email').value}),T('allerg')+': '+all,T('cooked')+' '+$('cooked').value,T('best')+' '+$('best').value,T('pickup')+' '+$('from').value+'–'+$('until').value,$('place').value,T('reheat')].join('\n');
   }
+
+  /* ---- log detail ---- */
+  var detailId=null;
+  function openDetail(id){
+    var e=state.log.find(function(x){return x.id===id});if(!e)return;detailId=id;
+    $('d-when').textContent=e.at+(e.edited?'  ·  '+T('edited')+' '+e.edited:'');
+    $('d-title').textContent=e.dish||'—';
+    var kv=$('d-kv');kv.textContent='';
+    [[T('portions'),(e.portions||'—')+(e.state?' · '+T('state')[e.state]:'')],[T('d_window'),e.window||'—'],[T('d_place'),e.place||'—'],[T('d_contact'),contactLine(e)||e.contact||'—'],[T('d_all'),(e.allergens&&e.allergens.length)?e.allergens.map(allergenLabel).join(', '):'—'],[T('d_cooked'),e.cooked||'—'],[T('d_best'),e.best||'—']].forEach(function(r){var dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=r[0];dd.textContent=r[1];kv.appendChild(dt);kv.appendChild(dd)});
+    openV('detail');
+  }
+  function loadEntry(e){
+    ['dish','portions','state','from','until','place','business','phone','email','cooked','best'].forEach(function(k){if(e[k]!=null)$(k).value=e[k]});
+    if(!e.business&&e.contact)$('business').value=e.contact;
+    state.allergens=(e.allergens||[]).slice();state.checks=RULES.map(function(){return true});state.confirm=true;save();
+  }
+  $('d-edit').addEventListener('click',function(){var e=state.log.find(function(x){return x.id===detailId});if(!e)return;loadEntry(e);editingId=detailId;closeV('detail');view='form';render()});
+  $('d-label').addEventListener('click',function(){var e=state.log.find(function(x){return x.id===detailId});if(!e)return;loadEntry(e);editingId=detailId;closeV('detail');view='ticket';render()});
+  $('d-del').addEventListener('click',function(){if(!confirm(T('d_confirm')))return;state.log=state.log.filter(function(x){return x.id!==detailId});save();closeV('detail');render()});
+
+  /* ---- render ---- */
   function render(){
     var done=state.checks.filter(Boolean).length;
     $('countLabel').textContent=done+' / 7';
-    Array.prototype.forEach.call(checksEl.children,function(el,i){el.classList.toggle('on',!!state.checks[i]);el.setAttribute('aria-checked',state.checks[i]?'true':'false')});
+    Array.prototype.forEach.call(checksEl.children,function(el,i){el.classList.toggle('on',!!state.checks[i]);el.querySelector('.ring').setAttribute('aria-checked',state.checks[i]?'true':'false')});
     Array.prototype.forEach.call(allEl.children,function(el){var on=state.allergens.indexOf(el.dataset.key)>=0;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on?'true':'false')});
+    $('confirm').classList.toggle('on',state.confirm);$('confirm').setAttribute('aria-checked',state.confirm?'true':'false');
     views.forEach(function(v){$('view-'+v).hidden=(v!==view)});
     document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.view===view)});
     $('stepLabel').textContent=T('step')[view];
+    if(view==='check')blinkRings();
     $('t-dish').textContent=$('dish').value||'—';
     $('t-meta').textContent=($('portions').value||'—')+' '+T('portions')+'  ·  '+T('state')[$('state').value];
-    $('t-contact').textContent=$('contact').value;
+    $('t-contact').textContent=contactLine({business:$('business').value,phone:$('phone').value,email:$('email').value});
     $('t-all').textContent=T('allerg')+': '+(state.allergens.map(allergenLabel).join(', ')||'—');
     $('t-cooked').textContent=T('cooked')+' '+$('cooked').value;
     $('t-best').textContent=T('best')+' '+$('best').value;
@@ -414,11 +650,11 @@ label.field.glint::after{top:22px}
     var tk=$('ticket');if(view==='ticket'){tk.classList.remove('in');void tk.offsetWidth;requestAnimationFrame(function(){tk.classList.add('in')})}else tk.classList.remove('in');
     var log=$('log');log.textContent='';
     if(!state.log.length){var p=document.createElement('p');p.className='empty';p.textContent=T('empty');log.appendChild(p)}
-    else state.log.forEach(function(e){var a=document.createElement('article');var w=document.createElement('div');w.className='mono when';w.textContent=e.at;var s=document.createElement('strong');s.textContent=e.dish;var m=document.createElement('div');m.className='mono';m.textContent=e.portions+' '+T('port')+' · '+e.window;a.appendChild(w);a.appendChild(s);a.appendChild(m);log.appendChild(a)});
+    else state.log.forEach(function(e){var a=document.createElement('button');a.type='button';var w=document.createElement('div');w.className='mono when';w.textContent=e.at+(e.edited?' · '+T('edited'):'');var s=document.createElement('strong');s.textContent=e.dish;var m=document.createElement('div');m.className='mono';m.textContent=e.portions+' '+T('port')+' · '+e.window+(e.business?' · '+e.business:'');a.appendChild(w);a.appendChild(s);a.appendChild(m);a.addEventListener('click',function(){openDetail(e.id)});log.appendChild(a)});
     var face=$('ctaFace'),btn=$('cta');btn.classList.remove('quiet','stamp','ghost');
     if(view==='check'){if(done<7){btn.classList.add('quiet');face.textContent=T('left')(7-done)}else{btn.classList.add('stamp');face.textContent=T('next_form')}}
     else if(view==='form'){face.textContent=T('show_ticket')}
-    else if(view==='ticket'){btn.classList.add('stamp');face.textContent=T('to_log')}
+    else if(view==='ticket'){btn.classList.add('stamp');face.textContent=editingId?T('save_edit'):T('to_log')}
     else{btn.classList.add('ghost');face.textContent=T('new_check')}
     if(view!=='check')$('dockhint').textContent='';
   }
