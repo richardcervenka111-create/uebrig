@@ -92,7 +92,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <p class="lead">Kuchár nepotrebuje dashboard. Potrebuje lístok, ktorý smie ísť von. Tento dokument je jediný zdroj pravdy pre to, ako Übrig vyzerá, hovorí a hýbe sa. Všetko, čo tu nie je, sa nerobí; všetko, čo tu je, sa robí presne tak.</p>
 </header>
 
-<div class="verdict"><b>Verdikt dizajnového tímu.</b> Richardov výber – board „Lístok a pečiať“ z Figmy – berieme ako základ v plnom rozsahu: papier, atrament, pečiať, Fraunces, Atkinson, Plex Mono, lis namiesto tlačidla, kruh namiesto checkboxu, lístok s perforáciou. Sprísňujeme štyri veci: (1) jedno znamenie, nie dve – tanier so zmiznutým klinom je primárne, samotný červený kruh z návrhu „nach dem service“ je len redukovaná pečiať pre ikonu aplikácie a favicon; (2) pohyb dostáva pravidlá – zatrasenie a záblesk sú navigácia, nie dekorácia, a smú sa stať raz; (3) spúšťacia animácia má presný scenár do 1,4 s a musí sa dať preskočiť; (4) prístupnosť sa nemeria dojmom, ale kontrastom a veľkosťou cieľa – čísla sú nižšie. Nič sa zatiaľ nestavia; tento manuál a prototyp sú podklad na schválenie.</div>
+<div class="verdict"><b>Verdikt dizajnového tímu.</b> Richardov výber – board „Lístok a pečiať“ z Figmy – berieme ako základ v plnom rozsahu: papier, atrament, pečiať, Fraunces, Atkinson, Plex Mono, lis namiesto tlačidla, kruh namiesto checkboxu, lístok s perforáciou. Sprísňujeme štyri veci: (1) jedno znamenie, nie dve – tanier so zmiznutým klinom je primárne, samotný červený kruh z návrhu „nach dem service“ je len redukovaná pečiať pre ikonu aplikácie a favicon; (2) pohyb dostáva pravidlá – zatrasenie a záblesk sú navigácia, nie dekorácia, a smú sa stať raz; (3) spúšťacia animácia má presný scenár (≈ 2,0 s) a musí sa dať preskočiť; (4) prístupnosť sa nemeria dojmom, ale kontrastom a veľkosťou cieľa – čísla sú nižšie. Nič sa zatiaľ nestavia; tento manuál a prototyp sú podklad na schválenie.</div>
 
 <!-- 1 -->
 <h2 id="idea"><span class="k">01 · Myšlienka</span>Lístok a pečiať</h2>
@@ -241,6 +241,11 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 </div>
 <ul><li>Hárok, obrys 1,25 px Atrament, rádius 4 px, tvrdý tieň 6 px Linka (papier na papieri). Perforácia = 18–22 bodiek Linka.</li><li>Hierarchia je zákon: jedlo → porcie · stav → kontakt → alergény → zubereitet → konsumieren bis → abholen → adresa → „Vor dem Servieren durcherhitzen.“ Rovnaké poradie vo WhatsApp texte aj v tlači.</li><li>Pečiať FREIGEGEBEN + znamenie vpravo hore – <b>až po siedmich áno</b>. Návrh bez pečiate je „Entwurf“ a nemá červenú.</li></ul>
 
+
+<h3>Info-bublina (Hinweis)</h3>
+<div class="demo"><div class="sheet" style="max-width:360px;position:relative;padding:12px 44px 12px 14px"><span class="k" style="display:block;margin-bottom:4px;color:var(--mute)">Info</span><span style="font-size:14px;color:var(--ink-2)">Sieben Hygiene-Fragen. Tippe jede an, die stimmt. Erst bei 7 von 7 wird der Knopf unten rot und es geht weiter.</span><span style="position:absolute;top:8px;right:14px;color:var(--mute);font-size:20px">×</span></div></div>
+<ul><li>Jedna bublina na obrazovku, vždy hore pod záložkami, Hárok s Linka obrysom a šípkou k záložke; text Atkinson 14 px v Atramente-2, popisok <span class="mono">INFO</span> v Plex Mono. Žiadna červená, žiadna ikona okrem ⓘ v hlavičke.</li><li>Obsah: najviac dve vety – čo obrazovka chce a čo sa stane ďalej. Nikdy marketing, nikdy „Tipp des Tages“.</li><li>Zavretie × si obrazovka pamätá (localStorage); ⓘ v hlavičke bubliny vypne alebo znovu zapne všetky. Nikdy neblokuje dock ani obsah, nikdy sa neobjaví ako modal.</li><li>Prekladá sa s jazykom; pri tlači etikety sa netlačí.</li></ul>
+
 <!-- 7 -->
 <h2 id="pohyb"><span class="k">07 · Pohyb</span>Lis, zatrasenie, záblesk, pečiať, otvorenie</h2>
 <p>Pohyb v Übrig má jednu úlohu: povedať, čo urobiť ďalej. Nikdy nezabáva, nikdy sa neopakuje v slučke, nikdy nebeží dva naraz. Trvania sú tri: <span class="mono">80 ms</span> (dotyk), <span class="mono">240 ms</span> (odpoveď), <span class="mono">600 ms</span> (upozornenie). Krivka: <span class="mono">cubic-bezier(.36,.07,.19,.97)</span> pre odpoveď, <span class="mono">ease-out</span> pre záblesk.</p>
@@ -254,15 +259,15 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <tr><td><b>Prechod krokov</b></td><td>obsah sa vymení bez posunu; podčiarknutie záložky sa presunie</td><td>160 ms</td><td>vždy</td></tr>
 </tbody></table></div>
 <h3>Spúšťacia animácia (cold start)</h3>
-<p>Scenár do 1,4 s, jediný raz pri studenom štarte (nie pri prepínaní krokov, nie pri návrate z pozadia do 10 minút). Klepnutie kdekoľvek ju preskočí. Pri <span class="mono">prefers-reduced-motion</span> sa zobrazí statický záber 300 ms a prejde sa ďalej.</p>
+<p>Scenár ≈ 2,0 s (pôvodných 1,3 s predĺžených o 35 % na Richardovu požiadavku, 25. 9. 2026), jediný raz pri studenom štarte (nie pri prepínaní krokov, nie pri návrate z pozadia do 10 minút). Klepnutie kdekoľvek ju preskočí. Pri <span class="mono">prefers-reduced-motion</span> sa zobrazí statický záber 405 ms a prejde sa ďalej.</p>
 <div class="sheet"><div class="timeline">
 <span class="t">0 ms</span><span>Papier. Nič iné. (Papier je vždy prvý – aplikácia nikdy nezačína bielou ani čiernou.)</span>
-<span class="t">120 ms</span><span>Wordmark „übrig“ vystúpi zdola o 8 px a z 0 na 100 % krytia, 360 ms, Fraunces italic. Umlaut príde o 80 ms neskôr – dve porcie dopadnú.</span>
-<span class="t">420 ms</span><span>Vonkajší kruh znamenia sa vykreslí (stroke-dashoffset), 400 ms; vnútorný kruh 80 ms za ním.</span>
-<span class="t">700 ms</span><span>Klin sa vykreslí zľava dole a zastaví sa pred uzavretím – medzera ostane.</span>
-<span class="t">900 ms</span><span>Bod „sadne“ do stredu ako lis: scale 1,3 → 1, 120 ms; haptika 10 ms.</span>
-<span class="t">1 000 ms</span><span>Tagline „nach dem service“ sa rozpáli z rozpalu 0,6 em na 0,32 em a z 0 na 100 % krytia, 300 ms.</span>
-<span class="t">1 300 ms</span><span>Celá scéna zmizne na 0 % za 160 ms, pod ňou je už hotová obrazovka „1 Prüfen“ – žiadny spinner, žiadny skeleton.</span>
+<span class="t">160 ms</span><span>Wordmark „übrig“ vystúpi zdola o 8 px a z 0 na 100 % krytia, 490 ms, Fraunces italic. Umlaut príde o 110 ms neskôr – dve porcie dopadnú.</span>
+<span class="t">570 ms</span><span>Vonkajší kruh znamenia sa vykreslí (stroke-dashoffset), 540 ms; vnútorný kruh 110 ms za ním.</span>
+<span class="t">945 ms</span><span>Klin sa vykreslí zľava dole (350 ms) a zastaví sa pred uzavretím – medzera ostane.</span>
+<span class="t">1 215 ms</span><span>Bod „sadne“ do stredu ako lis: scale 1,3 → 1, 160 ms; haptika 10 ms.</span>
+<span class="t">1 350 ms</span><span>Tagline „nach dem service“ sa rozpáli z rozpalu 0,6 em na 0,32 em a z 0 na 100 % krytia, 405 ms.</span>
+<span class="t">1 755 ms</span><span>Celá scéna zmizne na 0 % za 215 ms (koniec ≈ 1 970 ms), pod ňou je už hotová obrazovka „1 Prüfen“ – žiadny spinner, žiadny skeleton.</span>
 </div></div>
 <div class="no"><b>Zákazy pohybu:</b> nekonečné slučky, pulzovanie, bounce s viac než jedným prekmitom, parallax, konfety, zvuk, animované ikony, skeleton loadery, spinner dlhší než 600 ms (radšej text „Lädt …“ v Tlmenej).</div>
 
@@ -331,7 +336,7 @@ footer{margin-top:60px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <li><b>Chyba bez červenej.</b> Bežné systémy hlásia chybu červenou; tu je červená povolenie. Chybu preto nesie pohyb (zatrasenie) a text. Kompromis: text chyby je Tlmená, nie Atrament, aby sa nemýlil s obsahom.</li>
 <li><b>Tichý lis nie je disabled.</b> Disabled tlačidlo nič nepovie. Tichý lis po klepnutí navedie: zatrasenie + záblesk na prvý nesplnený riadok. Toto je Richardova požiadavka „tlačidlá sa zatrasú, polia zablisnú“ – s limitom raz na pokus, aby sa z navigácie nestal hluk.</li>
 <li><b>Záblesk okrovou, nie červenou.</b> Okrová je jediný teplý akcent bez významu „povolené“. Používa sa len v pohybe (kontrast 2,07 : 1 ju vylučuje z textu).</li>
-<li><b>Spúšťacia animácia 1,3 s, preskočiteľná.</b> Kuchár otvára Übrig raz za smenu – jedna vkusná sekunda znamenie zafixuje. Pri návrate z pozadia sa nehrá. Reduced motion = statický záber.</li>
+<li><b>Spúšťacia animácia ≈ 2,0 s, preskočiteľná.</b> Pôvodne 1,3 s; Richard ju 25. 9. chcel o 35 % dlhšiu – všetky časy sú škálované rovnakým faktorom, poradie a krivky ostali. Kuchár otvára Übrig raz za smenu – dve vkusné sekundy znamenie zafixujú. Pri návrate z pozadia sa nehrá. Reduced motion = statický záber.</li>
 <li><b>Nočný variant až po pilote.</b> Kuchyňa je vždy svetlá; odberatelia vonku by tmavý variant ocenili. Tokeny sú pripravené, zapnutie je rozhodnutie po prvých týždňoch.</li>
 <li><b>Fraunces len pre mená.</b> Pokušenie dať italic všade sme odmietli: pri 14 px v kuchyni klesá čitateľnosť. Atkinson Hyperlegible je navrhnutý pre slabý zrak – to je hlas viet.</li>
 <li><b>Žiadny toast.</b> Potvrdením akcie je lístok alebo záznam v protokole. Toast by bol štvrtý prvok, ktorý súperí o pozornosť.</li>

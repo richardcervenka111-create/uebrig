@@ -44,24 +44,35 @@ html.nojs #intro{display:none}
 #intro .dot{fill:var(--stamp);transform-origin:36px 36px;transform:scale(0)}
 #intro .tag{font-family:var(--f-fact);font-size:13px;letter-spacing:.6em;color:var(--ink-2);opacity:0}
 #intro .skip{position:absolute;bottom:calc(24px + var(--safe-b));font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
-#intro.play .word{animation:rise 360ms var(--e-answer) 120ms forwards}
-#intro.play .dots{animation:drop 220ms var(--e-answer) 380ms forwards}
-#intro.play .c1{animation:draw 400ms ease-out 420ms forwards}
-#intro.play .c2{animation:draw 400ms ease-out 500ms forwards}
-#intro.play .wedge{animation:draw 260ms ease-out 700ms forwards}
-#intro.play .dot{animation:press 120ms var(--e-answer) 900ms forwards}
-#intro.play .tag{animation:settle 300ms ease-out 1000ms forwards}
-#intro.play{animation:fade 160ms ease-out 1300ms forwards}
+#intro.play .word{animation:rise 486ms var(--e-answer) 162ms forwards}
+#intro.play .dots{animation:drop 297ms var(--e-answer) 513ms forwards}
+#intro.play .c1{animation:draw 540ms ease-out 567ms forwards}
+#intro.play .c2{animation:draw 540ms ease-out 675ms forwards}
+#intro.play .wedge{animation:draw 351ms ease-out 945ms forwards}
+#intro.play .dot{animation:press 162ms var(--e-answer) 1215ms forwards}
+#intro.play .tag{animation:settle 405ms ease-out 1350ms forwards}
+#intro.play{animation:fade 216ms ease-out 1755ms forwards}
 #intro.still .word,#intro.still .dots,#intro.still .tag{opacity:1;transform:none}
 #intro.still .c1,#intro.still .c2,#intro.still .wedge{stroke-dashoffset:0}
 #intro.still .dot{transform:scale(1)}
-#intro.still{animation:fade 160ms ease-out 300ms forwards}
+#intro.still{animation:fade 216ms ease-out 405ms forwards}
 @keyframes rise{to{opacity:1;transform:translateY(0)}}
 @keyframes drop{to{opacity:1;transform:translateY(0)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes press{0%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes settle{from{opacity:0;letter-spacing:.6em}to{opacity:1;letter-spacing:.32em}}
 @keyframes fade{to{opacity:0;visibility:hidden}}
+
+
+/* info bubble */
+.tip{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius-card);padding:12px 44px 12px 14px;margin:0 0 12px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.tip::before{content:"";position:absolute;top:-7px;left:26px;width:12px;height:12px;background:var(--sheet);border-left:1px solid var(--rule);border-top:1px solid var(--rule);transform:rotate(45deg)}
+.tip .k{font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);display:block;margin-bottom:4px}
+.tip .x{position:absolute;top:4px;right:4px;width:40px;height:40px;border:0;background:none;color:var(--mute);font-size:20px;line-height:1;border-radius:8px}
+.tip .x:hover{color:var(--ink)}
+.info{width:44px;height:44px;border:0;background:none;color:var(--mute);border-radius:50%;display:grid;place-items:center;padding:0}
+.info svg{width:22px;height:22px}
+.info[aria-pressed=true]{color:var(--ink)}
 
 /* ---------- app ---------- */
 .app{max-width:var(--col);margin:0 auto;min-height:100dvh;position:relative;padding-bottom:calc(112px + var(--safe-b))}
@@ -152,7 +163,8 @@ label.field.glint::after{top:22px}
   <noscript><p class="note" style="padding:12px 20px;border:1px solid var(--rule);border-radius:8px;margin:12px 20px">Diese Vorschau läuft ohne JavaScript (z. B. Dateivorschau auf dem iPhone). Bitte die Datei in Safari oder Chrome öffnen – oder den Link unter github.io verwenden.</p></noscript>
   <header class="top">
     <span class="mono step" id="stepLabel">1  Prüfen</span>
-    <span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
+    <button type="button" class="info" id="infoBtn" aria-pressed="true" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor"/><path d="M12 10.8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></span>
   </header>
   <div class="brand">
     <button type="button" id="replay" title="Intro nochmals abspielen">
@@ -170,11 +182,13 @@ label.field.glint::after{top:22px}
   </nav>
 
   <section id="view-check" class="panel">
+    <div class="tip" data-tip="check"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
     <div class="checks" id="checks"></div>
     <p class="note" data-i18n="note_check">Sieben Fragen. Alle Ja — sonst geht nichts raus.</p>
   </section>
 
   <section id="view-form" class="panel" hidden>
+    <div class="tip" data-tip="form"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
     <label class="field"><span class="k" data-i18n="f_dish">Gericht</span><input id="dish" type="text" placeholder="z. B. Gemüserisotto, Salat separat" data-i18n-ph="ph_dish" data-req="1"><span class="hint" id="h-dish"></span></label>
     <div class="row2">
       <label class="field"><span class="k" data-i18n="f_portions">Portionen</span><input id="portions" type="number" min="1" inputmode="numeric" placeholder="18" data-req="1"><span class="hint" id="h-portions"></span></label>
@@ -194,6 +208,7 @@ label.field.glint::after{top:22px}
   </section>
 
   <section id="view-ticket" class="panel" hidden>
+    <div class="tip no-print" data-tip="ticket"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
     <article class="ticket" id="ticket">
       <div class="head">
         <h2>übrig</h2>
@@ -213,7 +228,9 @@ label.field.glint::after{top:22px}
     <div class="no-print" style="margin-top:12px"><button class="press ghost" id="print" type="button"><span class="shade"></span><span class="face" data-i18n="print">Etikett drucken</span></button></div>
   </section>
 
-  <section id="view-log" class="panel" hidden><div class="log" id="log"></div></section>
+  <section id="view-log" class="panel" hidden>
+    <div class="tip" data-tip="log"><span class="k">Info</span><span class="t"></span><button type="button" class="x" aria-label="Schliessen">×</button></div>
+    <div class="log" id="log"></div></section>
 
   <div class="dock">
     <button class="press quiet" id="cta" type="button"><span class="shade"></span><span class="face" id="ctaFace">Noch 7 von 7</span></button>
@@ -234,7 +251,12 @@ label.field.glint::after{top:22px}
         reheat:'Vor dem Servieren durcherhitzen.',note_ticket:'Dieselbe Form geht in WhatsApp und auf den Behälter.',print:'Etikett drucken',foot:'Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals',skip:'tippen zum überspringen',
         left:function(n){return 'Noch '+n+' von 7'},hint_check:function(n){return 'Noch '+n+' von 7 — diese Frage zuerst.'},next_form:'Weiter zur Meldung',show_ticket:'Etikett zeigen',to_log:'In Protokoll legen',new_check:'Neue Freigabe',
         missing:'Fehlt noch.',without:function(f){return 'Ohne '+f+' kein Etikett.'},portions:'Portionen',port:'Port.',allerg:'Allergene',cooked:'Zubereitet',best:'Konsumieren bis',pickup:'Abholen',none:'keine angegeben',empty:'Noch kein Eintrag. Lokal im Browser.',
-        state:{'gekühlt':'gekühlt','heiss':'heiss'}},
+        state:{'gekühlt':'gekühlt','heiss':'heiss'},
+        tips:{check:'Sieben Hygiene-Fragen. Tippe jede an, die stimmt. Erst bei 7 von 7 wird der Knopf unten rot und es geht weiter — vorher zeigt er dir, was noch fehlt.',
+              form:'Was, wie viel, wann, wo. Gericht, Portionen, Ort und Kontakt sind Pflicht — fehlt etwas, blinkt das Feld. Zubereitet und Konsumieren bis sind vorausgefüllt, prüfe sie.',
+              ticket:'So sieht das Etikett aus. Drucke es auf den Behälter oder kopiere den Text darunter in WhatsApp. «In Protokoll legen» hält die Übergabe fest.',
+              log:'Das Protokoll bleibt nur in diesem Browser — kein Konto, kein Server. «Neue Freigabe» setzt die sieben Fragen zurück.'},
+        info_close:'Schliessen',info_btn:'Hinweise ein/aus'},
     en:{tab_check:'Check',tab_form:'Message',tab_ticket:'Label',tab_log:'Log',
         step:{check:'1  Check',form:'2  Message',ticket:'3  Label',log:'4  Log'},
         rules:["Not from the guest area","Hot ≥ 65 °C or ≤ 5 °C","Time on the label","14 allergens known","Closed container","Cold chain / hot box","Receiver knows the deadline"],
@@ -244,7 +266,12 @@ label.field.glint::after{top:22px}
         reheat:'Reheat thoroughly before serving.',note_ticket:'The same form goes to WhatsApp and onto the container.',print:'Print label',foot:'Prototype · nothing leaves the browser · tap the logo = intro again',skip:'tap to skip',
         left:function(n){return n+' of 7 left'},hint_check:function(n){return n+' of 7 left — this one first.'},next_form:'Continue to message',show_ticket:'Show label',to_log:'Add to log',new_check:'New release',
         missing:'Still missing.',without:function(f){return 'No label without '+f+'.'},portions:'portions',port:'port.',allerg:'Allergens',cooked:'Prepared',best:'Consume by',pickup:'Pick up',none:'none given',empty:'No entry yet. Local in the browser.',
-        state:{'gekühlt':'chilled','heiss':'hot'}}
+        state:{'gekühlt':'chilled','heiss':'hot'},
+        tips:{check:'Seven hygiene questions. Tap each one that is true. Only at 7 of 7 does the button below turn red and let you continue — before that it shows you what is missing.',
+              form:'What, how much, when, where. Dish, portions, place and contact are required — if one is missing, the field glints. Prepared and consume-by are prefilled; check them.',
+              ticket:'This is the label. Print it onto the container or copy the text below into WhatsApp. “Add to log” records the hand-over.',
+              log:'The log stays in this browser only — no account, no server. “New release” resets the seven questions.'},
+        info_close:'Close',info_btn:'Tips on/off'}
   };
   var lang='de';try{lang=localStorage.getItem('uebrig-prototyp-lang')||((navigator.language||'').slice(0,2)==='en'?'en':'de')}catch(e){}
   if(!I18N[lang])lang='de';
@@ -266,7 +293,7 @@ label.field.glint::after{top:22px}
     void intro.offsetWidth;
     intro.classList.add(REDUCED?'still':'play');
     intro.addEventListener('animationend',function done(e){if(e.target===intro){intro.hidden=true;intro.classList.remove('play','still');try{sessionStorage.setItem('uebrig-intro',String(Date.now()))}catch(x){}}});
-    if(!REDUCED&&intro.classList.contains('play'))setTimeout(function(){buzz(10)},900);
+    if(!REDUCED&&intro.classList.contains('play'))setTimeout(function(){buzz(10)},1215);
   }
   intro.addEventListener('click',function(){intro.hidden=true;intro.classList.remove('play','still');try{sessionStorage.setItem('uebrig-intro',String(Date.now()))}catch(x){}});
   intro.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')intro.click()});
@@ -342,6 +369,15 @@ label.field.glint::after{top:22px}
     render();
   });
   function labelOf(id){return T({dish:'f_dish',portions:'f_portions',place:'f_place',contact:'f_contact'}[id])||id}
+  var tips={};try{tips=JSON.parse(localStorage.getItem('uebrig-prototyp-tips')||'{}')||{}}catch(e){}
+  var tipsOn=true;try{tipsOn=localStorage.getItem('uebrig-prototyp-tips-on')!=='0'}catch(e){}
+  function saveTips(){try{localStorage.setItem('uebrig-prototyp-tips',JSON.stringify(tips));localStorage.setItem('uebrig-prototyp-tips-on',tipsOn?'1':'0')}catch(e){}}
+  function applyTips(){
+    document.querySelectorAll('.tip').forEach(function(el){var k=el.dataset.tip;el.querySelector('.t').textContent=T('tips')[k];el.querySelector('.x').setAttribute('aria-label',T('info_close'));el.hidden=!tipsOn||!!tips[k]});
+    var ib=$('infoBtn');ib.setAttribute('aria-pressed',tipsOn?'true':'false');ib.setAttribute('aria-label',T('info_btn'));ib.title=T('info_btn');
+  }
+  document.querySelectorAll('.tip .x').forEach(function(x){x.addEventListener('click',function(){tips[x.parentNode.dataset.tip]=true;saveTips();applyTips()})});
+  $('infoBtn').addEventListener('click',function(){tipsOn=!tipsOn;if(tipsOn)tips={};saveTips();applyTips()});
   function allergenLabel(key){var i=I18N.de.allergens.indexOf(key);return i>=0?T('allergens')[i]:key}
   function applyLang(){
     document.documentElement.lang=lang;
@@ -350,6 +386,7 @@ label.field.glint::after{top:22px}
     Array.prototype.forEach.call(checksEl.children,function(el){el.querySelector('span').textContent=T('rules')[+el.dataset.i]});
     Array.prototype.forEach.call(allEl.children,function(el){el.textContent=allergenLabel(el.dataset.key)});
     document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang?'true':'false')});
+    applyTips();
   }
   document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem('uebrig-prototyp-lang',lang)}catch(e){}applyLang();render()})});
 
