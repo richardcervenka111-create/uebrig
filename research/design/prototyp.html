@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="nojs">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,360;1,9..144,500&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.remove("nojs");</script>
 <style>
 :root{
   --paper:#F3EEE6;--sheet:#FFFBF4;--ink:#1A1814;--ink-2:#2A2622;--stamp:#9C3B2E;--stamp-dk:#6E2A21;--brass:#C4A36A;--rule:#D8D0C4;--mute:#7A746C;
@@ -28,6 +29,7 @@ h1,h2,.name{font-family:var(--f-name);font-weight:500;font-style:italic}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 /* ---------- intro ---------- */
+html.nojs #intro{display:none}
 #intro{position:fixed;inset:0;background:var(--paper);z-index:50;display:grid;place-items:center;cursor:pointer}
 #intro .scene{display:grid;justify-items:center;gap:18px;transform:translateY(-4vh)}
 #intro .word{font-family:var(--f-name);font-style:italic;font-weight:500;font-size:clamp(64px,18vw,96px);line-height:1;letter-spacing:-.02em;position:relative;opacity:0;transform:translateY(8px)}
@@ -143,6 +145,7 @@ label.field.glint::after{top:22px}
 </div>
 
 <div class="app">
+  <noscript><p class="note" style="padding:12px 20px;border:1px solid var(--rule);border-radius:8px;margin:12px 20px">Diese Vorschau läuft ohne JavaScript (z. B. Dateivorschau auf dem iPhone). Bitte die Datei in Safari oder Chrome öffnen – oder den Link unter github.io verwenden.</p></noscript>
   <header class="top">
     <span class="mono step" id="stepLabel">1  Prüfen</span>
     <span class="mono count" id="countLabel" aria-live="polite">0 / 7</span>
