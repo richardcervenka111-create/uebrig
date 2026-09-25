@@ -70,7 +70,11 @@ header.top .step{color:var(--stamp);letter-spacing:.12em;text-transform:uppercas
 header.top .count{color:var(--mute);font-size:11px}
 .brand{display:flex;align-items:center;gap:12px;padding:0 var(--gutter) 18px}
 .brand h1{margin:0;font-size:34px;letter-spacing:-.02em;line-height:1}
+.brand{justify-content:space-between}
 .brand button{background:none;border:0;padding:0;display:flex;align-items:center;gap:12px;color:inherit;text-align:left}
+.langs{display:flex;gap:2px;font-family:var(--f-fact);font-size:11px;letter-spacing:.12em}
+.langs button{gap:0;padding:8px 8px;min-height:44px;color:var(--mute);border-bottom:2px solid transparent;border-radius:0}
+.langs button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--stamp)}
 .mark{width:36px;height:36px;flex:none}
 .tabs{display:flex;padding:0 var(--gutter) 16px;gap:0}
 .tabs button{background:transparent;border:0;color:var(--mute);padding:6px 0;margin-right:18px;border-bottom:2px solid transparent;transition:border-color 160ms ease,color 160ms ease}
@@ -141,7 +145,7 @@ label.field.glint::after{top:22px}
     <svg viewBox="0 0 72 72" aria-hidden="true"><circle class="c1" cx="36" cy="36" r="33"/><circle class="c2" cx="36" cy="36" r="27"/><path class="wedge" d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2"/><circle class="dot" cx="36" cy="36" r="3.2"/></svg>
     <div class="tag">nach dem service</div>
   </div>
-  <div class="skip">tippen zum überspringen</div>
+  <div class="skip" data-i18n="skip">tippen zum überspringen</div>
 </div>
 
 <div class="app">
@@ -155,36 +159,37 @@ label.field.glint::after{top:22px}
       <svg class="mark" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="33" fill="none" stroke="#9C3B2E" stroke-width="2.2"/><circle cx="36" cy="36" r="27" fill="none" stroke="#9C3B2E" stroke-width="1.5"/><path d="M36 21.5 A14.5 14.5 0 1 1 24.2 47.2" fill="none" stroke="#9C3B2E" stroke-width="2.4" stroke-linecap="round"/><circle cx="36" cy="36" r="3.2" fill="#9C3B2E"/></svg>
       <h1>übrig</h1>
     </button>
+    <div class="langs" role="group" aria-label="Sprache / Language"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
   </div>
 
   <nav class="tabs no-print" aria-label="Schritte">
-    <button type="button" class="on" data-view="check">Prüfen</button>
-    <button type="button" data-view="form">Meldung</button>
-    <button type="button" data-view="ticket">Etikett</button>
-    <button type="button" data-view="log">Protokoll</button>
+    <button type="button" class="on" data-view="check" data-i18n="tab_check">Prüfen</button>
+    <button type="button" data-view="form" data-i18n="tab_form">Meldung</button>
+    <button type="button" data-view="ticket" data-i18n="tab_ticket">Etikett</button>
+    <button type="button" data-view="log" data-i18n="tab_log">Protokoll</button>
   </nav>
 
   <section id="view-check" class="panel">
     <div class="checks" id="checks"></div>
-    <p class="note">Sieben Fragen. Alle Ja — sonst geht nichts raus.</p>
+    <p class="note" data-i18n="note_check">Sieben Fragen. Alle Ja — sonst geht nichts raus.</p>
   </section>
 
   <section id="view-form" class="panel" hidden>
-    <label class="field"><span class="k">Gericht</span><input id="dish" type="text" placeholder="z. B. Gemüserisotto, Salat separat" data-req="1"><span class="hint" id="h-dish"></span></label>
+    <label class="field"><span class="k" data-i18n="f_dish">Gericht</span><input id="dish" type="text" placeholder="z. B. Gemüserisotto, Salat separat" data-i18n-ph="ph_dish" data-req="1"><span class="hint" id="h-dish"></span></label>
     <div class="row2">
-      <label class="field"><span class="k">Portionen</span><input id="portions" type="number" min="1" inputmode="numeric" placeholder="18" data-req="1"><span class="hint" id="h-portions"></span></label>
-      <label class="field"><span class="k">Zustand</span><select id="state"><option value="gekühlt">gekühlt</option><option value="heiss">heiss</option></select></label>
+      <label class="field"><span class="k" data-i18n="f_portions">Portionen</span><input id="portions" type="number" min="1" inputmode="numeric" placeholder="18" data-req="1"><span class="hint" id="h-portions"></span></label>
+      <label class="field"><span class="k" data-i18n="f_state">Zustand</span><select id="state"><option value="gekühlt" data-i18n="st_cold">gekühlt</option><option value="heiss" data-i18n="st_hot">heiss</option></select></label>
     </div>
     <div class="row2">
-      <label class="field"><span class="k">Abholen von</span><input id="from" type="time" value="21:30"></label>
-      <label class="field"><span class="k">bis</span><input id="until" type="time" value="22:15"></label>
+      <label class="field"><span class="k" data-i18n="f_from">Abholen von</span><input id="from" type="time" value="21:30"></label>
+      <label class="field"><span class="k" data-i18n="f_until">bis</span><input id="until" type="time" value="22:15"></label>
     </div>
-    <label class="field"><span class="k">Ort</span><input id="place" type="text" placeholder="Strasse, Eingang" data-req="1"><span class="hint" id="h-place"></span></label>
-    <label class="field"><span class="k">Kontakt</span><input id="contact" type="text" placeholder="Betrieb · Name · Telefon" data-req="1"><span class="hint" id="h-contact"></span></label>
-    <label class="field"><span class="k">Allergene</span><div class="chips" id="allergens"></div></label>
+    <label class="field"><span class="k" data-i18n="f_place">Ort</span><input id="place" type="text" placeholder="Strasse, Eingang" data-i18n-ph="ph_place" data-req="1"><span class="hint" id="h-place"></span></label>
+    <label class="field"><span class="k" data-i18n="f_contact">Kontakt</span><input id="contact" type="text" placeholder="Betrieb · Name · Telefon" data-i18n-ph="ph_contact" data-req="1"><span class="hint" id="h-contact"></span></label>
+    <label class="field"><span class="k" data-i18n="f_allergens">Allergene</span><div class="chips" id="allergens"></div></label>
     <div class="row2">
-      <label class="field"><span class="k">Zubereitet</span><input id="cooked" type="text"></label>
-      <label class="field"><span class="k">Konsumieren bis</span><input id="best" type="text"></label>
+      <label class="field"><span class="k" data-i18n="f_cooked">Zubereitet</span><input id="cooked" type="text"></label>
+      <label class="field"><span class="k" data-i18n="f_best">Konsumieren bis</span><input id="best" type="text"></label>
     </div>
   </section>
 
@@ -201,11 +206,11 @@ label.field.glint::after{top:22px}
       <h3 id="t-dish"></h3>
       <div class="mono meta" id="t-meta"></div>
       <p id="t-contact"></p><p id="t-all"></p><p id="t-cooked"></p><p id="t-best"></p><p id="t-win"></p><p id="t-place"></p>
-      <p>Vor dem Servieren durcherhitzen.</p>
+      <p data-i18n="reheat">Vor dem Servieren durcherhitzen.</p>
     </article>
-    <p class="note no-print">Dieselbe Form geht in WhatsApp und auf den Behälter.</p>
+    <p class="note no-print" data-i18n="note_ticket">Dieselbe Form geht in WhatsApp und auf den Behälter.</p>
     <div class="msg no-print" id="msg"></div>
-    <div class="no-print" style="margin-top:12px"><button class="press ghost" id="print" type="button"><span class="shade"></span><span class="face">Etikett drucken</span></button></div>
+    <div class="no-print" style="margin-top:12px"><button class="press ghost" id="print" type="button"><span class="shade"></span><span class="face" data-i18n="print">Etikett drucken</span></button></div>
   </section>
 
   <section id="view-log" class="panel" hidden><div class="log" id="log"></div></section>
@@ -214,13 +219,37 @@ label.field.glint::after{top:22px}
     <button class="press quiet" id="cta" type="button"><span class="shade"></span><span class="face" id="ctaFace">Noch 7 von 7</span></button>
     <p class="dockhint mono" id="dockhint" aria-live="polite"></p>
   </div>
-  <p class="foot no-print">Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals</p>
+  <p class="foot no-print" data-i18n="foot">Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals</p>
 </div>
 
 <script>
 (function(){
-  var RULES=["Nicht im Gästebereich","Heiss ≥ 65 °C oder ≤ 5 °C","Zeit aufs Etikett","14 Allergene bekannt","Geschlossener Behälter","Kühlkette / Warmhaltebox","Empfänger kennt Frist"];
-  var ALLERGENS=["Gluten","Krebstiere","Ei","Fisch","Erdnuss","Soja","Milch","Schalenfrüchte","Sellerie","Senf","Sesam","Sulfite","Lupine","Weichtiere"];
+  var I18N={
+    de:{tab_check:'Prüfen',tab_form:'Meldung',tab_ticket:'Etikett',tab_log:'Protokoll',
+        step:{check:'1  Prüfen',form:'2  Meldung',ticket:'3  Etikett',log:'4  Protokoll'},
+        rules:["Nicht im Gästebereich","Heiss ≥ 65 °C oder ≤ 5 °C","Zeit aufs Etikett","14 Allergene bekannt","Geschlossener Behälter","Kühlkette / Warmhaltebox","Empfänger kennt Frist"],
+        allergens:["Gluten","Krebstiere","Ei","Fisch","Erdnuss","Soja","Milch","Schalenfrüchte","Sellerie","Senf","Sesam","Sulfite","Lupine","Weichtiere"],
+        note_check:'Sieben Fragen. Alle Ja — sonst geht nichts raus.',f_dish:'Gericht',ph_dish:'z. B. Gemüserisotto, Salat separat',f_portions:'Portionen',f_state:'Zustand',st_cold:'gekühlt',st_hot:'heiss',
+        f_from:'Abholen von',f_until:'bis',f_place:'Ort',ph_place:'Strasse, Eingang',f_contact:'Kontakt',ph_contact:'Betrieb · Name · Telefon',f_allergens:'Allergene',f_cooked:'Zubereitet',f_best:'Konsumieren bis',
+        reheat:'Vor dem Servieren durcherhitzen.',note_ticket:'Dieselbe Form geht in WhatsApp und auf den Behälter.',print:'Etikett drucken',foot:'Prototyp · nichts verlässt den Browser · Logo tippen = Intro nochmals',skip:'tippen zum überspringen',
+        left:function(n){return 'Noch '+n+' von 7'},hint_check:function(n){return 'Noch '+n+' von 7 — diese Frage zuerst.'},next_form:'Weiter zur Meldung',show_ticket:'Etikett zeigen',to_log:'In Protokoll legen',new_check:'Neue Freigabe',
+        missing:'Fehlt noch.',without:function(f){return 'Ohne '+f+' kein Etikett.'},portions:'Portionen',port:'Port.',allerg:'Allergene',cooked:'Zubereitet',best:'Konsumieren bis',pickup:'Abholen',none:'keine angegeben',empty:'Noch kein Eintrag. Lokal im Browser.',
+        state:{'gekühlt':'gekühlt','heiss':'heiss'}},
+    en:{tab_check:'Check',tab_form:'Message',tab_ticket:'Label',tab_log:'Log',
+        step:{check:'1  Check',form:'2  Message',ticket:'3  Label',log:'4  Log'},
+        rules:["Not from the guest area","Hot ≥ 65 °C or ≤ 5 °C","Time on the label","14 allergens known","Closed container","Cold chain / hot box","Receiver knows the deadline"],
+        allergens:["Gluten","Crustaceans","Egg","Fish","Peanuts","Soy","Milk","Tree nuts","Celery","Mustard","Sesame","Sulphites","Lupin","Molluscs"],
+        note_check:'Seven questions. All yes — or nothing leaves.',f_dish:'Dish',ph_dish:'e.g. vegetable risotto, salad separate',f_portions:'Portions',f_state:'State',st_cold:'chilled',st_hot:'hot',
+        f_from:'Pick up from',f_until:'until',f_place:'Place',ph_place:'Street, entrance',f_contact:'Contact',ph_contact:'Business · name · phone',f_allergens:'Allergens',f_cooked:'Prepared',f_best:'Consume by',
+        reheat:'Reheat thoroughly before serving.',note_ticket:'The same form goes to WhatsApp and onto the container.',print:'Print label',foot:'Prototype · nothing leaves the browser · tap the logo = intro again',skip:'tap to skip',
+        left:function(n){return n+' of 7 left'},hint_check:function(n){return n+' of 7 left — this one first.'},next_form:'Continue to message',show_ticket:'Show label',to_log:'Add to log',new_check:'New release',
+        missing:'Still missing.',without:function(f){return 'No label without '+f+'.'},portions:'portions',port:'port.',allerg:'Allergens',cooked:'Prepared',best:'Consume by',pickup:'Pick up',none:'none given',empty:'No entry yet. Local in the browser.',
+        state:{'gekühlt':'chilled','heiss':'hot'}}
+  };
+  var lang='de';try{lang=localStorage.getItem('uebrig-prototyp-lang')||((navigator.language||'').slice(0,2)==='en'?'en':'de')}catch(e){}
+  if(!I18N[lang])lang='de';
+  var T=function(k){return I18N[lang][k]};
+  var RULES=I18N.de.rules, ALLERGENS=I18N.de.allergens;  /* Schlüssel: deutsche Namen bleiben interne IDs */
   var REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(id){return document.getElementById(id)};
   var pad=function(n){return String(n).padStart(2,'0')};
@@ -261,7 +290,7 @@ label.field.glint::after{top:22px}
   var checksEl=$('checks');
   RULES.forEach(function(label,i){
     var b=document.createElement('button');b.type='button';b.className='check';b.setAttribute('role','checkbox');b.setAttribute('aria-checked','false');
-    b.innerHTML='<i class="ring"><i class="dot"></i></i><span></span>';b.querySelector('span').textContent=label;
+    b.innerHTML='<i class="ring"><i class="dot"></i></i><span></span>';b.querySelector('span').textContent=label;b.dataset.i=i;
     b.addEventListener('click',function(){
       var before=state.checks.filter(Boolean).length;
       state.checks[i]=!state.checks[i];save();render();
@@ -272,7 +301,7 @@ label.field.glint::after{top:22px}
   });
   var allEl=$('allergens');
   ALLERGENS.forEach(function(name){
-    var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=name;b.setAttribute('aria-pressed','false');
+    var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=name;b.dataset.key=name;b.setAttribute('aria-pressed','false');
     b.addEventListener('click',function(){var s=state.allergens.indexOf(name);if(s>=0)state.allergens.splice(s,1);else state.allergens.push(name);save();render()});
     allEl.appendChild(b);
   });
@@ -298,11 +327,11 @@ label.field.glint::after{top:22px}
   $('cta').addEventListener('click',function(){
     var done=state.checks.filter(Boolean).length;
     if(view==='check'){
-      if(done<7){var idx=state.checks.indexOf(false);cue(checksEl.children[idx],'dockhint','Noch '+(7-done)+' von 7 — diese Frage zuerst.');return}
+      if(done<7){var idx=state.checks.indexOf(false);cue(checksEl.children[idx],'dockhint',T('hint_check')(7-done));return}
       view='form';
     }else if(view==='form'){
       var missing=null;['dish','portions','place','contact'].some(function(id){if(!$(id).value.trim()){missing=id;return true}});
-      if(missing){cue($(missing).closest('label'),'h-'+missing,'Fehlt noch.');$('dockhint').textContent='Ohne '+labelOf(missing)+' kein Etikett.';return}
+      if(missing){cue($(missing).closest('label'),'h-'+missing,T('missing'));$('dockhint').textContent=T('without')(labelOf(missing));return}
       view='ticket';
     }else if(view==='ticket'){
       state.log.unshift({at:stampT(new Date()),dish:$('dish').value,portions:$('portions').value,window:$('from').value+'–'+$('until').value});
@@ -312,41 +341,51 @@ label.field.glint::after{top:22px}
     }
     render();
   });
-  function labelOf(id){return {dish:'Gericht',portions:'Portionen',place:'Ort',contact:'Kontakt'}[id]||id}
+  function labelOf(id){return T({dish:'f_dish',portions:'f_portions',place:'f_place',contact:'f_contact'}[id])||id}
+  function allergenLabel(key){var i=I18N.de.allergens.indexOf(key);return i>=0?T('allergens')[i]:key}
+  function applyLang(){
+    document.documentElement.lang=lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=T(el.dataset.i18n);if(typeof v==='string')el.textContent=v});
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){el.placeholder=T(el.dataset.i18nPh)});
+    Array.prototype.forEach.call(checksEl.children,function(el){el.querySelector('span').textContent=T('rules')[+el.dataset.i]});
+    Array.prototype.forEach.call(allEl.children,function(el){el.textContent=allergenLabel(el.dataset.key)});
+    document.querySelectorAll('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===lang?'true':'false')});
+  }
+  document.querySelectorAll('.langs button').forEach(function(b){b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem('uebrig-prototyp-lang',lang)}catch(e){}applyLang();render()})});
 
   function draft(){
-    var all=state.allergens.length?state.allergens.join(', '):'keine angegeben';
-    return ['übrig — '+$('dish').value,$('portions').value+' Portionen · '+$('state').value,$('contact').value,'Allergene: '+all,'Zubereitet '+$('cooked').value,'Konsumieren bis '+$('best').value,'Abholen '+$('from').value+'–'+$('until').value,$('place').value,'Vor dem Servieren durcherhitzen.'].join('\n');
+    var all=state.allergens.length?state.allergens.map(allergenLabel).join(', '):T('none');
+    return ['übrig — '+$('dish').value,$('portions').value+' '+T('portions')+' · '+T('state')[$('state').value],$('contact').value,T('allerg')+': '+all,T('cooked')+' '+$('cooked').value,T('best')+' '+$('best').value,T('pickup')+' '+$('from').value+'–'+$('until').value,$('place').value,T('reheat')].join('\n');
   }
   function render(){
     var done=state.checks.filter(Boolean).length;
     $('countLabel').textContent=done+' / 7';
     Array.prototype.forEach.call(checksEl.children,function(el,i){el.classList.toggle('on',!!state.checks[i]);el.setAttribute('aria-checked',state.checks[i]?'true':'false')});
-    Array.prototype.forEach.call(allEl.children,function(el){var on=state.allergens.indexOf(el.textContent)>=0;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on?'true':'false')});
+    Array.prototype.forEach.call(allEl.children,function(el){var on=state.allergens.indexOf(el.dataset.key)>=0;el.classList.toggle('on',on);el.setAttribute('aria-pressed',on?'true':'false')});
     views.forEach(function(v){$('view-'+v).hidden=(v!==view)});
     document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.view===view)});
-    $('stepLabel').textContent={check:'1  Prüfen',form:'2  Meldung',ticket:'3  Etikett',log:'4  Protokoll'}[view];
+    $('stepLabel').textContent=T('step')[view];
     $('t-dish').textContent=$('dish').value||'—';
-    $('t-meta').textContent=($('portions').value||'—')+' Portionen  ·  '+$('state').value;
+    $('t-meta').textContent=($('portions').value||'—')+' '+T('portions')+'  ·  '+T('state')[$('state').value];
     $('t-contact').textContent=$('contact').value;
-    $('t-all').textContent='Allergene: '+(state.allergens.join(', ')||'—');
-    $('t-cooked').textContent='Zubereitet '+$('cooked').value;
-    $('t-best').textContent='Konsumieren bis '+$('best').value;
-    $('t-win').textContent='Abholen '+$('from').value+'–'+$('until').value;
+    $('t-all').textContent=T('allerg')+': '+(state.allergens.map(allergenLabel).join(', ')||'—');
+    $('t-cooked').textContent=T('cooked')+' '+$('cooked').value;
+    $('t-best').textContent=T('best')+' '+$('best').value;
+    $('t-win').textContent=T('pickup')+' '+$('from').value+'–'+$('until').value;
     $('t-place').textContent=$('place').value;
     $('msg').textContent=draft();
     var tk=$('ticket');if(view==='ticket'){tk.classList.remove('in');void tk.offsetWidth;requestAnimationFrame(function(){tk.classList.add('in')})}else tk.classList.remove('in');
     var log=$('log');log.textContent='';
-    if(!state.log.length){var p=document.createElement('p');p.className='empty';p.textContent='Noch kein Eintrag. Lokal im Browser.';log.appendChild(p)}
-    else state.log.forEach(function(e){var a=document.createElement('article');var w=document.createElement('div');w.className='mono when';w.textContent=e.at;var s=document.createElement('strong');s.textContent=e.dish;var m=document.createElement('div');m.className='mono';m.textContent=e.portions+' Port. · '+e.window;a.appendChild(w);a.appendChild(s);a.appendChild(m);log.appendChild(a)});
+    if(!state.log.length){var p=document.createElement('p');p.className='empty';p.textContent=T('empty');log.appendChild(p)}
+    else state.log.forEach(function(e){var a=document.createElement('article');var w=document.createElement('div');w.className='mono when';w.textContent=e.at;var s=document.createElement('strong');s.textContent=e.dish;var m=document.createElement('div');m.className='mono';m.textContent=e.portions+' '+T('port')+' · '+e.window;a.appendChild(w);a.appendChild(s);a.appendChild(m);log.appendChild(a)});
     var face=$('ctaFace'),btn=$('cta');btn.classList.remove('quiet','stamp','ghost');
-    if(view==='check'){if(done<7){btn.classList.add('quiet');face.textContent='Noch '+(7-done)+' von 7'}else{btn.classList.add('stamp');face.textContent='Weiter zur Meldung'}}
-    else if(view==='form'){face.textContent='Etikett zeigen'}
-    else if(view==='ticket'){btn.classList.add('stamp');face.textContent='In Protokoll legen'}
-    else{btn.classList.add('ghost');face.textContent='Neue Freigabe'}
+    if(view==='check'){if(done<7){btn.classList.add('quiet');face.textContent=T('left')(7-done)}else{btn.classList.add('stamp');face.textContent=T('next_form')}}
+    else if(view==='form'){face.textContent=T('show_ticket')}
+    else if(view==='ticket'){btn.classList.add('stamp');face.textContent=T('to_log')}
+    else{btn.classList.add('ghost');face.textContent=T('new_check')}
     if(view!=='check')$('dockhint').textContent='';
   }
-  render();
+  applyLang();render();
 })();
 </script>
 </body>
