@@ -66,8 +66,10 @@ html.nojs #intro{display:none}
 @keyframes nudge{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
 
 /* ---------- overlays (concept, support, welcome, log detail) ---------- */
-.veil{position:fixed;inset:0;background:rgba(26,24,20,.42);z-index:40;display:grid;place-items:end center;padding:0}
-.sheetbox{width:min(var(--col),100%);max-height:calc(100dvh - 24px);overflow:auto;background:var(--sheet);border:1px solid var(--rule);border-radius:14px 14px 0 0;padding:20px var(--gutter) calc(20px + var(--safe-b));position:relative;transform:translateY(24px);opacity:0;transition:transform var(--t-answer) var(--e-answer),opacity var(--t-answer) ease}
+.veil{position:fixed;inset:0;background:rgba(26,24,20,.42);z-index:40;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:0;overflow:hidden;-webkit-overflow-scrolling:touch}
+.sheetbox{width:min(var(--col),100%);max-height:calc(100vh - 24px);min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--sheet);border:1px solid var(--rule);border-radius:14px 14px 0 0;padding:20px var(--gutter) calc(20px + var(--safe-b));position:relative;transform:translateY(24px);opacity:0;transition:transform var(--t-answer) var(--e-answer),opacity var(--t-answer) ease}
+@supports (height:100dvh){.sheetbox{max-height:calc(100dvh - 24px)}}
+html.locked,html.locked body{overflow:hidden;height:100%}
 .veil.in .sheetbox{transform:none;opacity:1}
 .sheetbox h2{margin:0 0 6px;font-size:30px;line-height:1.05}
 .sheetbox .k{font-family:var(--f-fact);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);display:block;margin-bottom:8px}
@@ -543,8 +545,9 @@ label.field.glint::after{top:22px}
   var buzz=function(ms){try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}};
 
   /* ---- overlays ---- */
-  function openV(id){var v=$(id);v.hidden=false;void v.offsetWidth;requestAnimationFrame(function(){v.classList.add('in')});var f=v.querySelector('.x');if(f)f.focus({preventScroll:true})}
-  function closeV(id){var v=$(id);v.classList.remove('in');setTimeout(function(){v.hidden=true;if(id==='concept'||id==='detail')setTimeout(blinkRings,120)},REDUCED?0:260)}
+  function lockBody(){document.documentElement.classList.toggle('locked',!!document.querySelector('.veil:not([hidden])'))}
+  function openV(id){var v=$(id);v.hidden=false;v.querySelector('.sheetbox').scrollTop=0;lockBody();void v.offsetWidth;requestAnimationFrame(function(){v.classList.add('in')});var f=v.querySelector('.x');if(f)f.focus({preventScroll:true})}
+  function closeV(id){var v=$(id);v.classList.remove('in');setTimeout(function(){v.hidden=true;lockBody();if(id==='concept'||id==='detail')setTimeout(blinkRings,120)},REDUCED?0:260)}
   document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openV(b.dataset.open)})});
   document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){closeV(b.dataset.close)})});
   document.querySelectorAll('.veil').forEach(function(v){v.addEventListener('click',function(e){if(e.target===v)closeV(v.id)})});
