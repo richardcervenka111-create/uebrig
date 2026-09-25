@@ -61,6 +61,13 @@ $$ select coalesce((select approved from public.profiles where id = auth.uid()),
 revoke all on function public.my_role() from public;
 revoke all on function public.i_am_approved() from public;
 grant execute on function public.my_role(), public.i_am_approved() to authenticated;
+-- Supabase-Default-Privilegien geben EXECUTE auch an anon: explizit entziehen
+revoke execute on function public.my_role(), public.i_am_approved() from anon;
+alter default privileges in schema public revoke execute on functions from anon;
+
+grant usage on schema public to authenticated;
+grant select, insert, update on public.profiles to authenticated;
+grant select, insert, update on public.offers to authenticated;
 
 -- ---------- RLS ----------
 alter table public.profiles enable row level security;
@@ -71,8 +78,9 @@ create policy profiles_select_own   on public.profiles for select to authenticat
 create policy profiles_select_admin on public.profiles for select to authenticated using (public.my_role() = 'admin');
 create policy profiles_insert_own   on public.profiles for insert to authenticated
   with check (id = auth.uid() and approved = false and role in ('kitchen','taker'));
+-- WITH CHECK darf profiles nicht selbst abfragen (Rekursion) -> SECURITY-DEFINER-Helfer
 create policy profiles_update_own   on public.profiles for update to authenticated
-  using (id = auth.uid()) with check (id = auth.uid() and approved = (select approved from public.profiles p where p.id = auth.uid()) and role = (select role from public.profiles p where p.id = auth.uid()));
+  using (id = auth.uid()) with check (id = auth.uid() and approved = public.i_am_approved() and role = public.my_role());
 create policy profiles_update_admin on public.profiles for update to authenticated
   using (public.my_role() = 'admin') with check (public.my_role() = 'admin');
 
@@ -136,9 +144,11 @@ end $$;
 
 revoke all on function public.reserve_offer(uuid), public.release_offer(uuid), public.mark_picked(uuid) from public;
 grant execute on function public.reserve_offer(uuid), public.release_offer(uuid), public.mark_picked(uuid) to authenticated;
+revoke execute on function public.reserve_offer(uuid), public.release_offer(uuid), public.mark_picked(uuid) from anon;
 
 -- ---------- Realtime für die Live-Liste ----------
 alter publication supabase_realtime add table public.offers;
+alter publication supabase_realtime add table public.profiles;
 
 -- ---------- Ablauf: offene Ausschreibungen nach Abholfenster als 'expired' lesen ----------
 -- (kein Cron nötig: die Select-Policy blendet abgelaufene aus; die Küche sieht sie in "Meine" weiterhin.)
