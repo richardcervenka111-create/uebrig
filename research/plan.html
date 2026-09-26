@@ -45,6 +45,7 @@ footer{margin-top:44px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <li><a href="#hotove">Čo sa dnes urobilo</a></li>
 <li><a href="#plan">Plán v bodoch</a></li>
 <li><a href="#rozhodnutia">Rozhodnutia pre Richarda</a></li>
+<li><a href="#domeny">Domény, e-mail, hosting, Bärn Kit</a></li>
 <li><a href="#zabrany">Zábrany – ako sa to stráži</a></li>
 </ol>
 
@@ -184,7 +185,23 @@ footer{margin-top:44px;color:var(--mute);font-size:.88rem;border-top:1px solid v
 <div class="q"><b class="t">R9 · Písma a zdroje pri otvorenej sieti</b>
 <ol type="a"><li><span class="rec">Dáš mi na chvíľu prostredie so sieťou (alebo spustíš lokálne skript, ktorý pripravím) – odporúčam</span>: self-host písiem, SRI hash, a začnem odškrtávať 634 zdrojov v „Čo doveriť“.</li><li>Nechať Google Fonts a priznanie v Datenschutz.</li></ol></div>
 
-<h2 id="zabrany">6 · Zábrany – ako sa to stráži</h2>
+<h2 id="domeny">6 · Domény, e-mail, hosting a Bärn Kit (doplnené 26. 9. 2026)</h2>
+<div class="card">
+<p><b>Stav:</b> Richard kúpil <b>uebrig.ch</b> a <b>uebrig.de</b> (Hostpoint, 25. 9. 2026 – 24. 9. 2027) a na Cloud Office Basic založil schránky <code>info@uebrig.ch</code> a <code>hallo@uebrig.ch</code> (15 GB každá). Tým je <b>R3 rozhodnuté</b> (vlastná doména + vlastný SMTP cez Hostpoint, nie Resend) a <b>R4 z polovice</b> (kontaktný e-mail existuje, poštová adresa pre Impressum ešte nie). Hosting má byť cez Cloudflare tak, aby sa neplatilo nič navyše.</p>
+<p><b>Ako to bude zapojené (nula nákladov navyše):</b></p>
+<ul>
+<li><b>DNS obidvoch domén → Cloudflare (Free).</b> Nameservery sa prepnú v Hostpointe; Cloudflare pri pridaní zóny naimportuje existujúce záznamy, ale <b>MX, SPF (TXT), DKIM a autodiscover/autoconfig Hostpointu sa musia skontrolovať ručne</b>, inak prestane chodiť pošta. Pošta ostáva u Hostpointu (zaplatená).</li>
+<li><b>uebrig.ch → GitHub Pages</b> (repozitár <code>uebrig</code>): 4 záznamy A na IP GitHub Pages + CNAME <code>www</code>; v Cloudflare najprv <em>DNS only</em> (sivý oblak), aby GitHub vydal certifikát; potom sa v GitHube zapne „Enforce HTTPS“. Súbor <code>CNAME</code> v repozitári sa pridá <b>až po</b> nastavení DNS – inak by github.io adresa presmerovala na doménu, ktorá ešte nefunguje. Workflow už CNAME kopíruje, keď existuje.</li>
+<li><b>kit.uebrig.ch → Bärn Kit</b> (repozitár <code>-brig</code>): CNAME záznam na <code>richardcervenka111-create.github.io</code>, rovnaký postup. Bärn Kit je informačná appka zadarmo pre všetkých, súčasť projektu übrig – reklamný panel v hube vedie na übrig.</li>
+<li><b>uebrig.de → 301 na uebrig.ch</b> cez Cloudflare Redirect Rule (Free, bez servera).</li>
+<li><b>Supabase Custom SMTP</b> = Hostpoint: odosielateľ <code>hallo@uebrig.ch</code>, server a port podľa stránky „E-mail client settings“ v Control Paneli (spravidla <code>asmtp.mail.hostpoint.ch</code>, 465 SSL). Heslo zadáva Richard v Supabase Dashboard sám.</li>
+<li>Po prepnutí: og:image URL v <code>index.html</code> a <code>app/index.html</code>, odkazy v README a v Datenschutz prepísať na uebrig.ch; e2e test doplniť o kontrolu, že žiadny súbor už neodkazuje na github.io.</li>
+</ul>
+<p><b>Čo je hotové 26. 9.:</b> Datenschutz má kontakt <code>hallo@uebrig.ch</code>; oba workflowy (übrig, Bärn Kit) kopírujú <code>CNAME</code>, keď existuje; Bärn Kit je zapísaný ako súčasť projektu.</p>
+<p><b>Čo čaká na Richarda:</b> prepnutie nameserverov a záznamy v Cloudflare (prompt pre Cowork dodaný v chate), heslo pre SMTP v Supabase, poštová adresa pre Impressum. Hneď po jeho „DNS je nastavené“ pridám CNAME súbory, prepíšem URL a overím HTTPS na oboch doménach.</p>
+</div>
+
+<h2 id="zabrany">7 · Zábrany – ako sa to stráži</h2>
 <div class="scroll"><table>
 <tr><th>Čo</th><th>Kde beží</th><th>Videné padnúť?</th></tr>
 <tr><td>37 e2e kontrol (intro, listy a skrolovanie, 7/7, validácia, tlač = 1 strana, log, jazyky, prenos starého protokolu, kontrast, app hülle, Datenschutz, plán)</td><td>GitHub Actions, job <code>test</code> pred každým deployom; lokálne jedným príkazom</td><td>áno – skrolovanie (reprodukovaná chyba), kontrast (návrat starej farby), e-mail validácia (zámerne zlý vstup)</td></tr>

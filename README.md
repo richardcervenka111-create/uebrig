@@ -70,3 +70,8 @@ Vor jedem Deploy läuft `tests/e2e.mjs` (Playwright, Chromium: Intro, Blätter i
 Validierung, Druck = eine Seite, Protokoll bearbeiten, FR/IT/EN, Übernahme alter Protokolle, Kontrast,
 App-Hülle, Datenschutz). Lokal: `PW_PATH=<pfad zu playwright> BASE_URL=http://127.0.0.1:8080 node tests/e2e.mjs`.
 Lizenz CC0. Verwandt: Allergen-Poster, Bärn hilft, Notfallblatt.
+
+**Bärn Kit** (https://richardcervenka111-create.github.io/-brig/, Repository `-brig`) ist der Hub aller kleinen Bern-Apps
+und Teil des übrig-Projekts: gratis, ohne Tracking, mit dem übrig-Hinweisbanner. Domains `uebrig.ch` / `uebrig.de`
+und die Postfächer `hallo@` / `info@uebrig.ch` sind seit 25. 9. 2026 bei Hostpoint; DNS-Umzug zu Cloudflare und die
+CNAME-Dateien folgen, sobald die Einträge stehen (siehe research/plan.html, Kapitel 6).
