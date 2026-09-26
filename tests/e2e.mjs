@@ -84,6 +84,15 @@ try {
     await page.click('#langBtn'); await page.click(`#langList [data-lang=${l}]`); await sleep(100);
     check(`language ${l} applied`, await page.evaluate((l) => document.documentElement.lang === l && document.querySelector('[data-view=check]').textContent.length > 0 && !/Prüfen/.test(document.querySelector('[data-view=check]').textContent), l));
   }
+  // no leftover prototype wording in any language (the go-live on 25. 9. 2026 missed the footer)
+  const proto = [];
+  for (const l of ['de', 'fr', 'it', 'en']) {
+    await page.click('#langBtn'); await page.click(`#langList [data-lang=${l}]`); await sleep(80);
+    const hit = await page.evaluate(() => (document.body.innerText.match(/prototyp\w*|prototipo/i) || [''])[0]);
+    if (hit) proto.push(l + ':' + hit);
+  }
+  check('no "prototype" wording visible in DE/FR/IT/EN', proto.length === 0, proto.join(' '));
+
   // every screen opens at the top
   await page.evaluate(() => window.scrollTo(0, 400)); await page.click('[data-view=check]'); await sleep(100);
   check('new screen opens at top', await page.evaluate(() => scrollY === 0));
